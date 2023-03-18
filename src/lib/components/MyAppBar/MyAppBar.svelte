@@ -1,14 +1,25 @@
 <script lang="ts">
   import { AppBar, LightSwitch } from "@skeletonlabs/skeleton";
+  import Image from "svimg";
 </script>
 
 <AppBar>
   <!-- Lead Section -->
   <svelte:fragment slot="lead">
-    <span class="text-xl">
-      Joshua
-      <strong class="text-xl uppercase">Ellis</strong>
-    </span>
+    <div class="flex items-center space-x-4">
+      <!-- Headshot -->
+      <Image
+        class="rounded-full w-10 h-10 aspect-square"
+        src="headshot.jpg"
+        alt="Joshua Ellis"
+        width="64"
+      />
+      <!-- Name -->
+      <span class="text-xl hidden lg:inline-block">
+        Joshua
+        <strong class="text-xl uppercase">Ellis</strong>
+      </span>
+    </div>
   </svelte:fragment>
 
   <!-- Trail Section -->
