@@ -8,13 +8,12 @@ module.exports = {
   // Specify the paths to all of the template files in your project
   content: [
     "./src/**/*.{html,js,svelte,ts}",
-    require("path").join(
-      require.resolve("@skeletonlabs/skeleton"),
-      "../**/*.{html,js,svelte,ts}"
-    ),
+    "./node_modules/@skeletonlabs/skeleton/**/*.{html,js,svelte,ts}",
+    "./node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}",
   ],
 
   plugins: [
+    require("flowbite/plugin"),
     require("@tailwindcss/forms"),
     require("@tailwindcss/typography"),
     require("@tailwindcss/line-clamp"),
