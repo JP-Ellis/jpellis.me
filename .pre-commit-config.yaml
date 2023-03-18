@@ -13,7 +13,6 @@ repos:
       - id: check-symlinks
       - id: check-toml
       - id: check-yaml
-        exclude: ^mkdocs\.yml$
       - id: destroyed-symlinks
       - id: detect-private-key
       - id: end-of-file-fixer
@@ -33,6 +32,7 @@ repos:
         entry: pnpm exec prettier --plugin-search-dir=. --write --ignore-unknown
         language: system
         types: [text]
+        exclude: ^pnpm-lock.yaml$
 
       - id: eslint
         name: eslint
