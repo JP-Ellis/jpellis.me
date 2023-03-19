@@ -13,7 +13,6 @@ export default defineConfig({
       allow: [
         // search up for workspace root
         searchForWorkspaceRoot(process.cwd()),
-        // '/static/img'
       ],
     },
   },
