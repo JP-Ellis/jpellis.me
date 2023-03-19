@@ -14,6 +14,13 @@
     "format": "prettier --plugin-search-dir . --write ."
   },
   "devDependencies": {
+    "@floating-ui/dom": "^1.2",
+    "@fortawesome/fontawesome-free": "^6.3",
+    "@fortawesome/fontawesome-svg-core": "^6.3",
+    "@fortawesome/free-brands-svg-icons": "^6.3",
+    "@fortawesome/free-regular-svg-icons": "^6.3",
+    "@fortawesome/free-solid-svg-icons": "^6.3",
+    "@fortawesome/svelte-fontawesome": "^0.2",
     "@playwright/test": "^1.31",
     "@skeletonlabs/skeleton": "^1.0",
     "@sveltejs/adapter-auto": "^2.0",

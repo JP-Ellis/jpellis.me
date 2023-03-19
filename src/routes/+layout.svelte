@@ -1,11 +1,22 @@
 <script lang="ts">
   import "$lib/styles/theme.postcss";
 
-  import { AppBar, AppShell } from "@skeletonlabs/skeleton";
+  import {
+    arrow,
+    autoUpdate,
+    computePosition,
+    flip,
+    offset,
+    shift,
+  } from "@floating-ui/dom";
+  import { AppShell } from "@skeletonlabs/skeleton";
+  import { storePopup } from "@skeletonlabs/skeleton";
   import "@skeletonlabs/skeleton/styles/all.css";
 
   import MyAppBar from "$lib/components/MyAppBar/MyAppBar.svelte";
   import "$lib/styles/global.postcss";
+
+  storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 </script>
 
 <!-- App Shell -->
