@@ -4,7 +4,7 @@
   import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
 
   const outerClass = "";
-  export const linkClass = "btn variant-ghost-surface";
+  export const linkClass = "btn variant-ghost-primary";
   export const iconClass = "text-xl";
   export const labelClass = "";
   export { outerClass as class };
