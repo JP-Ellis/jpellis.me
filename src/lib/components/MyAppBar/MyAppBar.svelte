@@ -1,15 +1,18 @@
 <script lang="ts">
   import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
   import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
-  import { AppBar, LightSwitch } from "@skeletonlabs/skeleton";
-  import { popup } from "@skeletonlabs/skeleton";
-  import type { PopupSettings } from "@skeletonlabs/skeleton";
+  import {
+    AppBar,
+    LightSwitch,
+    type PopupSettings,
+    popup,
+  } from "@skeletonlabs/skeleton";
   import Image from "svimg";
 
   import MyLinks from "$lib/components/MyLinks/MyLinks.svelte";
 
   // Links popup
-  let popupSettings = {
+  const popupSettings = {
     event: "click",
     target: "linksPopup",
   } as PopupSettings;

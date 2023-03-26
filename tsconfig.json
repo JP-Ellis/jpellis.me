@@ -10,10 +10,18 @@
     "sourceMap": true,
     "strict": true
   },
-  "include": [".", ".eslintrc.cjs"]
-
+  // As TypeScript does not merge includes/excludes, we need to copy over the relevant ones from the
+  // referenced tsconfig.json and add to it.
+  "include": [
+    ".svelte-kit/ambient.d.ts",
+    ".velte-kit/types/**/$types.d.ts",
+    "vite.config.ts",
+    "src/**/*.js",
+    "src/**/*.ts",
+    "src/**/*.svelte",
+    "tests/**/*.js",
+    "tests/**/*.ts",
+    "tests/**/*.svelte"
+  ]
   // Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
-  //
-  // If you want to overwrite includes/excludes, make sure to copy over the relevant includes/excludes
-  // from the referenced tsconfig.json - TypeScript does not merge them in
 }

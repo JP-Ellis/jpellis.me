@@ -12,6 +12,7 @@ export default defineConfig({
     fs: {
       allow: [
         // search up for workspace root
+        // eslint-disable-next-line no-undef
         searchForWorkspaceRoot(process.cwd()),
       ],
     },

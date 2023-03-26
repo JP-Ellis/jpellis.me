@@ -3,14 +3,14 @@
   import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
   import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
 
-  let class_ = "";
-  export { class_ as class };
-  export let linkClass = "btn variant-ghost-surface";
-  export let iconClass = "text-xl";
-  export let labelClass = "";
+  const outerClass = "";
+  export const linkClass = "btn variant-ghost-surface";
+  export const iconClass = "text-xl";
+  export const labelClass = "";
+  export { outerClass as class };
 </script>
 
-<div class={class_}>
+<div class={outerClass}>
   <a class={linkClass} href="https://github.com/JP-Ellis" target="_blank">
     <span><FontAwesomeIcon icon={faGithub} class={iconClass} /></span>
     <span class={labelClass}>GitHub</span>

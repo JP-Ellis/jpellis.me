@@ -9,8 +9,7 @@
     offset,
     shift,
   } from "@floating-ui/dom";
-  import { AppShell } from "@skeletonlabs/skeleton";
-  import { storePopup } from "@skeletonlabs/skeleton";
+  import { AppShell, storePopup } from "@skeletonlabs/skeleton";
   import "@skeletonlabs/skeleton/styles/all.css";
 
   import MyAppBar from "$lib/components/MyAppBar/MyAppBar.svelte";
