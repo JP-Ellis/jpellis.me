@@ -26,27 +26,29 @@ export default [
   },
 
   // TypeScript
-  // The following config is not used because it is not compatible with Svelte.
-  // Issue: ota-meshi/eslint-plugin-svelte#422
-  // {
-  //   files: ["**/*.ts"],
-  //   ignores: ["playwright.config.ts"],
-  //   languageOptions: {
-  //     parser: typescriptParser,
-  //     parserOptions: {
-  //       project: "./tsconfig.json",
-  //     },
-  //   },
-  //   plugins: {
-  //     prettier: prettierPlugin,
-  //     "@typescript-eslint": typescriptPlugin,
-  //   },
-  //   rules: {
-  //     ...typescriptPlugin.configs.recommended.rules,
-  //     ...typescriptPlugin.configs["recommended-requiring-type-checking"].rules,
-  //     ...typescriptPlugin.configs.strict.rules,
-  //   },
-  // },
+  //
+  // The parser uses a singleton, therefore the options specified here _must_ be
+  // compatible with its usage in the Svelte config below.
+  {
+    files: ["**/*.ts"],
+    ignores: ["playwright.config.ts"],
+    languageOptions: {
+      parser: typescriptParser,
+      parserOptions: {
+        project: "./tsconfig.json",
+        extraFileExtensions: [".svelte"],
+      },
+    },
+    plugins: {
+      prettier: prettierPlugin,
+      "@typescript-eslint": typescriptPlugin,
+    },
+    rules: {
+      ...typescriptPlugin.configs.recommended.rules,
+      ...typescriptPlugin.configs["recommended-requiring-type-checking"].rules,
+      ...typescriptPlugin.configs.strict.rules,
+    },
+  },
 
   // Svelte
   {
