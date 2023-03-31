@@ -3,10 +3,10 @@
   import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
   import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
 
-  const outerClass = "";
-  export const linkClass = "btn variant-ghost-primary";
-  export const iconClass = "text-xl";
-  export const labelClass = "";
+  let outerClass = "";
+  export let linkClass = "btn variant-ghost-primary";
+  export let iconClass = "text-xl";
+  export let labelClass = "";
   export { outerClass as class };
 </script>
 
