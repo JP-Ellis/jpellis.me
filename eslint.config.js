@@ -50,6 +50,22 @@ export default [
     },
   },
 
+  // Typescript Type Declarations
+  {
+    files: ["**/*.d.ts"],
+    languageOptions: {},
+    plugins: {
+      prettier: prettierPlugin,
+      "@typescript-eslint": typescriptPlugin,
+    },
+    rules: {
+      ...typescriptPlugin.configs.recommended.rules,
+      ...typescriptPlugin.configs["recommended-requiring-type-checking"].rules,
+      ...typescriptPlugin.configs.strict.rules,
+      "init-declarations": "off",
+    },
+  },
+
   // Svelte
   {
     files: ["**/*.svelte"],
