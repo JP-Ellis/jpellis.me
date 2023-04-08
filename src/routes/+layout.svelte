@@ -27,7 +27,9 @@
   </svelte:fragment>
   <svelte:fragment slot="sidebarLeft" />
   <!-- Page Content -->
-  <slot />
+  <div class="container mx-auto">
+    <slot />
+  </div>
   <!-- Footer -->
   <svelte:fragment slot="pageFooter">
     <MyFooter />
