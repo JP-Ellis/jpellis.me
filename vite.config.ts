@@ -1,20 +1,10 @@
 import { sveltekit } from "@sveltejs/kit/vite";
-import { searchForWorkspaceRoot } from "vite";
+import { imagetools } from "@zerodevx/svelte-img/vite";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
-  plugins: [sveltekit()],
+  plugins: [sveltekit(), imagetools()],
   test: {
     include: ["src/**/*.{test,spec}.{js,ts}"],
-  },
-
-  server: {
-    fs: {
-      allow: [
-        // search up for workspace root
-        // eslint-disable-next-line no-undef
-        searchForWorkspaceRoot(process.cwd()),
-      ],
-    },
   },
 });
