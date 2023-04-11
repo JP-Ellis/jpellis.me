@@ -22,6 +22,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.4",
     "@fortawesome/svelte-fontawesome": "^0.2",
     "@playwright/test": "^1.32",
+    "@poppanator/sveltekit-svg": "^3.0.0",
     "@skeletonlabs/skeleton": "^1.1",
     "@sveltejs/adapter-auto": "^2.0",
     "@sveltejs/kit": "^1.15",
