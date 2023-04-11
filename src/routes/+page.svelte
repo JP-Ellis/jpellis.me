@@ -1,43 +1,110 @@
 <script lang="ts">
-  import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
+  import { CodeBracketSquare } from "@steeze-ui/heroicons";
+  import { Code2, ServerCog } from "@steeze-ui/lucide-icons";
+  import { Python, Rust } from "@steeze-ui/simple-icons";
+  import { Icon } from "@steeze-ui/svelte-icon";
   import Img from "@zerodevx/svelte-img";
 
-  import headshot from "$lib/assets/images/headshot.jpg?run";
+  import headshot from "$lib/assets/images/2022_headshot_square.jpg?run";
+  import portrait from "$lib/assets/images/2022_portrait.png?run&lqip=0";
+
+  const descriptions = [
+    { icon: Code2, text: "Software Engineer" },
+    { icon: ServerCog, text: "Data Engineer" },
+    { icon: Python, text: "Python Developer" },
+    { icon: Rust, text: "Rust Developer" },
+  ];
 </script>
 
-<div class="flex flex-col md:flex-row items-center align-center m-4">
-  <div class="md:max-lg:w-1/2 lg:w-1/3 p-4">
-    <Img
-      class="rounded-full aspect-square max-w-[400px] w-full mx-auto"
-      src="{headshot}"
-      alt="Joshua Ellis"
-    />
+<div class="front-page-container">
+  <div class="image-container">
+    <Img class="headshot" src="{headshot}" alt="Joshua Ellis" />
+    <Img class="portrait" src="{portrait}" alt="Joshua Ellis" />
   </div>
-  <div class="md:max-lg:w-1/2 md:w-2/3 text-justify max-w-prose mx-auto">
-    <p>
-      I'm Joshua Ellis, a data engineer with a passion for programming.
-      Currently, I work in the Data & Cloud team at KPMG where I build robust
-      and scalable data pipelines. Before that, I studied a PhD at Melbourne
-      University where I developed a tool to calculate the matter-anti-matter
-      asymmetry from the fundamental interactions between particles. I'm also
-      the author of TikZ-Feynman, a (now popular) LaTeX package for drawing
-      Feynman diagrams.
-    </p>
-    <p>
-      Apart from my work, I love to code in my free time. Python and Rust are my
-      go-to languages, and I enjoy tinkering with new tools and technologies to
-      stay on top of the latest developments.
-    </p>
-    <p>
-      This website is my way of sharing my experiences and projects with the
-      world. Feel free to browse around and get in touch if you want to chat
-      about data engineering, programming, or anything else that interests you.
-    </p>
+  <div class="text-container">
+    <div>
+      <h1>Joshua <strong style="font-variant: small-caps;">Ellis</strong></h1>
+      <ul class="list-inside">
+        {#each descriptions as { icon, text }}
+          <li>
+            <Icon src="{icon}" />{text}
+          </li>
+        {/each}
+      </ul>
+    </div>
   </div>
 </div>
 
 <style lang="postcss">
-  p {
-    @apply my-4;
+  .front-page-container {
+    /* By default, use the full screen of the page, but prevent really short
+     * screens from clipping the content.
+     */
+    @apply flex flex-col justify-center items-center h-[calc(100vh-74px)] max-md:min-h-[650px] pt-8;
+
+    /* Vertically align the image and text on the page (either within the
+     * top/bottom half, or side-by-side)
+     */
+    .image-container,
+    .text-container {
+      @apply relative flex flex-col items-center justify-center;
+      @apply h-1/2;
+    }
+
+    /* For the image container, avoid any overflow of the image.
+     */
+    .image-container {
+      @apply p-8 overflow-clip;
+    }
+
+    .text-container {
+      @apply min-w-[25ch];
+    }
+
+    :global(.headshot) {
+      @apply mx-auto aspect-square rounded-full max-w-[30ch];
+    }
+
+    :global(.portrait) {
+      @apply mx-auto hidden object-contain;
+    }
+
+    /* at md, switch to horizontal alignment of the two segments */
+    @media screen(md) {
+      @apply flex-row pt-0;
+
+      .image-container,
+      .text-container {
+        @apply w-1/2 h-full;
+      }
+    }
+
+    /* at lg, hide the headshot and show the portrait instead */
+    @media screen(lg) {
+      .image-container {
+        @apply p-0 justify-between before:content-[''];
+      }
+
+      :global(.headshot) {
+        @apply hidden;
+      }
+
+      :global(.portrait) {
+        @apply block;
+      }
+    }
+  }
+
+  h1 {
+    @apply pb-4;
+  }
+  ul {
+    li {
+      @apply my-2 flex items-center text-xl md:text-2xl;
+
+      :global(svg) {
+        @apply w-4 md:w-6 mr-3;
+      }
+    }
   }
 </style>
