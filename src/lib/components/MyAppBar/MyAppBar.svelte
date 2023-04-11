@@ -32,7 +32,7 @@
       <!-- Name -->
       <span class="text-xl hidden lg:inline-block">
         Joshua
-        <strong class="text-xl uppercase">Ellis</strong>
+        <strong class="text-xl" style="font-variant: small-caps">Ellis</strong>
       </span>
     </div>
   </svelte:fragment>
