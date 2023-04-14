@@ -40,6 +40,7 @@
      * screens from clipping the content.
      */
     @apply flex flex-col justify-center items-center h-[calc(100vh-74px)] max-md:min-h-[650px] pt-8;
+    @apply container mx-auto;
 
     /* Vertically align the image and text on the page (either within the
      * top/bottom half, or side-by-side)
