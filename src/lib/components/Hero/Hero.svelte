@@ -39,22 +39,26 @@
     /* By default, use the full screen of the page, but prevent really short
      * screens from clipping the content.
      */
-    @apply flex flex-col justify-center items-center h-[calc(100vh-74px)] max-md:min-h-[650px] pt-8;
     @apply container mx-auto;
+    @apply flex flex-col justify-center items-center;
+    @apply h-[calc(100vh-74px)] max-md:min-h-[650px];
+    @apply pt-8;
 
     /* Vertically align the image and text on the page (either within the
      * top/bottom half, or side-by-side)
      */
     .hero-image,
     .hero-text {
-      @apply relative flex flex-col items-center justify-center;
+      @apply relative;
+      @apply flex flex-col items-center justify-center;
       @apply h-1/2;
     }
 
     /* For the image container, avoid any overflow of the image.
      */
     .hero-image {
-      @apply p-8 overflow-clip;
+      @apply p-8;
+      @apply overflow-clip;
     }
 
     .hero-text {
@@ -62,16 +66,20 @@
     }
 
     :global(.headshot) {
-      @apply mx-auto aspect-square rounded-full max-w-[30ch];
+      @apply mx-auto;
+      @apply aspect-square rounded-full;
+      @apply max-w-[30ch];
     }
 
     :global(.portrait) {
-      @apply mx-auto hidden object-contain;
+      @apply mx-auto;
+      @apply hidden object-contain;
     }
 
     /* at md, switch to horizontal alignment of the two segments */
     @media screen(md) {
-      @apply flex-row pt-0;
+      @apply flex-row;
+      @apply pt-0;
 
       .hero-image,
       .hero-text {
@@ -82,7 +90,8 @@
     /* at lg, hide the headshot and show the portrait instead */
     @media screen(lg) {
       .hero-image {
-        @apply p-0 justify-between before:content-[''];
+        @apply p-0;
+        @apply justify-between before:content-[''];
       }
 
       :global(.headshot) {
@@ -100,10 +109,13 @@
   }
   ul {
     li {
-      @apply my-2 flex items-center text-xl md:text-2xl;
+      @apply my-2;
+      @apply flex items-center;
+      @apply text-xl md:text-2xl;
 
       :global(svg) {
-        @apply w-4 md:w-6 mr-3;
+        @apply mr-3;
+        @apply w-4 md:w-6;
       }
     }
   }
