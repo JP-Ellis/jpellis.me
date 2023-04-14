@@ -9,7 +9,7 @@
   } from "@skeletonlabs/skeleton";
   import Img from "@zerodevx/svelte-img";
 
-  import headshot from "$lib/assets/images/2022_headshot_square.jpg?run";
+  import headshot from "$lib/assets/images/joshua-ellis/headshot-square-2022.jpg?run";
   import MyLinks from "$lib/components/SocialLinks/SocialLinks.svelte";
 
   // Links popup
