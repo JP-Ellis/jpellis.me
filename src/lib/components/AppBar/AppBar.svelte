@@ -10,7 +10,7 @@
   import Img from "@zerodevx/svelte-img";
 
   import headshot from "$lib/assets/images/2022_headshot_square.jpg?run";
-  import MyLinks from "$lib/components/MyLinks/MyLinks.svelte";
+  import MyLinks from "$lib/components/SocialLinks/SocialLinks.svelte";
 
   // Links popup
   const popupSettings = {

@@ -12,8 +12,8 @@
   import { AppShell, storePopup } from "@skeletonlabs/skeleton";
   import "@skeletonlabs/skeleton/styles/all.css";
 
-  import MyAppBar from "$lib/components/MyAppBar/MyAppBar.svelte";
-  import MyFooter from "$lib/components/MyFooter/MyFooter.svelte";
+  import AppBar from "$lib/components/AppBar/AppBar.svelte";
+  import Footer from "$lib/components/Footer/Footer.svelte";
   import "$lib/styles/global.postcss";
 
   storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
@@ -23,7 +23,7 @@
 <AppShell>
   <!-- Header -->
   <svelte:fragment slot="header">
-    <MyAppBar />
+    <AppBar />
   </svelte:fragment>
   <svelte:fragment slot="sidebarLeft" />
   <!-- Page Content -->
@@ -32,6 +32,6 @@
   </div>
   <!-- Footer -->
   <svelte:fragment slot="pageFooter">
-    <MyFooter />
+    <Footer />
   </svelte:fragment>
 </AppShell>
