@@ -10,7 +10,7 @@
   import Img from "@zerodevx/svelte-img";
 
   import headshot from "$lib/assets/images/joshua-ellis/headshot-square-2022.jpg?run";
-  import MyLinks from "$lib/components/SocialLinks/SocialLinks.svelte";
+  import Socials from "$lib/components/Socials/Socials.svelte";
 
   // Links popup
   const popupSettings = {
@@ -40,7 +40,7 @@
   <!-- Trail Section -->
   <svelte:fragment slot="trail">
     <LightSwitch />
-    <MyLinks
+    <Socials
       class="hidden sm:inline-block"
       labelClass="hidden lg:inline-block"
     />
@@ -52,7 +52,7 @@
         <Icon src="{ChevronDown}" size="lg" width="100%" height="100%" />
       </button>
       <div data-popup="linksPopup" class="card p-2 w-40 shadow-xl">
-        <MyLinks
+        <Socials
           class="flex flex-col"
           linkClass="p-2"
           iconClass="h-8 w-1/3 inline-block"
