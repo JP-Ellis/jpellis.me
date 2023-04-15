@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
-  import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
   import {
     AppBar,
     LightSwitch,
     type PopupSettings,
     popup,
   } from "@skeletonlabs/skeleton";
+  import { ChevronDown } from "@steeze-ui/heroicons";
+  import { Icon } from "@steeze-ui/svelte-icon";
   import Img from "@zerodevx/svelte-img";
 
   import headshot from "$lib/assets/images/joshua-ellis/headshot-square-2022.jpg?run";
@@ -45,14 +45,17 @@
       labelClass="hidden lg:inline-block"
     />
     <div class="inline-block sm:hidden">
-      <button class="btn-icon" use:popup="{popupSettings}">
-        <FontAwesomeIcon icon="{faCaretDown}" size="lg" />
+      <button
+        class="btn-icon variant-ghost-primary p-2"
+        use:popup="{popupSettings}"
+      >
+        <Icon src="{ChevronDown}" size="lg" width="100%" height="100%" />
       </button>
       <div data-popup="linksPopup" class="card p-2 w-40 shadow-xl">
         <MyLinks
           class="flex flex-col"
           linkClass="p-2"
-          iconClass="text-xl w-1/3"
+          iconClass="h-8 w-1/3 inline-block"
           labelClass="w-2/3"
         />
       </div>
