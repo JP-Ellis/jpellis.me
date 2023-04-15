@@ -22,9 +22,9 @@
     "@fortawesome/free-solid-svg-icons": "^6.4",
     "@fortawesome/svelte-fontawesome": "^0.2",
     "@playwright/test": "^1.32",
-    "@poppanator/sveltekit-svg": "^3.0.0",
+    "@poppanator/sveltekit-svg": "^3.0",
     "@prettier/plugin-xml": "^2.2",
-    "@skeletonlabs/skeleton": "^1.1",
+    "@skeletonlabs/skeleton": "^1.2",
     "@steeze-ui/heroicons": "^2.2",
     "@steeze-ui/lucide-icons": "^1.0",
     "@steeze-ui/material-design-icons": "^1.0",
@@ -38,8 +38,8 @@
     "@tailwindcss/line-clamp": "^0.4",
     "@tailwindcss/typography": "^0.5",
     "@trivago/prettier-plugin-sort-imports": "^4.1",
-    "@typescript-eslint/eslint-plugin": "^5.57",
-    "@typescript-eslint/parser": "^5.57",
+    "@typescript-eslint/eslint-plugin": "^5.58",
+    "@typescript-eslint/parser": "^5.58",
     "@zerodevx/svelte-img": "^1.2",
     "autoprefixer": "^10.4",
     "eslint": "^8.38",
@@ -58,7 +58,7 @@
     "tslib": "^2.5",
     "typescript": "^5.0",
     "vite": "^4.2",
-    "vitest": "^0.29"
+    "vitest": "^0.30"
   },
   "type": "module"
 }
