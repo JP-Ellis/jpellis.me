@@ -33,14 +33,19 @@
     </div>
   </div>
 </div>
+<hr class="divider" />
 
 <style lang="postcss">
+  hr {
+    @apply border-b-4 border-primary-500;
+  }
+
   .hero {
     /* By default, use the full screen of the page, but prevent really short
      * screens from clipping the content.
      */
     @apply container mx-auto;
-    @apply flex flex-col justify-center items-center;
+    @apply flex flex-col md:flex-row justify-center items-center;
     @apply h-[calc(100vh-74px)] max-md:min-h-[650px];
     @apply pt-8;
 
@@ -78,7 +83,6 @@
 
     /* at md, switch to horizontal alignment of the two segments */
     @media screen(md) {
-      @apply flex-row;
       @apply pt-0;
 
       .hero-image,
