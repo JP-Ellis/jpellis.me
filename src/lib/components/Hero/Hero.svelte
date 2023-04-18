@@ -15,112 +15,38 @@
   ];
 </script>
 
-<div class="hero">
-  <div class="hero-image">
-    <Img class="headshot" src="{headshot}" alt="Joshua Ellis" />
-    <Img class="portrait" src="{portrait}" alt="Joshua Ellis" />
+<div
+  class="container mx-auto flex flex-col md:flex-row justify-center items-center h-[calc(100vh-74px)] max-md:min-h-[650px]"
+>
+  <div
+    class="flex flex-col items-center justify-center h-1/2 md:h-full md:w-1/2 p-8 lg:p-0 overflow-clip lg:justify-between lg:before:content-['']"
+  >
+    <Img
+      class="lg:hidden aspect-square rounded-full max-w-[30ch]"
+      src="{headshot}"
+      alt="Joshua Ellis"
+    />
+    <Img
+      class="max-lg:hidden mx-auto object-container"
+      src="{portrait}"
+      alt="Joshua Ellis"
+    />
   </div>
-  <div class="hero-text">
+  <div
+    class="flex flex-col items-center justify-center h-1/2 p-8 md:h-full md:w-1/2"
+  >
     <div>
-      <h1>Joshua <strong style="font-variant: small-caps;">Ellis</strong></h1>
+      <h1 class="pb-4">
+        Joshua <strong style="font-variant: small-caps;">Ellis</strong>
+      </h1>
       <ul class="list-inside">
         {#each descriptions as { icon, text }}
-          <li>
-            <Icon src="{icon}" />{text}
+          <li class="my-2 flex items-center text-xl md:text-2xl">
+            <Icon src="{icon}" class="mr-3 w-4 md:w-6" />{text}
           </li>
         {/each}
       </ul>
     </div>
   </div>
 </div>
-<hr class="divider" />
-
-<style lang="postcss">
-  hr {
-    @apply border-b-4 border-primary-500;
-  }
-
-  .hero {
-    /* By default, use the full screen of the page, but prevent really short
-     * screens from clipping the content.
-     */
-    @apply container mx-auto;
-    @apply flex flex-col md:flex-row justify-center items-center;
-    @apply h-[calc(100vh-74px)] max-md:min-h-[650px];
-    @apply pt-8;
-
-    /* Vertically align the image and text on the page (either within the
-     * top/bottom half, or side-by-side)
-     */
-    .hero-image,
-    .hero-text {
-      @apply relative;
-      @apply flex flex-col items-center justify-center;
-      @apply h-1/2;
-    }
-
-    /* For the image container, avoid any overflow of the image.
-     */
-    .hero-image {
-      @apply p-8;
-      @apply overflow-clip;
-    }
-
-    .hero-text {
-      @apply min-w-[25ch];
-    }
-
-    :global(.headshot) {
-      @apply mx-auto;
-      @apply aspect-square rounded-full;
-      @apply max-w-[30ch];
-    }
-
-    :global(.portrait) {
-      @apply mx-auto;
-      @apply hidden object-contain;
-    }
-
-    /* at md, switch to horizontal alignment of the two segments */
-    @media screen(md) {
-      @apply pt-0;
-
-      .hero-image,
-      .hero-text {
-        @apply w-1/2 h-full;
-      }
-    }
-
-    /* at lg, hide the headshot and show the portrait instead */
-    @media screen(lg) {
-      .hero-image {
-        @apply p-0;
-        @apply justify-between before:content-[''];
-      }
-
-      :global(.headshot) {
-        @apply hidden;
-      }
-
-      :global(.portrait) {
-        @apply block;
-      }
-    }
-  }
-
-  h1 {
-    @apply pb-4;
-  }
-  ul {
-    li {
-      @apply my-2;
-      @apply flex items-center;
-      @apply text-xl md:text-2xl;
-
-      :global(svg) {
-        @apply mr-3;
-        @apply w-4 md:w-6;
-      }
-    }
-  }
-</style>
+<hr class="divider border-b-4 border-primary-500" />

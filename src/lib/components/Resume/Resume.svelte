@@ -11,8 +11,12 @@ Section component to display each section of the resume.
 </script>
 
 <!-- Resume -->
-<div id="resume">
-  <h1>Resume</h1>
+<section id="resume" class="flex flex-col justify-center">
+  <h1
+    class="p-6 mb-12 text-3xl md:text-5xl font-bold text-center shadow-xl bg-surface-100-800-token"
+  >
+    Resume
+  </h1>
 
   <Organization title="KPMG" location="Melbourne, Australia">
     <KPMGLogo slot="logo" />
@@ -192,17 +196,4 @@ Section component to display each section of the resume.
       </ul>
     </Position>
   </Organization>
-</div>
-
-<style lang="postcss">
-  #resume {
-    @apply flex flex-col justify-center;
-
-    h1 {
-      @apply p-6 mb-12;
-      @apply text-3xl md:text-5xl font-bold text-center;
-      @apply shadow-xl;
-      @apply bg-surface-100-800-token;
-    }
-  }
-</style>
+</section>

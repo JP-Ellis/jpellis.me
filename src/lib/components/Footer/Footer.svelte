@@ -7,19 +7,15 @@
       target="_blank"
       rel="license noopener noreferrer"
       class="unstyled"
-      >CC BY 4.0<img alt="CC" src="/images/copyright/cc.svg" /><img
+      >CC BY 4.0<img
+        alt="CC"
+        src="/images/copyright/cc.svg"
+        class="inline-block h-4 ml-1 align-bottom"
+      /><img
         alt="BY"
         src="/images/copyright/by.svg"
+        class="inline-block h-4 ml-1 align-bottom"
       />
     </a>
   </span>
 </div>
-
-<style lang="postcss">
-  img {
-    display: inline-block;
-    height: 1rem;
-    margin-left: 0.2rem;
-    vertical-align: text-bottom;
-  }
-</style>
