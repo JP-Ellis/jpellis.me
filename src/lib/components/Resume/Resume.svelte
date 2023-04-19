@@ -33,17 +33,17 @@ Section component to display each section of the resume.
         'data engineering',
       ]}"
     >
-      <p class="unstyled text-lg md:text-xl">
+      <p class="unstyled">
         I have successfully delivered multiple complex projects in various
         industries. These projects involved:
       </p>
-      <ul class="list-outside list-disc pl-8 text-lg md:text-xl">
+      <ul class="list-outside list-disc pl-8">
         <li class="my-4">
           Deploying <strong>machine learning infrastructure</strong> within a
           tightly regulated environment, processing
           <strong>highly confidential</strong> information, while working closely
           with stakeholders across cloud infrastructure, security, and the data science
-          team to ensure a good outcome. This project has also been recognized for
+          teams to ensure a good outcome. This project has also been recognized for
           pioneering the deployment of machine learning infrastructure within KPMG
           globally.
         </li>
@@ -56,24 +56,24 @@ Section component to display each section of the resume.
           taking Excel and API data through to a curated layer.
         </li>
         <li class="my-4">
-          Conducting a thorough <strong>review</strong> of a university's
-          Integration Capabilities Uplift program’s platform, with a focus on
-          the business need, clarity and scope driving the implementation, the
-          capabilities being provided by the platform, and the suitability of
-          the technology design. Our team provided the client with
-          <strong>insightful recommendations</strong> as to the program's strengths
-          and areas of improvement.
+          Conducting a <strong>thorough review</strong> of a university's Integration
+          Capabilities Uplift program's platform, with a focus on the business need,
+          clarity and scope driving the implementation, the capabilities being provided
+          by the platform, and the suitability of the technology design. Our team
+          provided the client with insightful recommendations as to the program's
+          strengths and areas of improvement.
         </li>
         <li class="my-5">
           Acting as the <strong>Technology Lead</strong> and
-          <strong>Scrum Master</strong> for a foundational and modular Azure Data
-          Platform accelerator and a configuration-driven orchestrator framework
-          for Data Factory, building upon the former accelerator. I also developed
-          a modular and extensible Python framework to facilitate the deployment,
+          <strong>Scrum Master</strong> for a foundational and modular
+          <strong>Azure Data Platform accelerator</strong> and a
+          <strong>configuration-driven orchestrator</strong>
+          framework for Data Factory, building upon the former accelerator. I also
+          developed a modular and extensible Python framework to facilitate the deployment,
           configuration, and development of the Azure Data Platform accelerator.
         </li>
       </ul>
-      <p class="unstyled text-lg md:text-xl">
+      <p class="unstyled">
         Overall, I have a strong track record of <strong
           >delivering innovative and effective technology solutions</strong
         > while collaborating closely with stakeholders to ensure successful outcomes.
@@ -100,7 +100,7 @@ Section component to display each section of the resume.
         'neutrino mass',
       ]}"
     >
-      <p class="unstyled text-lg md:text-xl">
+      <p class="unstyled">
         Bubbling brooks of blueberry juice cascade down the lush mountainside,
         their sweet scent mingling with the crisp, clean air. The sun sets
         slowly over the horizon, casting long shadows across the verdant
@@ -122,7 +122,7 @@ Section component to display each section of the resume.
         'neutrino mass',
       ]}"
     >
-      <p class="unstyled text-lg md:text-xl">
+      <p class="unstyled">
         A flock of rainbow-colored birds flit through the sky, their feathers
         catching the light like shards of glass. They sing a haunting melody,
         their voices echoing off the walls of the ancient ruins below. The ruins
@@ -143,7 +143,7 @@ Section component to display each section of the resume.
         'neutrino mass',
       ]}"
     >
-      <p class="unstyled text-lg md:text-xl">
+      <p class="unstyled">
         In the depths of the ocean, schools of luminous fish dart through the
         murky depths. Their scales shimmer with an otherworldly glow, their
         movements hypnotic and mesmerizing. Around them, the water pulses with a
