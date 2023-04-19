@@ -16,6 +16,7 @@
   const popupSettings = {
     event: "click",
     target: "linksPopup",
+    placement: "bottom-end",
   } as PopupSettings;
 </script>
 
