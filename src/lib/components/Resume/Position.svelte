@@ -23,7 +23,7 @@ paragraph and lists automatically.
   /* eslint-disable */
 </script>
 
-<div class="flex flex-col ml-4 mb-8">
+<div class="flex flex-col m-4 mb-8">
   <div class="flex flex-col md:flex-row md:justify-between pb-4">
     <div class="flex flex-col font-bold">
       <h2>{title}</h2>
