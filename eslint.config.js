@@ -20,6 +20,20 @@ export default [
   // JavaScript
   {
     files: ["**/*.js", "**/*.cjs"],
+    ignores: ["svelte.config.js"],
+    plugins: {
+      prettier: prettierPlugin,
+    },
+  },
+
+  // Node scripts
+  {
+    files: ["svelte.config.js"],
+    languageOptions: {
+      globals: {
+        process: "readonly",
+      },
+    },
     plugins: {
       prettier: prettierPlugin,
     },
