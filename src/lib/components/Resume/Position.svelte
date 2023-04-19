@@ -31,7 +31,7 @@ paragraph and lists automatically.
         <h3>{subtitle}</h3>
       {/if}
     </div>
-    <div class="flex flex-col md:text-right">
+    <div class="flex flex-col grow-0 md:text-right">
       <h4>
         {#if end}
           {end.toLocaleDateString("en-US", { year: "numeric", month: "short" })}
@@ -45,7 +45,7 @@ paragraph and lists automatically.
     </div>
   </div>
 
-  <div class="flex flex-col text-justify">
+  <div class="flex flex-col lg:text-justify">
     <slot />
 
     <div
