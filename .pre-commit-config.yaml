@@ -39,3 +39,10 @@ repos:
         entry: pnpm exec eslint
         language: system
         files: \.(js|cjs|ts|cts|svelte)$
+
+      - id: pnpm-lock
+        name: pnpm-lock
+        entry: pnpm install --lockfile-only
+        language: system
+        files: ^(package\.json|pnpm-lock\.yaml)$
+        pass_filenames: false
