@@ -26,7 +26,7 @@ paragraph and lists automatically.
   <div
     class="flex flex-col justify-between p-4 md:w-1/4 md:min-w-[18rem] md:max-w-lg md:h-full md:sticky md:top-0"
   >
-    <div class="title">
+    <div>
       <h2>{title}</h2>
       <h3>{location}</h3>
     </div>
@@ -40,7 +40,7 @@ paragraph and lists automatically.
     which consists of a list of positions held at the organization.
   -->
   <div
-    class="flex flex-col border-l-2 border-surface-300-600-token md:text-xl md:max-w-[65ch]"
+    class="flex flex-col border-l-2 border-surface-300-600-token md:text-xl md:max-w-[70ch]"
   >
     <slot />
   </div>

@@ -25,7 +25,7 @@ paragraph and lists automatically.
 
 <div class="flex flex-col ml-4 mb-8">
   <div class="flex flex-col md:flex-row md:justify-between pb-4">
-    <div class="flex flex-col">
+    <div class="flex flex-col font-bold">
       <h2>{title}</h2>
       {#if subtitle}
         <h3>{subtitle}</h3>
@@ -45,7 +45,7 @@ paragraph and lists automatically.
     </div>
   </div>
 
-  <div class="flex flex-col">
+  <div class="flex flex-col text-justify">
     <slot />
 
     <div

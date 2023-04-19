@@ -33,98 +33,51 @@ Section component to display each section of the resume.
         'data engineering',
       ]}"
     >
-      <ul>
-        <li>
-          <ul>
-            <li>
-              Designed and implemented a data analytics platform from scratch,
-              using Azure (including Function App and Data Factory) and
-              Snowflake
-            </li>
-            <li>
-              Integrated CI/CD workflows in Azure DevOps to automate the
-              deployment of documentation and Bicep infrastructure-as-code.
-            </li>
-            <li>
-              Implemented some examplar data pipelines as starting point for the
-              client, taking Excel and API data through to the curated layer on
-              Snowfkale while ensuring there is an audit trail.
-            </li>
-          </ul>
+      <p class="unstyled text-lg md:text-xl">
+        I have successfully delivered multiple complex projects in various
+        industries. These projects involved:
+      </p>
+      <ul class="list-outside list-disc pl-8 text-lg md:text-xl">
+        <li class="my-4">
+          Deploying <strong>machine learning infrastructure</strong> within a
+          tightly regulated environment, processing
+          <strong>highly confidential</strong> information, while working closely
+          with stakeholders across cloud infrastructure, security, and the data science
+          team to ensure a good outcome. This project has also been recognized for
+          pioneering the deployment of machine learning infrastructure within KPMG
+          globally.
         </li>
-        <li>
-          <ul>
-            <li>
-              Conducted a thorough review of a client's program to update its
-              integration capabilities.
-            </li>
-            <li>
-              The review focused on three critical aspects: the business need,
-              clairty and scope driving the implementation; the capabilities
-              being provided by the platform; and the suitability of the
-              technology design.
-            </li>
-            <li>
-              Provided the client with insightful recommendations as to the
-              program's strengths and areas for improvement.
-            </li>
-          </ul>
+        <li class="my-4">
+          Implementing a <strong>data analytics platform</strong> from scratch,
+          using Azure and Snowflake, and integrating
+          <strong>CI/CD workflows</strong> in Azure DevOps to automate deployment
+          of documentation and Bicep infrastructure-as-code. This project included
+          implementing two model data pipelines as starting points for the client,
+          taking Excel and API data through to a curated layer.
         </li>
-        <li>
-          <ul>
-            <li>
-              Technology lead and scrum aster responsible for driving the
-              development of a foundational and modular Azure Data PLatform
-              accelerator as well as a configuration-driven orchestrator
-              framework for Data Factory.
-            </li>
-            <li>
-              Developed a modular and extensible Python framework to facilitate
-              the deployment, configuration and evelopment of the Azure Data
-              Platform accelerator.
-            </li>
-            <li>
-              The accelerator has now been successfully used in a number of
-              client engagments leading to a faster delivery to the clients, a
-              reduction in the cost of delivery and a higher quality of the
-              solution.
-            </li>
-          </ul>
+        <li class="my-4">
+          Conducting a thorough <strong>review</strong> of a university's
+          Integration Capabilities Uplift program’s platform, with a focus on
+          the business need, clarity and scope driving the implementation, the
+          capabilities being provided by the platform, and the suitability of
+          the technology design. Our team provided the client with
+          <strong>insightful recommendations</strong> as to the program's strengths
+          and areas of improvement.
         </li>
-        <li>
-          <strong>Tech lead</strong> and <strong>scrum master</strong> on an
-          internal project using <strong>Bicep infrastructure-as-code</strong>
-          to facilitate the deployment of
-          <strong>Azure data infrastructure</strong>. This project was
-          successfully used in a client engagements both within Australia and
-          overseas allowing for a much faster delivery to the clients.
-        </li>
-        <li>
-          Pioneered the deployment of <strong
-            >machine learning infrastructure</strong
-          > within KPMG globally. Worked within a tightly regulated environment to
-          ensure the safety of highly confidential client data.
-        </li>
-        <li>
-          Solely responsible to the deployment and configuration of
-          <strong>Azure</strong> infrastructure for a
-          <strong>data analytics platform</strong>. The platform was responsible
-          for ingesting data from a number of sources (from Excel to APIs), and
-          processed the data through a several layers of curation ultimately
-          pushing it into a Snowflake database. Implemented a sample of data
-          pipelines showcasing the new platform for the client, and functioning
-          as a reference for them to build their own pipelines.
-        </li>
-        <li>
-          Piloted the use of a new <strong
-            >developer standard operating environment</strong
-          >, paving the way for an
-          <strong>improved developer experience</strong> within KPMG Australia and
-          hopefully globally. Engaged with a number of stakeholders to ensure a mutually
-          satisfactory outcome that ensures a good developer experience while assuring
-          KPMG's security and compliance requirements are met.
+        <li class="my-5">
+          Acting as the <strong>Technology Lead</strong> and
+          <strong>Scrum Master</strong> for a foundational and modular Azure Data
+          Platform accelerator and a configuration-driven orchestrator framework
+          for Data Factory, building upon the former accelerator. I also developed
+          a modular and extensible Python framework to facilitate the deployment,
+          configuration, and development of the Azure Data Platform accelerator.
         </li>
       </ul>
+      <p class="unstyled text-lg md:text-xl">
+        Overall, I have a strong track record of <strong
+          >delivering innovative and effective technology solutions</strong
+        > while collaborating closely with stakeholders to ensure successful outcomes.
+      </p>
     </Position>
   </Organization>
 
@@ -147,13 +100,15 @@ Section component to display each section of the resume.
         'neutrino mass',
       ]}"
     >
-      <ul>
-        <li>
-          Worked on an internal project creating a library of reusable Azure
-          bicep templates to quickly deploy infrastructure, specifically
-          targeting data and machine learning related services.
-        </li>
-      </ul>
+      <p class="unstyled text-lg md:text-xl">
+        Bubbling brooks of blueberry juice cascade down the lush mountainside,
+        their sweet scent mingling with the crisp, clean air. The sun sets
+        slowly over the horizon, casting long shadows across the verdant
+        landscape. As the world around us fades into a dreamlike haze, we are
+        left with nothing but the sound of our own breathing, the rhythm of our
+        hearts beating as one. It is a moment frozen in time, a memory that will
+        last forever.
+      </p>
     </Position>
 
     <Position
@@ -167,13 +122,14 @@ Section component to display each section of the resume.
         'neutrino mass',
       ]}"
     >
-      <ul>
-        <li>
-          Worked on an internal project creating a library of reusable Azure
-          bicep templates to quickly deploy infrastructure, specifically
-          targeting data and machine learning related services.
-        </li>
-      </ul>
+      <p class="unstyled text-lg md:text-xl">
+        A flock of rainbow-colored birds flit through the sky, their feathers
+        catching the light like shards of glass. They sing a haunting melody,
+        their voices echoing off the walls of the ancient ruins below. The ruins
+        themselves are a testament to the power of human ingenuity, a
+        labyrinthine maze of crumbling stone and twisted metal. It is a place of
+        wonder and mystery, a world beyond our understanding.
+      </p>
     </Position>
 
     <Position
@@ -187,13 +143,14 @@ Section component to display each section of the resume.
         'neutrino mass',
       ]}"
     >
-      <ul>
-        <li>
-          Worked on an internal project creating a library of reusable Azure
-          bicep templates to quickly deploy infrastructure, specifically
-          targeting data and machine learning related services.
-        </li>
-      </ul>
+      <p class="unstyled text-lg md:text-xl">
+        In the depths of the ocean, schools of luminous fish dart through the
+        murky depths. Their scales shimmer with an otherworldly glow, their
+        movements hypnotic and mesmerizing. Around them, the water pulses with a
+        strange energy, a force that seems to emanate from the very heart of the
+        earth. It is a world of magic and mystery, a place where anything is
+        possible.
+      </p>
     </Position>
   </Organization>
 </section>
