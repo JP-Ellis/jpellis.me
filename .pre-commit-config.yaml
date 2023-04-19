@@ -29,20 +29,19 @@ repos:
     hooks:
       - id: prettier
         name: prettier
-        entry: pnpm exec prettier --plugin-search-dir=. --write --ignore-unknown
+        entry: npx prettier --plugin-search-dir=. --write --ignore-unknown
         language: system
         types: [text]
-        exclude: ^pnpm-lock.yaml$
 
       - id: eslint
         name: eslint
-        entry: pnpm exec eslint
+        entry: npx eslint
         language: system
         files: \.(js|cjs|ts|cts|svelte)$
 
-      - id: pnpm-lock
-        name: pnpm-lock
-        entry: pnpm install --lockfile-only
+      - id: npm-lock
+        name: npm-lock
+        entry: npm install --package-lock-only
         language: system
-        files: ^(package\.json|pnpm-lock\.yaml)$
+        files: ^(package\.json|package-lock\.yaml)$
         pass_filenames: false

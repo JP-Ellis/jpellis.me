@@ -25,7 +25,7 @@
     "@steeze-ui/simple-icons": "^1.4",
     "@steeze-ui/svelte-icon": "^1.3",
     "@steeze-ui/tabler-icons": "^2.0",
-    "@sveltejs/adapter-auto": "^2.0",
+    "@sveltejs/adapter-static": "^2.0",
     "@sveltejs/kit": "^1.15",
     "@tailwindcss/container-queries": "^0.1",
     "@tailwindcss/forms": "^0.5",
