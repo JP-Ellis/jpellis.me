@@ -36,7 +36,7 @@
     "@typescript-eslint/parser": "^5.58",
     "@zerodevx/svelte-img": "^1.2",
     "autoprefixer": "^10.4",
-    "eslint": "^8.38",
+    "eslint": "^8.39",
     "eslint-config-prettier": "^8.8",
     "eslint-plugin-prettier": "^4.2",
     "eslint-plugin-svelte": "^2.26",
