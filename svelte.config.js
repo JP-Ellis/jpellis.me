@@ -1,10 +1,10 @@
-import adapter from "@sveltejs/adapter-static";
+import adapter from "@sveltejs/adapter-cloudflare";
 import { vitePreprocess } from "@sveltejs/kit/vite";
 
-const dev = process.argv.includes("dev");
-if (dev) {
-  process.env.BASE_PATH = "";
-}
+// const dev = process.argv.includes("dev");
+// if (dev) {
+//   process.env.BASE_PATH = "";
+// }
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -13,16 +13,24 @@ const config = {
   preprocess: [vitePreprocess()],
 
   kit: {
+    // Cloudflare
     adapter: adapter({
-      pages: "build",
-      assets: "build",
-      fallback: null,
-      precompress: true,
-      strict: true,
+      routes: {
+        include: ["/*"],
+        exclude: ["<all>"],
+      },
     }),
-    paths: {
-      base: process.env.BASE_PATH,
-    },
+    // Static
+    // adapter: adapter({
+    //   pages: "build",
+    //   assets: "build",
+    //   fallback: null,
+    //   precompress: true,
+    //   strict: true,
+    // }),
+    // paths: {
+    //   base: process.env.BASE_PATH,
+    // },
   },
 };
 
