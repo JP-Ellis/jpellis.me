@@ -23,8 +23,8 @@
 <AppBar shadow="shadow-xl">
   <!-- Lead Section -->
   <svelte:fragment slot="lead">
-    <div class="flex items-center space-x-4">
-      <!-- Headshot -->
+    <!-- Headshot -->
+    <a href="/" class="flex items-center space-x-4">
       <Img
         class="rounded-full aspect-square w-10"
         src="{headshot}"
@@ -35,7 +35,7 @@
         Joshua
         <strong class="text-xl" style="font-variant: small-caps">Ellis</strong>
       </span>
-    </div>
+    </a>
   </svelte:fragment>
 
   <!-- Trail Section -->
