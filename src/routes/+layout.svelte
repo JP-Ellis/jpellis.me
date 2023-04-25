@@ -16,6 +16,7 @@
   import Footer from "$lib/components/Footer/Footer.svelte";
   import "$lib/styles/global.postcss";
 
+  // Popup shared storage settings
   storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 </script>
 
