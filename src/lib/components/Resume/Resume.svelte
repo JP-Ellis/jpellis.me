@@ -101,13 +101,31 @@ Section component to display each section of the resume.
       ]}"
     >
       <p class="unstyled">
-        Bubbling brooks of blueberry juice cascade down the lush mountainside,
-        their sweet scent mingling with the crisp, clean air. The sun sets
-        slowly over the horizon, casting long shadows across the verdant
-        landscape. As the world around us fades into a dreamlike haze, we are
-        left with nothing but the sound of our own breathing, the rhythm of our
-        hearts beating as one. It is a moment frozen in time, a memory that will
-        last forever.
+        Conducted research on an <strong
+          >E6-inspired seesaw neutrino mass</strong
+        >
+        model under the guidance of Prof. Volkas, exploring the relevant parameter
+        space through the
+        <strong>generation and visualization of large data sets</strong>.
+      </p>
+      <p class="unstyled">
+        Developed a new computational tool to solve <strong
+          >highly coupled Boltzmann differential equations</strong
+        >
+        involving hundreds of terms and rates spanning multiple orders of magnitude.
+        This tool allows for the calculation of the evolution of particle densities
+        and asymmetries in the early universe, and the resulting matter--anti-matter
+        asymmetry. This was developed in
+        <strong>Rust</strong> and featured novel integration quadratures to
+        efficiently evaluate certain integrals numerically, and required
+        extensive analysis and optimization of
+        <strong>numerical algorithms</strong> to ensure results were both accurate
+        and computable within a reasonable timeframe.
+      </p>
+      <p class="unstyled">
+        Utilized the above-mentioned computational tool to investigate the
+        validity of common simplifying assumptions and explore previously
+        difficult-to-reach parameter space in two-Higgs doublet models.
       </p>
     </Position>
 
