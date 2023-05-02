@@ -61,6 +61,7 @@ export default [
       ...typescriptPlugin.configs.recommended.rules,
       ...typescriptPlugin.configs["recommended-requiring-type-checking"].rules,
       ...typescriptPlugin.configs.strict.rules,
+      "func-style": ["error", "declaration", { allowArrowFunctions: true }],
     },
   },
 
