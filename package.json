@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@floating-ui/dom": "^1.2",
-    "@playwright/test": "^1.32",
+    "@playwright/test": "^1.33",
     "@poppanator/sveltekit-svg": "^3.0",
     "@prettier/plugin-xml": "^2.2",
     "@skeletonlabs/skeleton": "^1.2",
