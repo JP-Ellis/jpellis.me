@@ -1,7 +1,7 @@
 import { redirect } from "@sveltejs/kit";
 
 /**
- * Load function that throws a redirect error with status 302 and redirects to the root path.
+ * Load function that throws a redirect error with status 301 and redirects to the root path.
  *
  * @throws {Error} If the function is called.
  *
