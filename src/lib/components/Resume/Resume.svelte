@@ -33,51 +33,54 @@ Section component to display each section of the resume.
         'data engineering',
       ]}"
     >
-      <p class="unstyled">
-        I have successfully delivered multiple complex projects in various
-        industries. These projects involved:
-      </p>
-      <ul class="list-outside list-disc pl-8">
-        <li class="my-4">
-          Deploying <strong>machine learning infrastructure</strong> within a
-          tightly regulated environment, processing
-          <strong>highly confidential</strong> information, while working closely
-          with stakeholders across cloud infrastructure, security, and the data science
-          teams to ensure a good outcome. This project has also been recognized for
-          pioneering the deployment of machine learning infrastructure within KPMG
-          globally.
-        </li>
-        <li class="my-4">
-          Implementing a <strong>data analytics platform</strong> from scratch,
-          using Azure and Snowflake, and integrating
-          <strong>CI/CD workflows</strong> in Azure DevOps to automate deployment
-          of documentation and Bicep infrastructure-as-code. This project included
-          implementing two model data pipelines as starting points for the client,
-          taking Excel and API data through to a curated layer.
-        </li>
-        <li class="my-4">
-          Conducting a <strong>thorough review</strong> of a university's Integration
-          Capabilities Uplift program's platform, with a focus on the business need,
-          clarity and scope driving the implementation, the capabilities being provided
-          by the platform, and the suitability of the technology design. Our team
-          provided the client with insightful recommendations as to the program's
-          strengths and areas of improvement.
-        </li>
-        <li class="my-5">
-          Acting as the <strong>Technology Lead</strong> and
-          <strong>Scrum Master</strong> for a foundational and modular
-          <strong>Azure Data Platform accelerator</strong> and a
-          <strong>configuration-driven orchestrator</strong>
-          framework for Data Factory, building upon the former accelerator. I also
-          developed a modular and extensible Python framework to facilitate the deployment,
-          configuration, and development of the Azure Data Platform accelerator.
-        </li>
-      </ul>
-      <p class="unstyled">
-        Overall, I have a strong track record of <strong
-          >delivering innovative and effective technology solutions</strong
-        > while collaborating closely with stakeholders to ensure successful outcomes.
-      </p>
+      <div class="flex flex-col space-y-4">
+        <p class="unstyled">
+          I have successfully delivered multiple complex projects in various
+          industries. These projects involved:
+        </p>
+        <ul class="list-outside list-disc pl-8 flex flex-col space-y-4">
+          <li>
+            Deploying <strong>machine learning infrastructure</strong> within a
+            tightly regulated environment, processing
+            <strong>highly confidential</strong> information, while working closely
+            with stakeholders across cloud infrastructure, security, and the data
+            science teams to ensure a good outcome. This project has also been recognized
+            for pioneering the deployment of machine learning infrastructure within
+            KPMG globally.
+          </li>
+          <li>
+            Implementing a <strong>data analytics platform</strong> from
+            scratch, using Azure and Snowflake, and integrating
+            <strong>CI/CD workflows</strong> in Azure DevOps to automate deployment
+            of documentation and Bicep infrastructure-as-code. This project included
+            implementing two model data pipelines as starting points for the client,
+            taking Excel and API data through to a curated layer.
+          </li>
+          <li>
+            Conducting a <strong>thorough review</strong> of a university's Integration
+            Capabilities Uplift program's platform, with a focus on the business
+            need, clarity and scope driving the implementation, the capabilities
+            being provided by the platform, and the suitability of the technology
+            design. Our team provided the client with insightful recommendations
+            as to the program's strengths and areas of improvement.
+          </li>
+          <li>
+            Acting as the <strong>Technology Lead</strong> and
+            <strong>Scrum Master</strong> for a foundational and modular
+            <strong>Azure Data Platform accelerator</strong> and a
+            <strong>configuration-driven orchestrator</strong>
+            framework for Data Factory, building upon the former accelerator. I also
+            developed a modular and extensible Python framework to facilitate the
+            deployment, configuration, and development of the Azure Data Platform
+            accelerator.
+          </li>
+        </ul>
+        <p class="unstyled">
+          Overall, I have a strong track record of <strong
+            >delivering innovative and effective technology solutions</strong
+          > while collaborating closely with stakeholders to ensure successful outcomes.
+        </p>
+      </div>
     </Position>
   </Organization>
 
@@ -100,33 +103,35 @@ Section component to display each section of the resume.
         'neutrino mass',
       ]}"
     >
-      <p class="unstyled">
-        Conducted research on an <strong
-          >E6-inspired seesaw neutrino mass</strong
-        >
-        model under the guidance of Prof. Volkas, exploring the relevant parameter
-        space through the
-        <strong>generation and visualization of large data sets</strong>.
-      </p>
-      <p class="unstyled">
-        Developed a new computational tool to solve <strong
-          >highly coupled Boltzmann differential equations</strong
-        >
-        involving hundreds of terms and rates spanning multiple orders of magnitude.
-        This tool allows for the calculation of the evolution of particle densities
-        and asymmetries in the early universe, and the resulting matter--anti-matter
-        asymmetry. This was developed in
-        <strong>Rust</strong> and featured novel integration quadratures to
-        efficiently evaluate certain integrals numerically, and required
-        extensive analysis and optimization of
-        <strong>numerical algorithms</strong> to ensure results were both accurate
-        and computable within a reasonable timeframe.
-      </p>
-      <p class="unstyled">
-        Utilized the above-mentioned computational tool to investigate the
-        validity of common simplifying assumptions and explore previously
-        difficult-to-reach parameter space in two-Higgs doublet models.
-      </p>
+      <div class="flex flex-col space-y-4">
+        <p class="unstyled">
+          Conducted research on an <strong
+            >E6-inspired seesaw neutrino mass</strong
+          >
+          model under the guidance of Prof. Volkas, exploring the relevant parameter
+          space through the
+          <strong>generation and visualization of large data sets</strong>.
+        </p>
+        <p class="unstyled">
+          Developed a new computational tool to solve <strong
+            >highly coupled Boltzmann differential equations</strong
+          >
+          involving hundreds of terms and rates spanning multiple orders of magnitude.
+          This tool allows for the calculation of the evolution of particle densities
+          and asymmetries in the early universe, and the resulting matter--anti-matter
+          asymmetry. This was developed in
+          <strong>Rust</strong> and featured novel integration quadratures to
+          efficiently evaluate certain integrals numerically, and required
+          extensive analysis and optimization of
+          <strong>numerical algorithms</strong> to ensure results were both accurate
+          and computable within a reasonable timeframe.
+        </p>
+        <p class="unstyled">
+          Utilized the above-mentioned computational tool to investigate the
+          validity of common simplifying assumptions and explore previously
+          difficult-to-reach parameter space in two-Higgs doublet models.
+        </p>
+      </div>
     </Position>
 
     <Position
