@@ -28,7 +28,7 @@ paragraph and lists automatically.
   >
     <div>
       <h2>{title}</h2>
-      <h3>{location}</h3>
+      <span class="text-lg md:text-xl">{location}</span>
     </div>
     <div class="logo p-6 w-full max-w-[15rem] max-h-[15rem] self-center">
       <slot name="logo" />
@@ -40,7 +40,7 @@ paragraph and lists automatically.
     which consists of a list of positions held at the organization.
   -->
   <div
-    class="flex flex-col border-l-2 border-surface-300-600-token md:text-xl md:max-w-[70ch]"
+    class="flex flex-col md:border-l-2 md:border-surface-300-600-token md:text-xl md:max-w-[70ch]"
   >
     <slot />
   </div>
