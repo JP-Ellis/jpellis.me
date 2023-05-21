@@ -93,7 +93,7 @@ Section component to display each section of the resume.
     <Position
       title="PhD Candidate"
       subtitle="Theoretical Particle Physics"
-      start="{new Date('2018-01-01')}"
+      start="{new Date('2017-01-01')}"
       end="{new Date('2022-06-24')}"
       keywords="{[
         'theoretical particle physics',
@@ -137,43 +137,60 @@ Section component to display each section of the resume.
     <Position
       title="Masters of Science"
       subtitle="Theoretical Particle Physics"
-      start="{new Date('2016-01-01')}"
-      end="{new Date('2017-11-30')}"
+      start="{new Date('2015-02-01')}"
+      end="{new Date('2016-12-30')}"
       keywords="{[
         'theoretical particle physics',
         'leptogenesis',
         'neutrino mass',
       ]}"
     >
-      <p class="unstyled">
-        A flock of rainbow-colored birds flit through the sky, their feathers
-        catching the light like shards of glass. They sing a haunting melody,
-        their voices echoing off the walls of the ancient ruins below. The ruins
-        themselves are a testament to the power of human ingenuity, a
-        labyrinthine maze of crumbling stone and twisted metal. It is a place of
-        wonder and mystery, a world beyond our understanding.
-      </p>
+      <div class="flex flex-col space-y-4">
+        <p class="unstyled">
+          Investigated the phenomenology of an E<sub>6</sub>-inspired seesaw
+          neutrino mass model under the guidance of Prof. Volkas. Explored the
+          relevant parameter space through the generation and visualization of
+          large data sets and constrained the parameter space using experimental
+          data from the LHC and cosmological observations.
+        </p>
+        <p class="unstyled">
+          Completed coursework achieving a 1<sup>st</sup> class honours average.
+        </p>
+        <p class="unstyled">
+          In my spare time, created <strong>TikZ-Feynman</strong>, a
+          <strong>LaTeX</strong> package for drawing Feynman diagrams. This has become
+          widely adopted by the particle physics community, with over 400 citations.
+        </p>
+      </div>
     </Position>
 
     <Position
       title="Bachelor of Science (Physics)"
       subtitle="Diploma in Mathematical Science"
       start="{new Date('2011-02-01')}"
-      end="{new Date('2015-11-30')}"
+      end="{new Date('2014-11-30')}"
       keywords="{[
         'theoretical particle physics',
         'leptogenesis',
         'neutrino mass',
       ]}"
     >
-      <p class="unstyled">
-        In the depths of the ocean, schools of luminous fish dart through the
-        murky depths. Their scales shimmer with an otherworldly glow, their
-        movements hypnotic and mesmerizing. Around them, the water pulses with a
-        strange energy, a force that seems to emanate from the very heart of the
-        earth. It is a world of magic and mystery, a place where anything is
-        possible.
-      </p>
+      <div class="flex flex-col space-y-4">
+        <p class="unstyled">
+          Completed a <strong>major in physics</strong> and concurrent
+          <strong>diploma in mathematica science</strong>
+          with a focus on pure mathematics. Completed coursework achieving a 1<sup
+            >st</sup
+          >
+          class honours average in both and was a recipient of the
+          <strong>Dean's List Award</strong> for my performance.
+        </p>
+        <p class="unstyled">
+          Attended the <strong>CERN summer schhol</strong> in 2013 where I
+          helped developed a <strong>level 1 trigger for the LHC</strong> in C++
+          and ROOT.
+        </p>
+      </div>
     </Position>
   </Organization>
 </section>
