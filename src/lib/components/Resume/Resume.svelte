@@ -34,7 +34,7 @@ Section component to display each section of the resume.
       ]}"
     >
       <div class="flex flex-col space-y-4">
-        <p class="unstyled">
+        <p>
           I have successfully delivered multiple complex projects in various
           industries. These projects involved:
         </p>
@@ -75,7 +75,7 @@ Section component to display each section of the resume.
             accelerator.
           </li>
         </ul>
-        <p class="unstyled">
+        <p>
           Overall, I have a strong track record of <strong
             >delivering innovative and effective technology solutions</strong
           > while collaborating closely with stakeholders to ensure successful outcomes.
@@ -104,7 +104,7 @@ Section component to display each section of the resume.
       ]}"
     >
       <div class="flex flex-col space-y-4">
-        <p class="unstyled">
+        <p>
           Conducted research on an <strong
             >E6-inspired seesaw neutrino mass</strong
           >
@@ -112,7 +112,7 @@ Section component to display each section of the resume.
           space through the
           <strong>generation and visualization of large data sets</strong>.
         </p>
-        <p class="unstyled">
+        <p>
           Developed a new computational tool to solve <strong
             >highly coupled Boltzmann differential equations</strong
           >
@@ -126,7 +126,7 @@ Section component to display each section of the resume.
           <strong>numerical algorithms</strong> to ensure results were both accurate
           and computable within a reasonable timeframe.
         </p>
-        <p class="unstyled">
+        <p>
           Utilized the above-mentioned computational tool to investigate the
           validity of common simplifying assumptions and explore previously
           difficult-to-reach parameter space in two-Higgs doublet models.
@@ -146,17 +146,17 @@ Section component to display each section of the resume.
       ]}"
     >
       <div class="flex flex-col space-y-4">
-        <p class="unstyled">
+        <p>
           Investigated the phenomenology of an E<sub>6</sub>-inspired seesaw
           neutrino mass model under the guidance of Prof. Volkas. Explored the
           relevant parameter space through the generation and visualization of
           large data sets and constrained the parameter space using experimental
           data from the LHC and cosmological observations.
         </p>
-        <p class="unstyled">
+        <p>
           Completed coursework achieving a 1<sup>st</sup> class honours average.
         </p>
-        <p class="unstyled">
+        <p>
           In my spare time, created <strong>TikZ-Feynman</strong>, a
           <strong>LaTeX</strong> package for drawing Feynman diagrams. This has become
           widely adopted by the particle physics community, with over 400 citations.
@@ -176,7 +176,7 @@ Section component to display each section of the resume.
       ]}"
     >
       <div class="flex flex-col space-y-4">
-        <p class="unstyled">
+        <p>
           Completed a <strong>major in physics</strong> and concurrent
           <strong>diploma in mathematica science</strong>
           with a focus on pure mathematics. Completed coursework achieving a 1<sup
@@ -185,7 +185,7 @@ Section component to display each section of the resume.
           class honours average in both and was a recipient of the
           <strong>Dean's List Award</strong> for my performance.
         </p>
-        <p class="unstyled">
+        <p>
           Attended the <strong>CERN summer schhol</strong> in 2013 where I
           helped developed a <strong>level 1 trigger for the LHC</strong> in C++
           and ROOT.

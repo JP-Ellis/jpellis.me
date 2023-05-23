@@ -26,22 +26,22 @@ paragraph and lists automatically.
 <div class="flex flex-col m-4 mb-8">
   <div class="flex flex-col md:flex-row md:justify-between pb-4">
     <div class="flex flex-col font-bold">
-      <h3 class="unstyled text-4xl">{title}</h3>
+      <h3 class="h3 text-xl md:text-2xl">{title}</h3>
       {#if subtitle}
-        <span class="text-xl">{subtitle}</span>
+        <span class="h4">{subtitle}</span>
       {/if}
     </div>
     <div class="flex flex-col grow-0 md:text-right">
-      <div>
+      <div class="h4">
         {#if end}
           {end.toLocaleDateString("en-US", { year: "numeric", month: "short" })}
         {:else}
           {"Present"}
         {/if}
       </div>
-      <h4>
+      <div class="h4">
         {start.toLocaleDateString("en-US", { year: "numeric", month: "short" })}
-      </h4>
+      </div>
     </div>
   </div>
 

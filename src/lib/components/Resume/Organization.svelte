@@ -27,8 +27,8 @@ paragraph and lists automatically.
     class="flex flex-col justify-between p-4 md:w-1/4 md:min-w-[18rem] md:max-w-lg md:h-full md:sticky md:top-0"
   >
     <div>
-      <h2>{title}</h2>
-      <span class="text-lg md:text-xl">{location}</span>
+      <h2 class="h2">{title}</h2>
+      <span class="h3">{location}</span>
     </div>
     <div class="logo p-6 w-full max-w-[15rem] max-h-[15rem] self-center">
       <slot name="logo" />

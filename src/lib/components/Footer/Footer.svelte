@@ -11,7 +11,6 @@
       href="https://creativecommons.org/licenses/by/4.0/"
       target="_blank"
       rel="license noopener noreferrer"
-      class="unstyled"
       >CC BY 4.0 <CC
         role="graphics-symbol"
         class="inline-block w-4 h-4 ml-1 align-bottom"

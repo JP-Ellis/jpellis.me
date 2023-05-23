@@ -11,7 +11,7 @@
     shift,
   } from "@floating-ui/dom";
   import { AppShell, storePopup } from "@skeletonlabs/skeleton";
-  import "@skeletonlabs/skeleton/styles/all.css";
+  import "@skeletonlabs/skeleton/styles/skeleton.css";
 
   import AppBar from "$lib/components/AppBar/AppBar.svelte";
   import Footer from "$lib/components/Footer/Footer.svelte";
