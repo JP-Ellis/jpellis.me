@@ -26,7 +26,6 @@
     "@steeze-ui/svelte-icon": "^1.3",
     "@steeze-ui/tabler-icons": "^2.0",
     "@sveltejs/adapter-cloudflare": "^2.2",
-    "@sveltejs/adapter-static": "^2.0",
     "@sveltejs/kit": "^1.20",
     "@tailwindcss/container-queries": "^0.1",
     "@tailwindcss/forms": "^0.5",
