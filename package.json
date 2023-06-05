@@ -40,7 +40,7 @@
     "eslint": "^8.41",
     "eslint-config-prettier": "^8.8",
     "eslint-plugin-prettier": "^4.2",
-    "eslint-plugin-svelte": "^2.29",
+    "eslint-plugin-svelte": "^2.30",
     "flowbite": "^1.6",
     "flowbite-svelte": "^0.34",
     "postcss": "^8.4",
