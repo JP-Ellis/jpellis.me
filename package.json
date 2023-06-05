@@ -18,7 +18,7 @@
     "@playwright/test": "^1.34",
     "@poppanator/sveltekit-svg": "^3.0",
     "@prettier/plugin-xml": "^2.2",
-    "@skeletonlabs/skeleton": "^1.5",
+    "@skeletonlabs/skeleton": "^1.6",
     "@steeze-ui/heroicons": "^2.2",
     "@steeze-ui/lucide-icons": "^1.0",
     "@steeze-ui/material-design-icons": "^1.0",
