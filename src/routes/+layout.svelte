@@ -10,11 +10,12 @@
     offset,
     shift,
   } from "@floating-ui/dom";
-  import { AppShell, storePopup } from "@skeletonlabs/skeleton";
+  import { AppShell, Drawer, storePopup } from "@skeletonlabs/skeleton";
   import "@skeletonlabs/skeleton/styles/skeleton.css";
 
-  import AppBar from "$lib/components/AppBar/AppBar.svelte";
   import Footer from "$lib/components/Footer/Footer.svelte";
+  import Navbar from "$lib/components/Navbar/Navbar.svelte";
+  import Sidebar from "$lib/components/Sidebar/Sidebar.svelte";
   import "$lib/styles/global.postcss";
 
   // Popup shared storage settings
@@ -74,15 +75,26 @@
   <meta property="og:image:type" content="{meta.image.type}" />
 </svelte:head>
 
+<!-- Overlays -->
+<Drawer class="w-[50%]">
+  <Sidebar class="w-[80px]" />
+</Drawer>
+
 <!-- App Shell -->
 <AppShell>
   <!-- Header -->
   <svelte:fragment slot="header">
-    <AppBar />
+    <Navbar />
   </svelte:fragment>
-  <svelte:fragment slot="sidebarLeft" />
+
+  <!-- Navigation bar (on left) -->
+  <svelte:fragment slot="sidebarLeft">
+    <Sidebar class="hidden lg:grid overflow-hidden" />
+  </svelte:fragment>
+
   <!-- Page Content -->
   <slot />
+
   <!-- Footer -->
   <svelte:fragment slot="pageFooter">
     <Footer />

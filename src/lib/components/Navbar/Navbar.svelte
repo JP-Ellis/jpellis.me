@@ -3,9 +3,10 @@
     AppBar,
     LightSwitch,
     type PopupSettings,
+    drawerStore,
     popup,
   } from "@skeletonlabs/skeleton";
-  import { ChevronDown } from "@steeze-ui/heroicons";
+  import { Bars3, ChevronDown } from "@steeze-ui/heroicons";
   import { Icon } from "@steeze-ui/svelte-icon";
   import Img from "@zerodevx/svelte-img";
 
@@ -23,6 +24,13 @@
 <AppBar shadow="shadow-xl">
   <!-- Lead Section -->
   <svelte:fragment slot="lead">
+    <!-- Sidebar Sandwich -->
+    <button
+      class="flex items-center lg:hidden"
+      on:click="{() => drawerStore.open()}"
+    >
+      <Icon src="{Bars3}" size="lg" class="w-10 mr-8" />
+    </button>
     <!-- Headshot -->
     <a href="/" class="flex items-center space-x-4">
       <Img
