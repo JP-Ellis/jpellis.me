@@ -27,6 +27,7 @@
     <!-- Sidebar Sandwich -->
     <button
       class="flex items-center lg:hidden"
+      aria-label="Open navigation sidebar"
       on:click="{() => drawerStore.open()}"
     >
       <Icon src="{Bars3}" size="lg" class="w-10 mr-8" />
@@ -56,6 +57,7 @@
     <div class="inline-block sm:hidden">
       <button
         class="btn-icon variant-ghost-primary p-2"
+        aria-label="Open social links popup"
         use:popup="{popupSettings}"
       >
         <Icon src="{ChevronDown}" size="lg" width="100%" height="100%" />
