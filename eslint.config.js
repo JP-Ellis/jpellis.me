@@ -52,6 +52,9 @@ export default [
         project: "./tsconfig.json",
         extraFileExtensions: [".svelte"],
       },
+      globals: {
+        process: "readonly",
+      },
     },
     plugins: {
       prettier: prettierPlugin,
@@ -118,6 +121,7 @@ export default [
       "sort-keys": "off",
       "multiline-comment-style": "off",
       "capitalized-comments": "off",
+      "no-continue": "off",
     },
   },
 ];
