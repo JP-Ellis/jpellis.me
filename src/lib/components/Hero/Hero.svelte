@@ -36,7 +36,7 @@
     class="flex flex-col items-center justify-center h-1/2 p-8 md:h-full md:w-1/2"
   >
     <div>
-      <h1 class="pb-4">
+      <h1 class="h1 pb-4">
         Joshua <strong style="font-variant: small-caps;">Ellis</strong>
       </h1>
       <ul class="list-inside">
