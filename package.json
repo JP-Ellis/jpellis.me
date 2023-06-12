@@ -13,21 +13,25 @@
     "lint": "eslint .",
     "format": "prettier --plugin-search-dir . --write ."
   },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=8"
+  },
   "devDependencies": {
-    "@floating-ui/dom": "^1.2",
-    "@octokit/rest": "^19.0.11",
-    "@octokit/types": "^9.3.1",
-    "@playwright/test": "^1.34",
+    "@floating-ui/dom": "^1.3",
+    "@octokit/rest": "^19.0",
+    "@octokit/types": "^9.3",
+    "@playwright/test": "^1.35",
     "@poppanator/sveltekit-svg": "^3.0",
     "@prettier/plugin-xml": "^2.2",
-    "@skeletonlabs/skeleton": "^1.6",
+    "@skeletonlabs/skeleton": "^1.7",
     "@steeze-ui/heroicons": "^2.2",
     "@steeze-ui/lucide-icons": "^1.0",
     "@steeze-ui/material-design-icons": "^1.0",
     "@steeze-ui/simple-icons": "^1.4",
     "@steeze-ui/svelte-icon": "^1.3",
     "@steeze-ui/tabler-icons": "^2.0",
-    "@sveltejs/adapter-cloudflare": "^2.2",
+    "@sveltejs/adapter-cloudflare": "^2.3",
     "@sveltejs/kit": "^1.20",
     "@tailwindcss/container-queries": "^0.1",
     "@tailwindcss/forms": "^0.5",
@@ -38,7 +42,7 @@
     "@typescript-eslint/parser": "^5.59",
     "@zerodevx/svelte-img": "^1.2",
     "autoprefixer": "^10.4",
-    "eslint": "^8.41",
+    "eslint": "^8.42",
     "eslint-config-prettier": "^8.8",
     "eslint-plugin-prettier": "^4.2",
     "eslint-plugin-svelte": "^2.30",
@@ -53,9 +57,9 @@
     "tailwindcss": "^3.3",
     "ts-node": "^10.9",
     "tslib": "^2.5",
-    "typescript": "^5.0",
+    "typescript": "^5.1",
     "vite": "^4.3",
-    "vitest": "^0.31"
+    "vitest": "^0.32"
   },
   "type": "module"
 }
