@@ -13,7 +13,7 @@
   // eslint-disable-next-line init-declarations
   let basePath: string | undefined;
   page.subscribe((pg) => {
-    [basePath = ""] = pg.url.pathname.split("/");
+    basePath = pg.url.pathname.split("/")[1];
   });
 
   let outerClass = "";

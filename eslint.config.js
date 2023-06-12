@@ -122,6 +122,16 @@ export default [
       "multiline-comment-style": "off",
       "capitalized-comments": "off",
       "no-continue": "off",
+      "prefer-destructuring": ["error", { object: true, array: false }],
+      "no-magic-numbers": [
+        "error",
+        {
+          ignore: [0, 1, -1],
+          ignoreArrayIndexes: true,
+          ignoreDefaultValues: true,
+          ignoreClassFieldInitialValues: true,
+        },
+      ],
     },
   },
 ];
