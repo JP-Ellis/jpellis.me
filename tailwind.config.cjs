@@ -6,13 +6,6 @@ const tailwindForms = require("@tailwindcss/forms");
 const tailwindTypography = require("@tailwindcss/typography");
 const flowbite = require("flowbite/plugin");
 
-// import skeleton from "@skeletonlabs/skeleton/tailwind/skeleton.cjs";
-// import tailwindContainerQueries from "@tailwindcss/container-queries";
-// import tailwindForms from "@tailwindcss/forms";
-// import tailwindTypography from "@tailwindcss/typography";
-// import flowbite from "flowbite/plugin";
-// import type { Config } from "tailwindcss";
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: "class",
