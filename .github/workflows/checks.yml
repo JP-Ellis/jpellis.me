@@ -32,4 +32,4 @@ jobs:
           pnpm install
 
       - name: Run pre-commit
-        uses: pre-commit-ci/lite-action@v1.0.0
+        uses: pre-commit-ci/lite-action@v1.0.1
