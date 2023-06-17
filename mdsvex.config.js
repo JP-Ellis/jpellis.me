@@ -1,6 +1,5 @@
 import fs from "fs";
 import katex from "katex";
-import { escapeSvelte } from "mdsvex";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
@@ -42,9 +41,9 @@ function remarkSkeletonCode() {
     visit(tree, "code", (node) => {
       node.type = "raw";
       node.value = `<CodeBlock
-        language="${node.lang}"
+        language="${node.lang ?? "text"}"
         lineNumbers="true"
-        code={\`${escapeSvelte(node.value)}\`}
+        code={\`${node.value}\`}
       />`;
     });
   };
