@@ -10,6 +10,10 @@ vite.config.ts.timestamp-*
 # Generated images
 /static/img/*
 
+# Debug
+rehype-tree.json
+remark-tree.json
+
 ################################################################################
 ## Languages
 ################################################################################
