@@ -64,7 +64,6 @@ export default [
       ...typescriptPlugin.configs.recommended.rules,
       ...typescriptPlugin.configs["recommended-requiring-type-checking"].rules,
       ...typescriptPlugin.configs.strict.rules,
-      "func-style": ["error", "declaration", { allowArrowFunctions: true }],
     },
   },
 
@@ -117,12 +116,10 @@ export default [
       "one-var": ["error", "never"],
 
       // Disable rules that are too strict
-      "sort-imports": "off",
-      "sort-keys": "off",
-      "multiline-comment-style": "off",
       "capitalized-comments": "off",
+      "func-style": ["error", "declaration", { allowArrowFunctions: true }],
+      "multiline-comment-style": "off",
       "no-continue": "off",
-      "prefer-destructuring": ["error", { object: true, array: false }],
       "no-magic-numbers": [
         "error",
         {
@@ -132,6 +129,9 @@ export default [
           ignoreClassFieldInitialValues: true,
         },
       ],
+      "prefer-destructuring": ["error", { object: true, array: false }],
+      "sort-imports": "off",
+      "sort-keys": "off",
     },
   },
 ];
