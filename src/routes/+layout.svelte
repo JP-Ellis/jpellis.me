@@ -10,13 +10,23 @@
     offset,
     shift,
   } from "@floating-ui/dom";
-  import { AppShell, Drawer, storePopup } from "@skeletonlabs/skeleton";
+  import {
+    AppShell,
+    Drawer,
+    storeHighlightJs,
+    storePopup,
+  } from "@skeletonlabs/skeleton";
   import "@skeletonlabs/skeleton/styles/skeleton.css";
+  import hljs from "highlight.js";
+  import "highlight.js/styles/github-dark.css";
 
   import Footer from "$lib/components/Footer/Footer.svelte";
   import Navbar from "$lib/components/Navbar/Navbar.svelte";
   import Sidebar from "$lib/components/Sidebar/Sidebar.svelte";
   import "$lib/styles/global.postcss";
+
+  // Highlight.js
+  storeHighlightJs.set(hljs);
 
   // Popup shared storage settings
   storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
@@ -46,7 +56,7 @@
     description: metaDefaults.description,
     image: metaDefaults.image,
   } satisfies PageMeta;
-  page.subscribe((_page) => {
+  page.subscribe(() => {
     meta.title = metaDefaults.title;
     meta.description = metaDefaults.description;
     meta.image = metaDefaults.image;

@@ -1,0 +1,48 @@
+<script lang="ts">
+  import { CodeBlock } from "@skeletonlabs/skeleton";
+</script>
+
+# Rust-Skiplist
+
+A skiplist is a way of storing elements in such a way that elements can be
+efficiently accessed, inserted and removed, all in $\mathcal{O}(\log n)$ on
+average. Rust-SkipList is an implementation of skiplists inside
+[Rust](https://rust-lang.org)
+
+Conceptually, a skiplist is structured as follows:
+
+```text
+<head> ----------> [2] --------------------------------------------------> [9] ---------->
+<head> ----------> [2] ------------------------------------[7] ----------> [9] ---------->
+<head> ----------> [2] ----------> [4] ------------------> [7] ----------> [9] --> [10] ->
+<head> --> [1] --> [2] --> [3] --> [4] --> [5] --> [6] --> [7] --> [8] --> [9] --> [10] ->
+```
+
+Each node in the skiplist `[x]` has an array of references to nodes further down
+the list, with the initial references skipping many elements of the list, and
+the last element of the list always returning the next element of the list.
+
+When accessing elements, the algorithm begins with the head node on the first
+(top-most) level and moves as far right without exceeding the element desired.
+The algorithm then moves down a level and repeats the process until it finds the
+desired node. For example, if finding the element `8` in the above skiplist, the
+algorithm would visit `<head> -> [2] -> [4] -> [7] -> [8]`.
+
+The bottom-most level is simply a linked list (i.e. each link always goes to the
+next node in the list), and each level up, the links become progressively longer
+skipping more and more elements. The height of each node is determined randomly,
+typically following a geometric distribution with some paramt $p \in (0, 1)$.
+This way the number of nodes of height $n + 1$ is approximately $p$ times the
+number of nodes of height $n$. A value of $p = \frac{1}{2}$ is typical and
+appears to provide a good trade-off between memory usage and speed.
+
+In order to use this crate, just add the following to your project's
+`Cargo.toml`:
+
+```toml
+[dependencies]
+skiplist = "*"
+```
+
+and the documentation can be accessed over at
+[docs.rs](https://docs.rs/skiplist).
