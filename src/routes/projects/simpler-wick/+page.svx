@@ -20,7 +20,6 @@ blurb: |
 
 <script lang="ts">
   import { CodeBlock } from "@skeletonlabs/skeleton";
-  import SimplerWickManual from "./simpler-wick.pdf";
 </script>
 
 # Simpler-Wick
@@ -33,7 +32,7 @@ and eliminating the need for manual adjustments.
 
 Wick's theorem is a method of reducing high-order derivatives to a combinatoric
 problem and is used to reduce arbitrarily large products of creation and
-annihilation operators into a sum of [nomral
+annihilation operators into a sum of [normal
 ordered](https://en.wikipedia.org/wiki/Normal_order) pairs thereby allowing for
 the application of Green's functions.
 
@@ -48,4 +47,4 @@ of operators to be contracted:
 ```
 
 All the documentation can be found in
-[simpler-wick.pdf]({SimplerWickManual}).
+[simpler-wick.pdf](simpler-wick/simpler-wick.pdf).

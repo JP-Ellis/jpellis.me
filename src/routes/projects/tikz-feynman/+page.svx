@@ -138,7 +138,7 @@ issue or pull request on [Github](https://github.com/JP-Ellis/TikZ-Feynman).
 ```
 
 [ctan]: https://ctan.org/pkg/tikz-feynman
-[documentation]: ./tikz-feynman/tikz-feynman.pdf
+[documentation]: tikz-feynman/tikz-feynman.pdf
 
 <style lang="postcss">
   :global(.dark) {
