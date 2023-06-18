@@ -1,0 +1,51 @@
+---
+title: Simpler-Wick
+slug: simpler-wick
+github: JP-Ellis/simpler-wick
+blurb: |
+  Simpler-Wick is a LaTeX package designed to simplify the process of
+  typesetting Wick contractions in mathematical expressions. It offers an
+  concise and intuitive syntax, allowing users to easily represent
+  contractions between operators.
+
+  Simpler-Wick automates the placement of contraction lines, eliminating the
+  need for manual adjustments. The package comes with comprehensive
+  documentation, providing clear instructions and examples for its usage.
+
+  Simpler-Wick is open source and can be accessed on CTAN, making it readily
+  available for LaTeX users. With Simpler-Wick, the task of typesetting Wick
+  contractions becomes effortless, enabling researchers and mathematicians to
+  focus on their content rather than the technicalities.
+---
+
+<script lang="ts">
+  import { CodeBlock } from "@skeletonlabs/skeleton";
+  import SimplerWickManual from "./simpler-wick.pdf";
+</script>
+
+# Simpler-Wick
+
+Simpler-wick is a LaTeX package designed to simplify the process of typesetting
+[Wick contractions](https://en.wikipedia.org/wiki/Wick%27s_theorem) in
+mathematical expressions. It offers an concise syntax for representing
+contractions between operators, automating the placement of contraction lines
+and eliminating the need for manual adjustments.
+
+Wick's theorem is a method of reducing high-order derivatives to a combinatoric
+problem and is used to reduce arbitrarily large products of creation and
+annihilation operators into a sum of [nomral
+ordered](https://en.wikipedia.org/wiki/Normal_order) pairs thereby allowing for
+the application of Green's functions.
+
+The syntax is designed to be simple and intuitive, with the enclosing `\wick`
+command wrapping around the equations, and `\cN` (with `N` being a number) being used to mark pairs
+of operators to be contracted:
+
+```latex
+\begin{equation}
+  \wick{\c1 A \c2 \phi \c2 \phi \c1 A}
+\end{equation}
+```
+
+All the documentation can be found in
+[simpler-wick.pdf]({SimplerWickManual}).
