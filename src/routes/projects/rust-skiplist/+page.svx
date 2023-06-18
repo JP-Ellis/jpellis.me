@@ -1,5 +1,22 @@
 ---
-repo: https://github.com/JP-Ellis/rust-skiplist
+title: Rust-Skiplist
+slug: rust-skiplist
+github: JP-Ellis/rust-skiplist
+blurb: |
+  Rust-Skiplist is a Rust package that provides an efficient implementation of a
+  skiplist data structure. Skiplists are a type of sorted linked list that allow
+  for fast searching, insertion, and deletion operations with a logarithmic time
+  complexity.
+
+  This package offers an API that followings the standard library collections,
+  allowing developers to easily integrate skiplists into their Rust projects. It
+  provides methods for inserting, removing, and searching for elements in the
+  list. The package also provides collections for sets and mapping based on the
+  skiplist.
+
+  The package is well-documented, providing clear explanations and examples to
+  guide users. With Rust-Skiplist, Rust developers can leverage the power of
+  skip lists to efficiently manage sorted data structures in their applications.
 ---
 
 <script lang="ts">
