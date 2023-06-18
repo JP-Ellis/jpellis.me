@@ -39,11 +39,14 @@ function rehypeDebug() {
 function remarkSkeletonCode() {
   return function transformer(tree) {
     visit(tree, "code", (node) => {
+      const language = node.lang ?? "text";
+      const code = node.value.replace(/\\/gu, "\\\\");
+
       node.type = "raw";
       node.value = `<CodeBlock
-        language="${node.lang ?? "text"}"
+        language="${language}"
         lineNumbers="true"
-        code={\`${node.value}\`}
+        code={\`${code}\`}
       />`;
     });
   };
@@ -74,11 +77,13 @@ function remarkMathBlock() {
  * Parse Skeleton base elements and add the appropriate typography classes.
  */
 /** @type {import('unified').Plugin<[Options?], Root>} */
+// eslint-disable-next-line max-lines-per-function
 function rehypeSkeletonElements() {
+  // eslint-disable-next-line max-lines-per-function
   return function transformer(tree) {
     // eslint-disable-next-line max-statements
     visit(tree, "element", (node) => {
-      // Add header classes
+      // Headings
       if (node.tagName === "h1") {
         node.properties.class = "h1";
       }
@@ -98,17 +103,30 @@ function rehypeSkeletonElements() {
         node.properties.class = "h6";
       }
 
-      // Add anchor
-      if (node.tagName === "a") {
-        node.properties.class = "anchor";
-      }
-
-      // code and kbd tags
+      // Code-like
       if (node.tagName === "code") {
         node.properties.class = "code text-md";
       }
       if (node.tagName === "kbd") {
         node.properties.class = "kbd";
+      }
+
+      // Text
+      if (node.tagName === "blockquote") {
+        node.properties.class = "blockquote";
+      }
+
+      // Lists
+      if (node.tagName === "ul") {
+        node.properties.class = "list-disc ml-4 flex flex-col gap-4";
+      }
+      if (node.tagName === "ol") {
+        node.properties.class = "list-decimal";
+      }
+
+      // Miscellaneous
+      if (node.tagName === "a") {
+        node.properties.class = "anchor";
       }
     });
   };
