@@ -73,5 +73,8 @@
     "text",
     "track",
     "width"
-  ]
+  ],
+  "files.associations": {
+    "*.svx": "markdown"
+  }
 }
