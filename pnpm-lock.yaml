@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 devDependencies:
   '@floating-ui/dom':
     specifier: ^1.3
@@ -36,8 +32,8 @@ devDependencies:
     specifier: ^1.0
     version: 1.0.0
   '@steeze-ui/simple-icons':
-    specifier: ^1.4
-    version: 1.4.0
+    specifier: ^1.5
+    version: 1.5.0(svelte@3.59.1)
   '@steeze-ui/svelte-icon':
     specifier: ^1.3
     version: 1.3.2
@@ -808,8 +804,12 @@ packages:
     resolution: {integrity: sha512-UoN766WbZwHFcmxO4krKz/U48XnQWKBi6JH+EnPyHM3GrM4iU8gHGIRS/POu9kpxqR03+gc8PiZszkIEduKa6A==}
     dev: true
 
-  /@steeze-ui/simple-icons@1.4.0:
-    resolution: {integrity: sha512-/RKpk28U5O+Wtdb+Ck2ChQHdmDOoISp2VkCO/SgDTkz7aJTmPUX/rpz/oBxpvP3ZYY+8p7iG2zdrdWp486VURQ==}
+  /@steeze-ui/simple-icons@1.5.0(svelte@3.59.1):
+    resolution: {integrity: sha512-B/lxdcopBPsd4QnbuFuR1/20jHX03e/Kelv88IdCN4rpX8pVshBVJmnhj4ASWmitpkbVjlih4Tx6yBQ4l+djHA==}
+    peerDependencies:
+      svelte: ^3.54.0
+    dependencies:
+      svelte: 3.59.1
     dev: true
 
   /@steeze-ui/svelte-icon@1.3.2:
@@ -4352,3 +4352,7 @@ packages:
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: true
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
