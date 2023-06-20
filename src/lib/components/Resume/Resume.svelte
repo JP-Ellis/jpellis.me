@@ -178,7 +178,7 @@ Section component to display each section of the resume.
       <div class="flex flex-col space-y-4">
         <p>
           Completed a <strong>major in physics</strong> and concurrent
-          <strong>diploma in mathematica science</strong>
+          <strong>diploma in mathematical science</strong>
           with a focus on pure mathematics. Completed coursework achieving a 1<sup
             >st</sup
           >
@@ -186,7 +186,7 @@ Section component to display each section of the resume.
           <strong>Dean's List Award</strong> for my performance.
         </p>
         <p>
-          Attended the <strong>CERN summer schhol</strong> in 2013 where I
+          Attended the <strong>CERN summer school</strong> in 2013 where I
           helped developed a <strong>level 1 trigger for the LHC</strong> in C++
           and ROOT.
         </p>
