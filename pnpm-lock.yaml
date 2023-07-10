@@ -39,8 +39,8 @@ devDependencies:
     specifier: ^1.5
     version: 1.5.0(svelte@3.59.1)
   '@steeze-ui/svelte-icon':
-    specifier: ^1.3
-    version: 1.3.2
+    specifier: ^1.4
+    version: 1.4.1(svelte@3.59.1)
   '@steeze-ui/tabler-icons':
     specifier: ^2.0
     version: 2.0.0
@@ -822,8 +822,12 @@ packages:
       svelte: 3.59.1
     dev: true
 
-  /@steeze-ui/svelte-icon@1.3.2:
-    resolution: {integrity: sha512-Y7tH9UKeDYLfBicWLw4n4mhgfuSwgEdtq9wog7H+DjvfpTvea5SEqjHI8onoKZonJqAaUBGVjH02LAiqRWu+cw==}
+  /@steeze-ui/svelte-icon@1.4.1(svelte@3.59.1):
+    resolution: {integrity: sha512-O8KiL+1rjdhVzdBC5AKzDbc/NLZehOVU+nBj24t6BK22mWCe4o5YDbb04LesN9mBgB8NRRlaV6T81zLGY8xZHQ==}
+    peerDependencies:
+      svelte: ^3.54.0
+    dependencies:
+      svelte: 3.59.1
     dev: true
 
   /@steeze-ui/tabler-icons@2.0.0:
