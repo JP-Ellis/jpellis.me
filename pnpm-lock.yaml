@@ -132,8 +132,8 @@ devDependencies:
     specifier: ^3.4
     version: 3.4.4(postcss@8.4.25)(svelte@3.59.1)
   svelte-eslint-parser:
-    specifier: ^0.31
-    version: 0.31.0(svelte@3.59.1)
+    specifier: ^0.32
+    version: 0.32.1(svelte@3.59.1)
   tailwindcss:
     specifier: ^3.3
     version: 3.3.2(ts-node@10.9.1)
@@ -3760,11 +3760,11 @@ packages:
       svelte: 3.59.1
     dev: true
 
-  /svelte-eslint-parser@0.31.0(svelte@3.59.1):
-    resolution: {integrity: sha512-/31RpBf/e3YjoFphjsyo3JRyN1r4UalGAGafXrZ6EJK4h4COOO0rbfBoen5byGsXnIJKsrlC1lkEd2Vzpq2IDg==}
+  /svelte-eslint-parser@0.32.1(svelte@3.59.1):
+    resolution: {integrity: sha512-GCSfeIzdgk53CaOzK+s/+l2igfTno3mWGkwoDYAwPes/rD9Al2fc7ksfopjx5UL87S7dw1eL73F6wNYiiuhzIA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
-      svelte: ^3.37.0 || ^4.0.0-0
+      svelte: ^3.37.0 || ^4.0.0
     peerDependenciesMeta:
       svelte:
         optional: true
