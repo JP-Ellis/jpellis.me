@@ -33,8 +33,8 @@ devDependencies:
     specifier: ^1.0
     version: 1.0.0
   '@steeze-ui/material-design-icons':
-    specifier: ^1.0
-    version: 1.0.0
+    specifier: ^1.1
+    version: 1.1.2
   '@steeze-ui/simple-icons':
     specifier: ^1.5
     version: 1.5.0(svelte@3.59.2)
@@ -791,8 +791,8 @@ packages:
     resolution: {integrity: sha512-XhitVTo2DyZ1qvXeijylkKtwg48sz4C77LuRzzo3R8LcxVuqc9JywTEs9SYUMRPfXt+TZA3iWFGMxtLvQ5n4CQ==}
     dev: true
 
-  /@steeze-ui/material-design-icons@1.0.0:
-    resolution: {integrity: sha512-UoN766WbZwHFcmxO4krKz/U48XnQWKBi6JH+EnPyHM3GrM4iU8gHGIRS/POu9kpxqR03+gc8PiZszkIEduKa6A==}
+  /@steeze-ui/material-design-icons@1.1.2:
+    resolution: {integrity: sha512-p1csJ9RR8J2zG+ED3JJehVHxIi88B0ilUhg0ScbduVe54lgTZ1suAu5d94zOrBww/ImKDPhFshEXUWodVpELLw==}
     dev: true
 
   /@steeze-ui/simple-icons@1.5.0(svelte@3.59.2):
