@@ -27,7 +27,7 @@
     "@skeletonlabs/skeleton": "^1.7",
     "@steeze-ui/heroicons": "^2.2",
     "@steeze-ui/lucide-icons": "^1.0",
-    "@steeze-ui/material-design-icons": "^1.0",
+    "@steeze-ui/material-design-icons": "^1.1",
     "@steeze-ui/simple-icons": "^1.5",
     "@steeze-ui/svelte-icon": "^1.4",
     "@steeze-ui/tabler-icons": "^2.0",
