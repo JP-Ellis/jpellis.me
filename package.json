@@ -18,7 +18,7 @@
     "pnpm": ">=8"
   },
   "devDependencies": {
-    "@floating-ui/dom": "^1.4",
+    "@floating-ui/dom": "^1.5",
     "@octokit/rest": "^20.0",
     "@octokit/types": "^11.1",
     "@playwright/test": "^1.35",
