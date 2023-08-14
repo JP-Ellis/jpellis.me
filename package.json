@@ -30,7 +30,7 @@
     "@steeze-ui/material-design-icons": "^1.1",
     "@steeze-ui/simple-icons": "^1.5",
     "@steeze-ui/svelte-icon": "^1.4",
-    "@steeze-ui/tabler-icons": "^2.0",
+    "@steeze-ui/tabler-icons": "^2.1",
     "@sveltejs/adapter-cloudflare": "^2.3",
     "@sveltejs/kit": "^1.22",
     "@tailwindcss/container-queries": "^0.1",
