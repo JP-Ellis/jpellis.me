@@ -37,7 +37,7 @@ devDependencies:
     version: 1.1.2
   '@steeze-ui/simple-icons':
     specifier: ^1.5
-    version: 1.5.0(svelte@3.59.2)
+    version: 1.5.1
   '@steeze-ui/svelte-icon':
     specifier: ^1.4
     version: 1.4.1(svelte@3.59.2)
@@ -1010,12 +1010,8 @@ packages:
     resolution: {integrity: sha512-p1csJ9RR8J2zG+ED3JJehVHxIi88B0ilUhg0ScbduVe54lgTZ1suAu5d94zOrBww/ImKDPhFshEXUWodVpELLw==}
     dev: true
 
-  /@steeze-ui/simple-icons@1.5.0(svelte@3.59.2):
-    resolution: {integrity: sha512-B/lxdcopBPsd4QnbuFuR1/20jHX03e/Kelv88IdCN4rpX8pVshBVJmnhj4ASWmitpkbVjlih4Tx6yBQ4l+djHA==}
-    peerDependencies:
-      svelte: ^3.54.0
-    dependencies:
-      svelte: 3.59.2
+  /@steeze-ui/simple-icons@1.5.1:
+    resolution: {integrity: sha512-XspfzOCghi5QZZ+CUJM/WKgVEBZVhXxPMBW/m4t6WY4U1KDKYEgcZufLzt+rBVQHQgv4LpWaPeAHlNQbETQ3eA==}
     dev: true
 
   /@steeze-ui/svelte-icon@1.4.1(svelte@3.59.2):
