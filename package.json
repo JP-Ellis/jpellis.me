@@ -54,7 +54,7 @@
     "postcss": "^8.4",
     "prettier": "^2.8",
     "prettier-plugin-svelte": "^2.10",
-    "rehype-autolink-headings": "^6.1",
+    "rehype-autolink-headings": "^7.0",
     "rehype-slug": "^5.1",
     "remark-gfm": "^3.0",
     "remark-math": "^3.0",
