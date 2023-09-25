@@ -23,7 +23,7 @@
     "@octokit/types": "^11.1",
     "@playwright/test": "^1.37",
     "@poppanator/sveltekit-svg": "^3.0",
-    "@prettier/plugin-xml": "^2.2",
+    "@prettier/plugin-xml": "^3.1",
     "@skeletonlabs/skeleton": "^1.7",
     "@steeze-ui/heroicons": "^2.2",
     "@steeze-ui/lucide-icons": "^1.0",
