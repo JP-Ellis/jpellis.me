@@ -94,7 +94,7 @@ devDependencies:
     version: 1.7.0
   flowbite-svelte:
     specifier: ^0.44
-    version: 0.44.6(svelte@3.59.2)
+    version: 0.44.11(svelte@3.59.2)
   highlight.js:
     specifier: ^11.8
     version: 11.8.0
@@ -2153,8 +2153,8 @@ packages:
     resolution: {integrity: sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==}
     dev: true
 
-  /flowbite-svelte@0.44.6(svelte@3.59.2):
-    resolution: {integrity: sha512-uBtX4NTaiST2tPi0Hbc1ExN4/+dAdaLeSi9lZfNqAsIop9Kxws98gMLRzvEH6hUSR3Ye75S51hVaTk93h0LjVA==}
+  /flowbite-svelte@0.44.11(svelte@3.59.2):
+    resolution: {integrity: sha512-tIAF0TE+jDgsKJqBNvVH7zGUXZPxmu2BtahjNk2xYcPGad6zOZRMw+OHZrTu7WBf+/Th1aBTVM9gE201d9P2uA==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
     peerDependencies:
       svelte: ^3.55.1 || ^4.0.0
