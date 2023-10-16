@@ -87,8 +87,8 @@ devDependencies:
     specifier: ^4.2
     version: 4.2.1(eslint-config-prettier@9.0.0)(eslint@8.46.0)(prettier@2.8.8)
   eslint-plugin-svelte:
-    specifier: ^2.32
-    version: 2.32.4(eslint@8.46.0)(svelte@3.59.2)(ts-node@10.9.1)
+    specifier: ^2.34
+    version: 2.34.0(eslint@8.46.0)(svelte@3.59.2)(ts-node@10.9.1)
   flowbite:
     specifier: ^1.7
     version: 1.7.0
@@ -1936,8 +1936,8 @@ packages:
       prettier-linter-helpers: 1.0.0
     dev: true
 
-  /eslint-plugin-svelte@2.32.4(eslint@8.46.0)(svelte@3.59.2)(ts-node@10.9.1):
-    resolution: {integrity: sha512-VJ12i2Iogug1jvhwxSlognnfGj76P5gks/V4pUD4SCSVQOp14u47MNP0zAG8AQR3LT0Fi1iUvIFnY4l9z5Rwbg==}
+  /eslint-plugin-svelte@2.34.0(eslint@8.46.0)(svelte@3.59.2)(ts-node@10.9.1):
+    resolution: {integrity: sha512-4RYUgNai7wr0v+T/kljMiYSjC/oqwgq5i+cPppawryAayj4C7WK1ixFlWCGmNmBppnoKCl4iA4ZPzPtlHcb4CA==}
     engines: {node: ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0-0
@@ -1958,7 +1958,7 @@ packages:
       postcss-selector-parser: 6.0.13
       semver: 7.5.4
       svelte: 3.59.2
-      svelte-eslint-parser: 0.32.2(svelte@3.59.2)
+      svelte-eslint-parser: 0.33.1(svelte@3.59.2)
     transitivePeerDependencies:
       - supports-color
       - ts-node
@@ -3768,23 +3768,6 @@ packages:
       - sass
       - stylus
       - sugarss
-    dev: true
-
-  /svelte-eslint-parser@0.32.2(svelte@3.59.2):
-    resolution: {integrity: sha512-Ok9D3A4b23iLQsONrjqtXtYDu5ZZ/826Blaw2LeFZVTg1pwofKDG4mz3/GYTax8fQ0plRGHI6j+d9VQYy5Lo/A==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    peerDependencies:
-      svelte: ^3.37.0 || ^4.0.0
-    peerDependenciesMeta:
-      svelte:
-        optional: true
-    dependencies:
-      eslint-scope: 7.2.2
-      eslint-visitor-keys: 3.4.2
-      espree: 9.6.1
-      postcss: 8.4.31
-      postcss-scss: 4.0.9(postcss@8.4.31)
-      svelte: 3.59.2
     dev: true
 
   /svelte-eslint-parser@0.33.1(svelte@3.59.2):
