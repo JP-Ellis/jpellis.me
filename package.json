@@ -45,7 +45,7 @@
     "eslint": "^8.46",
     "eslint-config-prettier": "^9.0",
     "eslint-plugin-prettier": "^4.2",
-    "eslint-plugin-svelte": "^2.32",
+    "eslint-plugin-svelte": "^2.34",
     "flowbite": "^1.7",
     "flowbite-svelte": "^0.44",
     "highlight.js": "^11.9",
