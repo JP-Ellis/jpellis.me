@@ -21,7 +21,7 @@
     "@floating-ui/dom": "^1.5",
     "@octokit/rest": "^20.0",
     "@octokit/types": "^12.0",
-    "@playwright/test": "^1.37",
+    "@playwright/test": "^1.39",
     "@poppanator/sveltekit-svg": "^3.0",
     "@prettier/plugin-xml": "^3.1",
     "@skeletonlabs/skeleton": "^1.7",
