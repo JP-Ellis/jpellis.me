@@ -30,8 +30,8 @@ devDependencies:
     specifier: ^2.2
     version: 2.2.2
   '@steeze-ui/lucide-icons':
-    specifier: ^1.0
-    version: 1.0.0
+    specifier: ^1.2
+    version: 1.2.0
   '@steeze-ui/material-design-icons':
     specifier: ^1.1
     version: 1.1.2
@@ -828,8 +828,8 @@ packages:
     resolution: {integrity: sha512-VUkgSAbjLzsEuF4kDQDESANb/NNxqhkOMnrzD1VhB3tSGr7wVZ5FKS7aM2QZcKXjziwR6dbt7Nhs3fpZhqOi1A==}
     dev: true
 
-  /@steeze-ui/lucide-icons@1.0.0:
-    resolution: {integrity: sha512-XhitVTo2DyZ1qvXeijylkKtwg48sz4C77LuRzzo3R8LcxVuqc9JywTEs9SYUMRPfXt+TZA3iWFGMxtLvQ5n4CQ==}
+  /@steeze-ui/lucide-icons@1.2.0:
+    resolution: {integrity: sha512-EHanG7TVXRh9hc0c7OGXgfcTGN3A8jnswH8vtS4ex27XDZxm2TT9u7ns5oNrDafvto6eYlDhNSlppgGQ56qlOA==}
     dev: true
 
   /@steeze-ui/material-design-icons@1.1.2:
