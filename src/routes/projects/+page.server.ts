@@ -30,8 +30,8 @@ interface ProjectMetadata {
 async function fetchGitHubStats(
   fetch: (
     input: RequestInfo | URL,
-    init?: RequestInit | undefined
-  ) => Promise<Response>
+    init?: RequestInit | undefined,
+  ) => Promise<Response>,
 ): Promise<GitHubStats> {
   const iterator = octokit.paginate.iterator(octokit.rest.repos.listForUser, {
     username: me,
@@ -55,7 +55,7 @@ async function fetchGitHubStats(
 }
 
 async function parseProjectMetadata(
-  data: ProjectMetadata
+  data: ProjectMetadata,
 ): Promise<ProjectMetadata> {
   const compiled = await compileMarkdown(data.blurb);
   return { ...data, blurb: compiled?.code ?? "" };
@@ -72,8 +72,8 @@ async function parseProjects(): Promise<ProjectMetadata[]> {
           }
           throw new Error("No metadata found");
         })
-        .then(parseProjectMetadata)
-    )
+        .then(parseProjectMetadata),
+    ),
   );
 }
 
