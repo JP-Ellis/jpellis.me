@@ -1,9 +1,17 @@
 // Squelch warnings of image imports from your assets dir
-declare module "$lib/assets/*.png?run" {
+declare module "$lib/assets/*.png?as=run" {
   const meta: object[];
   export default meta;
 }
-declare module "$lib/assets/*.jpg?run" {
+declare module "$lib/assets/*.png?as=run:0" {
+  const meta: object[];
+  export default meta;
+}
+declare module "$lib/assets/*.jpg?as=run" {
+  const meta: object[];
+  export default meta;
+}
+declare module "$lib/assets/*.jpg?as=run:0" {
   const meta: object[];
   export default meta;
 }

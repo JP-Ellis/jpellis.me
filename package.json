@@ -40,7 +40,7 @@
     "@trivago/prettier-plugin-sort-imports": "^4.2",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
-    "@zerodevx/svelte-img": "^1.2",
+    "@zerodevx/svelte-img": "^2.0.0",
     "autoprefixer": "^10.4",
     "eslint": "^8.46",
     "eslint-config-prettier": "^9.0",
