@@ -54,6 +54,7 @@ export default [
       },
       globals: {
         process: "readonly",
+        require: "readonly",
       },
     },
     plugins: {

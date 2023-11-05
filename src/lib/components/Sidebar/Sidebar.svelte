@@ -2,13 +2,19 @@
   // Stores
   // import { storeCurrentUrl } from "$docs/stores/stores";
   import { page } from "$app/stores";
-  import { AppRail, AppRailAnchor, drawerStore } from "@skeletonlabs/skeleton";
+  import {
+    AppRail,
+    AppRailAnchor,
+    getDrawerStore,
+  } from "@skeletonlabs/skeleton";
   import {
     ChatBubbleBottomCenterText,
     Home,
     RocketLaunch,
   } from "@steeze-ui/heroicons";
   import { Icon } from "@steeze-ui/svelte-icon";
+
+  const drawerStore = getDrawerStore();
 
   // eslint-disable-next-line init-declarations
   let basePath: string | undefined;

@@ -3,8 +3,8 @@
     AppBar,
     LightSwitch,
     type PopupSettings,
-    drawerStore,
     popup,
+    getDrawerStore,
   } from "@skeletonlabs/skeleton";
   import { Bars3, ChevronDown } from "@steeze-ui/heroicons";
   import { Icon } from "@steeze-ui/svelte-icon";
@@ -19,6 +19,8 @@
     target: "linksPopup",
     placement: "bottom-end",
   } as PopupSettings;
+
+  const drawerStore = getDrawerStore();
 </script>
 
 <AppBar shadow="shadow-xl">
