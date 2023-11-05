@@ -1,6 +1,6 @@
 <script lang="ts">
-  import BY from "$lib/assets/images/copyright/by.svg?component";
-  import CC from "$lib/assets/images/copyright/cc.svg?component";
+  import BY from "./assets/by.svg?component";
+  import CC from "./assets/cc.svg?component";
 </script>
 
 <div class="text-xs text-surface-400 text-center mt-2 mb-2">

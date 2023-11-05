@@ -3,10 +3,10 @@ Resume component, used to display a resume in a nice way and makes use of the
 Section component to display each section of the resume.
 -->
 <script lang="ts">
-  import KPMGLogo from "$lib/assets/images/company/kpmg.svg?component";
-  import MelbourneUniversityLogo from "$lib/assets/images/company/melbourne_university.svg?component";
-  import Organization from "$lib/components/Resume/Organization.svelte";
+  import KPMGLogo from "./assets/kpmg.svg?component";
+  import MelbourneUniversityLogo from "./assets/melbourne_university.svg?component";
 
+  import Organization from "./Organization.svelte";
   import Position from "./Position.svelte";
 </script>
 
