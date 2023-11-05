@@ -1,5 +1,5 @@
 <script lang="ts">
-  import "$lib/styles/theme.postcss";
+  import "../app.postcss";
 
   import { page } from "$app/stores";
   import {
@@ -13,20 +13,24 @@
   import {
     AppShell,
     Drawer,
+    Modal,
+    Toast,
+    initializeStores,
     storeHighlightJs,
     storePopup,
   } from "@skeletonlabs/skeleton";
-  import "@skeletonlabs/skeleton/styles/skeleton.css";
   import hljs from "highlight.js";
   import "highlight.js/styles/github-dark.css";
 
   import Footer from "$lib/components/Footer/Footer.svelte";
   import Navbar from "$lib/components/Navbar/Navbar.svelte";
   import Sidebar from "$lib/components/Sidebar/Sidebar.svelte";
-  import "$lib/styles/global.postcss";
 
   // Highlight.js
   storeHighlightJs.set(hljs);
+
+  // Initialize stores for drawers, modals, toasts, etc.
+  initializeStores();
 
   // Popup shared storage settings
   storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
@@ -89,6 +93,8 @@
 <Drawer class="w-[50%]">
   <Sidebar class="w-[80px]" />
 </Drawer>
+<Modal />
+<Toast />
 
 <!-- App Shell -->
 <AppShell>
