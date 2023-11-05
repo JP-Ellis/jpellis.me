@@ -56,7 +56,7 @@
     "prettier-plugin-svelte": "^3.0.3",
     "rehype-autolink-headings": "^7.0",
     "rehype-slug": "^6.0.0",
-    "remark-gfm": "^3.0",
+    "remark-gfm": "^4.0.0",
     "remark-math": "^3.0",
     "svelte": "^3.59",
     "svelte-check": "^3.5",
