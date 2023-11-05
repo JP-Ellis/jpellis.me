@@ -20,9 +20,9 @@ blurb: |
   import { CodeBlock } from "@skeletonlabs/skeleton";
   import  Img  from "@zerodevx/svelte-img";
 
-  import qed from "./assets/qed.png?run&lqip=0"
-  import mixing from "./assets/mixing.png?run&lqip=0"
-  import penguin from "./assets/penguin.png?run&lqip=0"
+  import qed from "./assets/qed.png\?as=run:0"
+  import mixing from "./assets/mixing.png\?as=run:0"
+  import penguin from "./assets/penguin.png\?as=run:0"
 </script>
 
 # Ti*k*Z-Feynman

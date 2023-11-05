@@ -4,8 +4,8 @@
   import { Icon } from "@steeze-ui/svelte-icon";
   import Img from "@zerodevx/svelte-img";
 
-  import headshot from "$lib/assets/images/joshua-ellis/headshot-square-2022.jpg?run";
-  import portrait from "$lib/assets/images/joshua-ellis/portrait-2022.png?run&lqip=0";
+  import headshot from "$lib/assets/images/joshua-ellis/headshot-square-2022.jpg?as=run";
+  import portrait from "$lib/assets/images/joshua-ellis/portrait-2022.png?as=run:0";
 
   const descriptions = [
     { icon: Code2, text: "Software Engineer" },
