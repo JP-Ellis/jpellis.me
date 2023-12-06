@@ -1,0 +1,12 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["config:best-practices"],
+  prHourlyLimit: 0,
+  prConcurrentLimit: 0,
+  "pre-commit": {
+    enabled: true,
+  },
+  // TODO: Remove this once Renovate support pnpm-lock files
+  // https://github.com/renovatebot/renovate/issues/21438
+  rangeStrategy: "pin",
+}
