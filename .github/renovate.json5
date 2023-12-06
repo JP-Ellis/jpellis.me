@@ -9,4 +9,10 @@
   // TODO: Remove this once Renovate support pnpm-lock files
   // https://github.com/renovatebot/renovate/issues/21438
   rangeStrategy: "pin",
+  packageRules: [
+    {
+      matchPackagePatterns: ["node"],
+      rangeStrategy: "auto",
+    },
+  ],
 }
