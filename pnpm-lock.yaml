@@ -93,8 +93,8 @@ devDependencies:
     specifier: 5.0.1
     version: 5.0.1(eslint-config-prettier@9.0.0)(eslint@8.53.0)(prettier@3.1.0)
   eslint-plugin-svelte:
-    specifier: 2.35.0
-    version: 2.35.0(eslint@8.53.0)(svelte@4.2.2)(ts-node@10.9.1)
+    specifier: 2.35.1
+    version: 2.35.1(eslint@8.53.0)(svelte@4.2.2)(ts-node@10.9.1)
   flowbite:
     specifier: 2.0.0
     version: 2.0.0
@@ -2322,8 +2322,8 @@ packages:
       synckit: 0.8.5
     dev: true
 
-  /eslint-plugin-svelte@2.35.0(eslint@8.53.0)(svelte@4.2.2)(ts-node@10.9.1):
-    resolution: {integrity: sha512-3WDFxNrkXaMlpqoNo3M1ZOQuoFLMO9+bdnN6oVVXaydXC7nzCJuGy9a0zqoNDHMSRPYt0Rqo6hIdHMEaI5sQnw==}
+  /eslint-plugin-svelte@2.35.1(eslint@8.53.0)(svelte@4.2.2)(ts-node@10.9.1):
+    resolution: {integrity: sha512-IF8TpLnROSGy98Z3NrsKXWDSCbNY2ReHDcrYTuXZMbfX7VmESISR78TWgO9zdg4Dht1X8coub5jKwHzP0ExRug==}
     engines: {node: ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0-0
