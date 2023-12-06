@@ -24,7 +24,7 @@
     "@playwright/test": "1.40.1",
     "@poppanator/sveltekit-svg": "4.1.3",
     "@prettier/plugin-xml": "3.2.2",
-    "@skeletonlabs/skeleton": "2.4.0",
+    "@skeletonlabs/skeleton": "2.5.1",
     "@skeletonlabs/tw-plugin": "0.2.4",
     "@steeze-ui/heroicons": "2.2.3",
     "@steeze-ui/lucide-icons": "1.2.0",
