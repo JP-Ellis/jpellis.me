@@ -94,7 +94,7 @@ devDependencies:
     version: 5.0.1(eslint-config-prettier@9.1.0)(eslint@8.55.0)(prettier@3.1.0)
   eslint-plugin-svelte:
     specifier: 2.35.1
-    version: 2.35.1(eslint@8.55.0)(svelte@4.2.8)(ts-node@10.9.1)
+    version: 2.35.1(eslint@8.55.0)(svelte@4.2.8)(ts-node@10.9.2)
   flowbite:
     specifier: 2.2.0
     version: 2.2.0
@@ -142,10 +142,10 @@ devDependencies:
     version: 0.33.1(svelte@4.2.8)
   tailwindcss:
     specifier: 3.3.6
-    version: 3.3.6(ts-node@10.9.1)
+    version: 3.3.6(ts-node@10.9.2)
   ts-node:
-    specifier: 10.9.1
-    version: 10.9.1(@types/node@20.10.3)(typescript@5.3.3)
+    specifier: 10.9.2
+    version: 10.9.2(@types/node@20.10.3)(typescript@5.3.3)
   tslib:
     specifier: 2.6.2
     version: 2.6.2
@@ -1150,7 +1150,7 @@ packages:
     peerDependencies:
       tailwindcss: '>=3.0.0'
     dependencies:
-      tailwindcss: 3.3.6(ts-node@10.9.1)
+      tailwindcss: 3.3.6(ts-node@10.9.2)
     dev: true
 
   /@steeze-ui/heroicons@2.2.3:
@@ -1261,7 +1261,7 @@ packages:
     peerDependencies:
       tailwindcss: '>=3.2.0'
     dependencies:
-      tailwindcss: 3.3.6(ts-node@10.9.1)
+      tailwindcss: 3.3.6(ts-node@10.9.2)
     dev: true
 
   /@tailwindcss/forms@0.5.7(tailwindcss@3.3.6):
@@ -1270,7 +1270,7 @@ packages:
       tailwindcss: '>=3.0.0 || >= 3.0.0-alpha.1'
     dependencies:
       mini-svg-data-uri: 1.4.4
-      tailwindcss: 3.3.6(ts-node@10.9.1)
+      tailwindcss: 3.3.6(ts-node@10.9.2)
     dev: true
 
   /@tailwindcss/line-clamp@0.4.4(tailwindcss@3.3.6):
@@ -1278,7 +1278,7 @@ packages:
     peerDependencies:
       tailwindcss: '>=2.0.0 || >=3.0.0 || >=3.0.0-alpha.1'
     dependencies:
-      tailwindcss: 3.3.6(ts-node@10.9.1)
+      tailwindcss: 3.3.6(ts-node@10.9.2)
     dev: true
 
   /@tailwindcss/typography@0.5.10(tailwindcss@3.3.6):
@@ -1290,7 +1290,7 @@ packages:
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
-      tailwindcss: 3.3.6(ts-node@10.9.1)
+      tailwindcss: 3.3.6(ts-node@10.9.2)
     dev: true
 
   /@trivago/prettier-plugin-sort-imports@4.3.0(prettier@3.1.0):
@@ -2322,7 +2322,7 @@ packages:
       synckit: 0.8.5
     dev: true
 
-  /eslint-plugin-svelte@2.35.1(eslint@8.55.0)(svelte@4.2.8)(ts-node@10.9.1):
+  /eslint-plugin-svelte@2.35.1(eslint@8.55.0)(svelte@4.2.8)(ts-node@10.9.2):
     resolution: {integrity: sha512-IF8TpLnROSGy98Z3NrsKXWDSCbNY2ReHDcrYTuXZMbfX7VmESISR78TWgO9zdg4Dht1X8coub5jKwHzP0ExRug==}
     engines: {node: ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -2340,7 +2340,7 @@ packages:
       esutils: 2.0.3
       known-css-properties: 0.29.0
       postcss: 8.4.32
-      postcss-load-config: 3.1.4(postcss@8.4.32)(ts-node@10.9.1)
+      postcss-load-config: 3.1.4(postcss@8.4.32)(ts-node@10.9.2)
       postcss-safe-parser: 6.0.0(postcss@8.4.32)
       postcss-selector-parser: 6.0.13
       semver: 7.5.4
@@ -3835,7 +3835,7 @@ packages:
       postcss: 8.4.32
     dev: true
 
-  /postcss-load-config@3.1.4(postcss@8.4.32)(ts-node@10.9.1):
+  /postcss-load-config@3.1.4(postcss@8.4.32)(ts-node@10.9.2):
     resolution: {integrity: sha512-6DiM4E7v4coTE4uzA8U//WhtPwyhiim3eyjEMFCnUpzbrkK9wJHgKDT2mR+HbtSrd/NubVaYTOpSpjUl8NQeRg==}
     engines: {node: '>= 10'}
     peerDependencies:
@@ -3849,11 +3849,11 @@ packages:
     dependencies:
       lilconfig: 2.1.0
       postcss: 8.4.32
-      ts-node: 10.9.1(@types/node@20.10.3)(typescript@5.3.3)
+      ts-node: 10.9.2(@types/node@20.10.3)(typescript@5.3.3)
       yaml: 1.10.2
     dev: true
 
-  /postcss-load-config@4.0.1(postcss@8.4.32)(ts-node@10.9.1):
+  /postcss-load-config@4.0.1(postcss@8.4.32)(ts-node@10.9.2):
     resolution: {integrity: sha512-vEJIc8RdiBRu3oRAI0ymerOn+7rPuMvRXslTvZUKZonDHFIczxztIyJ1urxM1x9JXEikvpWWTUUqal5j/8QgvA==}
     engines: {node: '>= 14'}
     peerDependencies:
@@ -3867,7 +3867,7 @@ packages:
     dependencies:
       lilconfig: 2.1.0
       postcss: 8.4.32
-      ts-node: 10.9.1(@types/node@20.10.3)(typescript@5.3.3)
+      ts-node: 10.9.2(@types/node@20.10.3)(typescript@5.3.3)
       yaml: 2.3.4
     dev: true
 
@@ -4614,7 +4614,7 @@ packages:
       '@babel/runtime': 7.23.2
     dev: true
 
-  /tailwindcss@3.3.6(ts-node@10.9.1):
+  /tailwindcss@3.3.6(ts-node@10.9.2):
     resolution: {integrity: sha512-AKjF7qbbLvLaPieoKeTjG1+FyNZT6KaJMJPFeQyLfIp7l82ggH1fbHJSsYIvnbTFQOlkh+gBYpyby5GT1LIdLw==}
     engines: {node: '>=14.0.0'}
     hasBin: true
@@ -4636,7 +4636,7 @@ packages:
       postcss: 8.4.32
       postcss-import: 15.1.0(postcss@8.4.32)
       postcss-js: 4.0.1(postcss@8.4.32)
-      postcss-load-config: 4.0.1(postcss@8.4.32)(ts-node@10.9.1)
+      postcss-load-config: 4.0.1(postcss@8.4.32)(ts-node@10.9.2)
       postcss-nested: 6.0.1(postcss@8.4.32)
       postcss-selector-parser: 6.0.13
       resolve: 1.22.8
@@ -4758,8 +4758,8 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: true
 
-  /ts-node@10.9.1(@types/node@20.10.3)(typescript@5.3.3):
-    resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
+  /ts-node@10.9.2(@types/node@20.10.3)(typescript@5.3.3):
+    resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
     peerDependencies:
       '@swc/core': '>=1.2.50'
