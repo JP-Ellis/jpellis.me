@@ -49,10 +49,10 @@ devDependencies:
     version: 2.1.1
   '@sveltejs/adapter-cloudflare':
     specifier: 2.3.4
-    version: 2.3.4(@sveltejs/kit@1.27.7)
+    version: 2.3.4(@sveltejs/kit@1.28.0)
   '@sveltejs/kit':
-    specifier: 1.27.7
-    version: 1.27.7(svelte@4.2.8)(vite@5.0.0)
+    specifier: 1.28.0
+    version: 1.28.0(svelte@4.2.8)(vite@5.0.0)
   '@tailwindcss/container-queries':
     specifier: 0.1.1
     version: 0.1.1(tailwindcss@3.3.6)
@@ -1181,19 +1181,19 @@ packages:
     resolution: {integrity: sha512-cWnORbuPwXhsrH3hebxZ0gSF/zMZEuLz014XoGcxXhU+GPYixqXjyBbTfJiGjbexRjkj7A2/1ocx6AcWEwN1Pw==}
     dev: true
 
-  /@sveltejs/adapter-cloudflare@2.3.4(@sveltejs/kit@1.27.7):
+  /@sveltejs/adapter-cloudflare@2.3.4(@sveltejs/kit@1.28.0):
     resolution: {integrity: sha512-+5Msbm7svrZjaBt0KapNh2zEaMRfrhbTRBWRXrFa+w+KFRQnHjFIPvWz/NQ11XKVu7dRe7mkzqvqieL2b0hpJw==}
     peerDependencies:
       '@sveltejs/kit': ^1.0.0
     dependencies:
       '@cloudflare/workers-types': 4.20231025.0
-      '@sveltejs/kit': 1.27.7(svelte@4.2.8)(vite@5.0.0)
+      '@sveltejs/kit': 1.28.0(svelte@4.2.8)(vite@5.0.0)
       esbuild: 0.18.20
       worktop: 0.8.0-next.15
     dev: true
 
-  /@sveltejs/kit@1.27.7(svelte@4.2.8)(vite@5.0.0):
-    resolution: {integrity: sha512-AzXYDoYt42clCBwLF9GTHsXyg2DFR31Ncyt8yxu8Aw4tgB433V+w+hcr1RTfAN9zKW2J2PY9FMQ8FoX/4Vw8CA==}
+  /@sveltejs/kit@1.28.0(svelte@4.2.8)(vite@5.0.0):
+    resolution: {integrity: sha512-T9hoS6XM840W4ZUgf3kKAoBt2dsupumUxBtlxt3ddu2yRLrqsKcC3gledBB/e5NtTC8zEZyR5qWBNFT9WAWmIA==}
     engines: {node: ^16.14 || >=18}
     hasBin: true
     requiresBuild: true
