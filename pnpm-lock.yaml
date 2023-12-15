@@ -96,8 +96,8 @@ devDependencies:
     specifier: 2.35.1
     version: 2.35.1(eslint@8.55.0)(svelte@4.2.8)(ts-node@10.9.2)
   flowbite:
-    specifier: 2.2.0
-    version: 2.2.0
+    specifier: 2.2.1
+    version: 2.2.1
   flowbite-svelte:
     specifier: 0.44.20
     version: 0.44.20(svelte@4.2.8)
@@ -2592,13 +2592,13 @@ packages:
     dependencies:
       '@floating-ui/dom': 1.5.3
       apexcharts: 3.44.0
-      flowbite: 2.2.0
+      flowbite: 2.2.1
       svelte: 4.2.8
       tailwind-merge: 2.0.0
     dev: true
 
-  /flowbite@2.2.0:
-    resolution: {integrity: sha512-Eq0qWz4a5nlxaGuUcspzpu+8Ny0A7lKEJEKcuPpkdSoF8tWjbKeuVVgKk8/q10ZE9bhXh1GHBXdCsRxu0LZTNQ==}
+  /flowbite@2.2.1:
+    resolution: {integrity: sha512-iiZyBTtriEDRHrqXZgpKHaxl4B2J8HZUP8Yn1RXozUDKszWHDVj4GxQqMMB9AJHRWOgXV/4E/LJZ/zqQgBUhWA==}
     dependencies:
       '@popperjs/core': 2.11.8
       mini-svg-data-uri: 1.4.4
