@@ -3,8 +3,9 @@
 default_stages:
   - commit
 default_install_hook_types:
-  - pre-commit
   - commit-msg
+  - post-checkout
+  - pre-commit
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -50,3 +51,11 @@ repos:
         language: system
         files: ^(package\.json|pnpm-lock\.yaml)$
         pass_filenames: false
+
+      - id: pnpm-sync
+        name: pnpm-sync
+        entry: pnpm install --frozen-lockfile
+        language: system
+        files: ^(package\.json|pnpm-lock\.yaml)$
+        pass_filenames: false
+        stages: [post-checkout]
