@@ -3,6 +3,7 @@ import typescriptPlugin from "@typescript-eslint/eslint-plugin";
 import typescriptParser from "@typescript-eslint/parser";
 import prettierConfig from "eslint-config-prettier";
 import prettierPlugin from "eslint-plugin-prettier";
+import eslintPluginRecommended from "eslint-plugin-prettier/recommended";
 import sveltePlugin from "eslint-plugin-svelte";
 import svelteParser from "svelte-eslint-parser";
 
@@ -16,6 +17,7 @@ export default [
   js.configs.recommended,
   js.configs.all,
   prettierConfig,
+  eslintPluginRecommended,
 
   // JavaScript
   {
