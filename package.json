@@ -34,6 +34,7 @@
     "@steeze-ui/tabler-icons": "2.1.1",
     "@sveltejs/adapter-cloudflare": "3.0.1",
     "@sveltejs/kit": "2.0.6",
+    "@sveltejs/vite-plugin-svelte": "^3.0.0",
     "@tailwindcss/container-queries": "0.1.1",
     "@tailwindcss/forms": "0.5.7",
     "@tailwindcss/line-clamp": "0.4.4",
