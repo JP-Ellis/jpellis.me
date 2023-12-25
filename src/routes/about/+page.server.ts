@@ -9,5 +9,5 @@ import { redirect } from "@sveltejs/kit";
  */
 export function load(): void {
   // eslint-disable-next-line no-magic-numbers, @typescript-eslint/no-throw-literal
-  throw redirect(301, "/");
+  redirect(301, "/");
 }
