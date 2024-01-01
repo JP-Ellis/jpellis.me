@@ -25,12 +25,14 @@ Section component to display each section of the resume.
       title="Senior Consultant"
       subtitle="Data & DevOps Engineer"
       start="{new Date('2022-06-27')}"
-      end="{null}"
+      end="{new Date('2023-08-25')}"
       keywords="{[
         'azure',
-        'infrastructure-as-code',
-        'devops',
+        'consulting',
         'data engineering',
+        'devops',
+        'infrastructure-as-code',
+        'python',
       ]}"
     >
       <div class="flex flex-col space-y-4">
