@@ -5,6 +5,7 @@ Section component to display each section of the resume.
 <script lang="ts">
   import KPMGLogo from "./assets/kpmg.svg?component";
   import MelbourneUniversityLogo from "./assets/melbourne_university.svg?component";
+  import SmartBearLogo from "./assets/smartbear.svg?component";
 
   import Organization from "./Organization.svelte";
   import Position from "./Position.svelte";
@@ -17,6 +18,41 @@ Section component to display each section of the resume.
   >
     Resume
   </h1>
+
+  <Organization title="PactFlow - SmartBear" location="Melbourne, Australia">
+    <SmartBearLogo slot="logo" />
+
+    <Position
+      title="Senior Software Engineer"
+      subtitle="Python, Rust and Open Source"
+      start="{new Date('2023-09-04')}"
+      end="{null}"
+      keywords="{[
+        'open source',
+        'pact',
+        'pactflow',
+        'python',
+        'rust',
+        'software engineering',
+      ]}"
+    >
+      <div class="flex flex-col space-y-4">
+        <p>
+          I am spearheading a critical <strong>upgrade of Pact Python</strong>
+          to support Pact the latest Pact specifications. This involves a significant
+          rewrite of the core library to make use of the foreign function interface
+          (FFI) provided by the Pact core Rust library. This will allow uses of Pact
+          Python to reap the full benefit of the new features provided in the latest
+          Pact specifications.
+        </p>
+        <p>
+          My responsibilities extend beyond coding to include active engagement
+          with the Pact developer community. I am offering assistance to
+          open-source contributors, taking part in community meetups
+        </p>
+      </div>
+    </Position>
+  </Organization>
 
   <Organization title="KPMG" location="Melbourne, Australia">
     <KPMGLogo slot="logo" />
