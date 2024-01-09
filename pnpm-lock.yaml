@@ -30,8 +30,8 @@ devDependencies:
     specifier: 0.3.1
     version: 0.3.1(tailwindcss@3.4.1)
   '@steeze-ui/heroicons':
-    specifier: 2.2.3
-    version: 2.2.3
+    specifier: 2.3.0
+    version: 2.3.0
   '@steeze-ui/lucide-icons':
     specifier: 1.2.0
     version: 1.2.0
@@ -995,8 +995,8 @@ packages:
       tailwindcss: 3.4.1(ts-node@10.9.2)
     dev: true
 
-  /@steeze-ui/heroicons@2.2.3:
-    resolution: {integrity: sha512-bv4YK375U9TDS50SmJ5VdFy2UmMhgKbJCCbo6IUU3qs2luEj2VX6sQoDy96j8AIKttxMd62ih1j0lZj7CTjIfA==}
+  /@steeze-ui/heroicons@2.3.0:
+    resolution: {integrity: sha512-tVOamjAd9ZzXgDwVKwbA3K+o86Z1ks/IMvqdgoCf9hKeGINVUIlAlGhM3wdpSmt7brIoBLgR70wlnsXGytZk9g==}
     dev: true
 
   /@steeze-ui/lucide-icons@1.2.0:
