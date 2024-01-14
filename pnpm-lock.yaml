@@ -18,8 +18,8 @@ devDependencies:
     specifier: 1.40.1
     version: 1.40.1
   '@poppanator/sveltekit-svg':
-    specifier: 4.2.0
-    version: 4.2.0(svelte@4.2.8)(svgo@3.1.0)(vite@5.0.11)
+    specifier: 4.2.1
+    version: 4.2.1(svelte@4.2.8)(svgo@3.1.0)(vite@5.0.11)
   '@prettier/plugin-xml':
     specifier: 3.2.2
     version: 3.2.2(prettier@3.2.2)
@@ -831,16 +831,19 @@ packages:
     resolution: {integrity: sha512-2LuNTFBIO0m7kKIQvvPHN6UE63VjpmL9rnEEaOOaiSPbZK+zUOYIzBAWcED+3XYzhYsd/0mD57VdxAEqqV52CQ==}
     dev: true
 
-  /@poppanator/sveltekit-svg@4.2.0(svelte@4.2.8)(svgo@3.1.0)(vite@5.0.11):
-    resolution: {integrity: sha512-bQ78bPB8DdjR/UPXs5qWWcGqTJT+aR5zmIV6dlcTh3VdarRKJPzC2bB0O1umshfCFoP16O4oERdOiiD2eiP32Q==}
+  /@poppanator/sveltekit-svg@4.2.1(svelte@4.2.8)(svgo@3.1.0)(vite@5.0.11):
+    resolution: {integrity: sha512-w7jl4EVOOF+X+uv2BEUiMDJwds+GfbczwGpcS0+rsjIsKYmqmwMi4ts3bVZR9ZvdFHWy5rS84U+pSBClz6cbBg==}
     peerDependencies:
       svelte: '>=4.x'
       svgo: '>=3.x'
       vite: '>=4.x'
     dependencies:
+      '@rollup/pluginutils': 5.1.0
       svelte: 4.2.8
       svgo: 3.1.0
       vite: 5.0.11(@types/node@20.11.0)
+    transitivePeerDependencies:
+      - rollup
     dev: true
 
   /@popperjs/core@2.11.8:
