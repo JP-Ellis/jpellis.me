@@ -48,8 +48,8 @@ devDependencies:
     specifier: 2.1.1
     version: 2.1.1
   '@sveltejs/adapter-cloudflare':
-    specifier: 4.0.2
-    version: 4.0.2(@sveltejs/kit@2.4.0)
+    specifier: 4.1.0
+    version: 4.1.0(@sveltejs/kit@2.4.0)
   '@sveltejs/kit':
     specifier: 2.4.0
     version: 2.4.0(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.9)(vite@5.0.11)
@@ -1233,8 +1233,8 @@ packages:
     resolution: {integrity: sha512-cWnORbuPwXhsrH3hebxZ0gSF/zMZEuLz014XoGcxXhU+GPYixqXjyBbTfJiGjbexRjkj7A2/1ocx6AcWEwN1Pw==}
     dev: true
 
-  /@sveltejs/adapter-cloudflare@4.0.2(@sveltejs/kit@2.4.0):
-    resolution: {integrity: sha512-zfTDBLxGVy+sFKze1sPpHmOoXAjlhGllZthTgKePj3uB6lKM9Kk1y+oXXym1u1Qe+uVeHF5799M1h/0u1Ll5Rg==}
+  /@sveltejs/adapter-cloudflare@4.1.0(@sveltejs/kit@2.4.0):
+    resolution: {integrity: sha512-AQQdZAZpcFDcBiMEmxbMYhn4yKZYoPZrKUrYpVejjbO+9obIGIuj/jWjVzAEkHqZMZuoRRqPbq+Zq+AWRm4x1Q==}
     peerDependencies:
       '@sveltejs/kit': ^2.0.0
     dependencies:
