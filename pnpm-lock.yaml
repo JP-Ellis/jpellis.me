@@ -6,8 +6,8 @@ settings:
 
 devDependencies:
   '@floating-ui/dom':
-    specifier: 1.6.1
-    version: 1.6.1
+    specifier: 1.6.2
+    version: 1.6.2
   '@octokit/rest':
     specifier: 20.0.2
     version: 20.0.2
@@ -581,8 +581,8 @@ packages:
       '@floating-ui/utils': 0.2.1
     dev: true
 
-  /@floating-ui/dom@1.6.1:
-    resolution: {integrity: sha512-iA8qE43/H5iGozC3W0YSnVSW42Vh522yyM1gj+BqRwVsTNOyr231PsXDaV04yT39PsO0QL2QpbI/M0ZaLUQgRQ==}
+  /@floating-ui/dom@1.6.2:
+    resolution: {integrity: sha512-xymkSSowKdGqo0SRr2Mp4czH5A8o2Pum35PAD0ftb3gCcPacWzwhvtUeUqmVXm9EVtm2hThD/lRrFNcahMOaSQ==}
     dependencies:
       '@floating-ui/core': 1.6.0
       '@floating-ui/utils': 0.2.1
@@ -2426,7 +2426,7 @@ packages:
     peerDependencies:
       svelte: ^4.0.0
     dependencies:
-      '@floating-ui/dom': 1.6.1
+      '@floating-ui/dom': 1.6.2
       apexcharts: 3.45.2
       flowbite: 2.2.1
       svelte: 4.2.9
