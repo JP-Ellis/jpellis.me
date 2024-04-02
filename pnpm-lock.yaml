@@ -45,8 +45,8 @@ devDependencies:
     specifier: 1.5.0
     version: 1.5.0(svelte@4.2.12)
   '@steeze-ui/tabler-icons':
-    specifier: 2.1.1
-    version: 2.1.1
+    specifier: 3.0.0
+    version: 3.0.0
   '@sveltejs/adapter-cloudflare':
     specifier: 4.2.0
     version: 4.2.0(@sveltejs/kit@2.5.5)(wrangler@3.33.0)
@@ -1493,8 +1493,8 @@ packages:
       svelte: 4.2.12
     dev: true
 
-  /@steeze-ui/tabler-icons@2.1.1:
-    resolution: {integrity: sha512-cWnORbuPwXhsrH3hebxZ0gSF/zMZEuLz014XoGcxXhU+GPYixqXjyBbTfJiGjbexRjkj7A2/1ocx6AcWEwN1Pw==}
+  /@steeze-ui/tabler-icons@3.0.0:
+    resolution: {integrity: sha512-oeNzCyLL7v/tmZZ0o/CWKQEEM5asooQdAcbNsV5kHEWPquMF1wrzGVvR0cHeKdsaER5GpKr8GHWcuYvt9DoJyA==}
     dev: true
 
   /@sveltejs/adapter-cloudflare@4.2.0(@sveltejs/kit@2.5.5)(wrangler@3.33.0):
