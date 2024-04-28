@@ -18,7 +18,7 @@
     "pnpm": ">=8"
   },
   "devDependencies": {
-    "@floating-ui/dom": "1.6.3",
+    "@floating-ui/dom": "1.6.4",
     "@octokit/rest": "20.1.0",
     "@octokit/types": "13.4.1",
     "@playwright/test": "1.43.1",
