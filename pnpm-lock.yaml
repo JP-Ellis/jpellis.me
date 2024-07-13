@@ -144,8 +144,8 @@ importers:
         specifier: 3.8.0
         version: 3.8.0(postcss-load-config@4.0.2(postcss@8.4.39)(ts-node@10.9.2(@types/node@20.14.2)(typescript@5.4.5)))(postcss@8.4.39)(svelte@4.2.18)
       svelte-eslint-parser:
-        specifier: 0.37.0
-        version: 0.37.0(svelte@4.2.18)
+        specifier: 0.40.0
+        version: 0.40.0(svelte@4.2.18)
       tailwindcss:
         specifier: 3.4.4
         version: 3.4.4(ts-node@10.9.2(@types/node@20.14.2)(typescript@5.4.5))
@@ -2399,6 +2399,10 @@ packages:
     resolution: {integrity: sha512-0vzE+lAiG7hZl1/9I8yzKLx3aR9Xbof3fBHKunvMfOCYAtMhrsnccJY2iTURb9EZd5+pLuiNV9/c/GZJOHsgIw==}
     engines: {node: ^10 || ^12 || >=14}
 
+  postcss@8.4.39:
+    resolution: {integrity: sha512-0vzE+lAiG7hZl1/9I8yzKLx3aR9Xbof3fBHKunvMfOCYAtMhrsnccJY2iTURb9EZd5+pLuiNV9/c/GZJOHsgIw==}
+    engines: {node: ^10 || ^12 || >=14}
+
   prebuild-install@7.1.2:
     resolution: {integrity: sha512-UnNke3IQb6sgarcZIDU3gbMeTp/9SSU1DAIkil7PrqG1vZlBtY5msYccSKSHDqa3hNg436IXK+SNImReuA1wEQ==}
     engines: {node: '>=10'}
@@ -2702,6 +2706,15 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       svelte: ^3.37.0 || ^4.0.0 || ^5.0.0-next.115
+    peerDependenciesMeta:
+      svelte:
+        optional: true
+
+  svelte-eslint-parser@0.40.0:
+    resolution: {integrity: sha512-M+v1HhC5T1WKYVxWexUCS4o6oIBS88XKzOZuhl2ew+eGxol7eC21e+VE8TC4rXJ3iT3iXT0qlZsZcpKjVo5/zQ==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    peerDependencies:
+      svelte: ^3.37.0 || ^4.0.0 || ^5.0.0-next.181
     peerDependenciesMeta:
       svelte:
         optional: true
@@ -5382,6 +5395,10 @@ snapshots:
     dependencies:
       postcss: 8.4.39
 
+  postcss-scss@4.0.9(postcss@8.4.39):
+    dependencies:
+      postcss: 8.4.39
+
   postcss-selector-parser@6.0.10:
     dependencies:
       cssesc: 3.0.0
@@ -5393,6 +5410,12 @@ snapshots:
       util-deprecate: 1.0.2
 
   postcss-value-parser@4.2.0: {}
+
+  postcss@8.4.39:
+    dependencies:
+      nanoid: 3.3.7
+      picocolors: 1.0.1
+      source-map-js: 1.2.0
 
   postcss@8.4.39:
     dependencies:
@@ -5771,6 +5794,16 @@ snapshots:
       - sugarss
 
   svelte-eslint-parser@0.37.0(svelte@4.2.18):
+    dependencies:
+      eslint-scope: 7.2.2
+      eslint-visitor-keys: 3.4.3
+      espree: 9.6.1
+      postcss: 8.4.39
+      postcss-scss: 4.0.9(postcss@8.4.39)
+    optionalDependencies:
+      svelte: 4.2.18
+
+  svelte-eslint-parser@0.40.0(svelte@4.2.18):
     dependencies:
       eslint-scope: 7.2.2
       eslint-visitor-keys: 3.4.3
