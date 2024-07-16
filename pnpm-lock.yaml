@@ -42,8 +42,8 @@ importers:
         specifier: 1.1.2
         version: 1.1.2
       '@steeze-ui/simple-icons':
-        specifier: 1.7.1
-        version: 1.7.1
+        specifier: 1.8.0
+        version: 1.8.0
       '@steeze-ui/svelte-icon':
         specifier: 1.5.0
         version: 1.5.0(svelte@4.2.18)
@@ -847,8 +847,8 @@ packages:
   '@steeze-ui/material-design-icons@1.1.2':
     resolution: {integrity: sha512-p1csJ9RR8J2zG+ED3JJehVHxIi88B0ilUhg0ScbduVe54lgTZ1suAu5d94zOrBww/ImKDPhFshEXUWodVpELLw==}
 
-  '@steeze-ui/simple-icons@1.7.1':
-    resolution: {integrity: sha512-vIsurZBiP6ksg/6zvE6wQVKVludu3UFtePmIAWAbmfjlA6LcjGx+IpX0xNOhVfUs8dC8cMOVn2yLbDhQm5dLYA==}
+  '@steeze-ui/simple-icons@1.8.0':
+    resolution: {integrity: sha512-Th/iGG9ZEmg5AJzVEg6rgMwQZJL47b7IdbCWNqmZNT+ZK3wjBgcOWb8uEK4E77OWYu5K2UuqkqZeE3i2pYOCxQ==}
 
   '@steeze-ui/svelte-icon@1.5.0':
     resolution: {integrity: sha512-Y0S7Qk2kO6byzOlD5SQGbOF2ZaKXJgfTkH78QUPcq579wiWMQJ5H14zL4XwtsPJ0DfkoL5qa3WaIdYkWb9A6AA==}
@@ -3589,7 +3589,7 @@ snapshots:
 
   '@steeze-ui/material-design-icons@1.1.2': {}
 
-  '@steeze-ui/simple-icons@1.7.1': {}
+  '@steeze-ui/simple-icons@1.8.0': {}
 
   '@steeze-ui/svelte-icon@1.5.0(svelte@4.2.18)':
     dependencies:
