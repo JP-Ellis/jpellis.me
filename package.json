@@ -31,7 +31,7 @@
     "@steeze-ui/material-design-icons": "1.1.2",
     "@steeze-ui/simple-icons": "1.7.1",
     "@steeze-ui/svelte-icon": "1.5.0",
-    "@steeze-ui/tabler-icons": "3.0.0",
+    "@steeze-ui/tabler-icons": "3.1.0",
     "@sveltejs/adapter-cloudflare": "4.6.1",
     "@sveltejs/kit": "2.5.18",
     "@sveltejs/vite-plugin-svelte": "3.1.1",
