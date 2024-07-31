@@ -71,7 +71,7 @@
     "unist-util-visit": "5.0.0",
     "vite": "5.3.3",
     "vite-plugin-tailwind-purgecss": "0.3.3",
-    "vitest": "2.0.2"
+    "vitest": "2.0.5"
   },
   "type": "module"
 }
