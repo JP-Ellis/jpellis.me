@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@floating-ui/dom": "1.6.8",
-    "@octokit/rest": "21.0.0",
+    "@octokit/rest": "21.0.1",
     "@octokit/types": "13.5.0",
     "@playwright/test": "1.45.1",
     "@poppanator/sveltekit-svg": "4.2.1",
