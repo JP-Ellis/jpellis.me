@@ -48,8 +48,8 @@ importers:
         specifier: 1.5.0
         version: 1.5.0(svelte@4.2.18)
       '@steeze-ui/tabler-icons':
-        specifier: 3.1.0
-        version: 3.1.0
+        specifier: 3.2.0
+        version: 3.2.0
       '@sveltejs/adapter-cloudflare':
         specifier: 4.7.2
         version: 4.7.2(@sveltejs/kit@2.5.20(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.3.5(@types/node@20.16.1)))(svelte@4.2.18)(vite@5.3.5(@types/node@20.16.1)))(wrangler@3.68.0(@cloudflare/workers-types@4.20240729.0))
@@ -855,8 +855,8 @@ packages:
     peerDependencies:
       svelte: ^4.0.0
 
-  '@steeze-ui/tabler-icons@3.1.0':
-    resolution: {integrity: sha512-NSNOYdXxweRNU94Fo8EfF1nIuYsrRA3JrOr4ew7gjNgbIZWrMqiJYY+dpoY7csL2QzytWlCM8821np6IHjbGGQ==}
+  '@steeze-ui/tabler-icons@3.2.0':
+    resolution: {integrity: sha512-IcB15MyCh2kEbBPwWsZLn0q2Pfjc2yfjvnhUSE5HMxOaCCVC66AlyuzAsWGjn7NoiJAGovfkMWGdyBNr3vJm1w==}
 
   '@sveltejs/adapter-cloudflare@4.7.2':
     resolution: {integrity: sha512-zdFtQ2nzVHvc3OweA3zF2+WgSRUW536kKGPzfdRmWo/+UbvwAXB3c3pB66/JaypkxWTIhxz1umshtw5eHWyx/w==}
@@ -3595,7 +3595,7 @@ snapshots:
     dependencies:
       svelte: 4.2.18
 
-  '@steeze-ui/tabler-icons@3.1.0': {}
+  '@steeze-ui/tabler-icons@3.2.0': {}
 
   '@sveltejs/adapter-cloudflare@4.7.2(@sveltejs/kit@2.5.20(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.3.5(@types/node@20.16.1)))(svelte@4.2.18)(vite@5.3.5(@types/node@20.16.1)))(wrangler@3.68.0(@cloudflare/workers-types@4.20240729.0))':
     dependencies:
