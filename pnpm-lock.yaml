@@ -99,8 +99,8 @@ importers:
         specifier: 5.2.1
         version: 5.2.1(eslint-config-prettier@9.1.0(eslint@9.15.0(jiti@1.21.6)))(eslint@9.15.0(jiti@1.21.6))(prettier@3.3.3)
       eslint-plugin-svelte:
-        specifier: 2.46.0
-        version: 2.46.0(eslint@9.15.0(jiti@1.21.6))(svelte@4.2.19)(ts-node@10.9.2(@types/node@22.9.3)(typescript@5.7.2))
+        specifier: 2.46.1
+        version: 2.46.1(eslint@9.15.0(jiti@1.21.6))(svelte@4.2.19)(ts-node@10.9.2(@types/node@22.9.3)(typescript@5.7.2))
       flowbite:
         specifier: 2.5.2
         version: 2.5.2(rollup@4.21.2)
@@ -1618,8 +1618,8 @@ packages:
       eslint-config-prettier:
         optional: true
 
-  eslint-plugin-svelte@2.46.0:
-    resolution: {integrity: sha512-1A7iEMkzmCZ9/Iz+EAfOGYL8IoIG6zeKEq1SmpxGeM5SXmoQq+ZNnCpXFVJpsxPWYx8jIVGMerQMzX20cqUl0g==}
+  eslint-plugin-svelte@2.46.1:
+    resolution: {integrity: sha512-7xYr2o4NID/f9OEYMqxsEQsCsj4KaMy4q5sANaKkAb6/QeCjYFxRmDm2S3YC3A3pl1kyPZ/syOx/i7LcWYSbIw==}
     engines: {node: ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0-0 || ^9.0.0-0
@@ -2370,10 +2370,6 @@ packages:
 
   postcss-selector-parser@6.0.10:
     resolution: {integrity: sha512-IQ7TZdoaqbT+LCpShg46jnZVlhWD2w6iQYAcYXfHARZ7X1t/UGhhceQDs5X0cGqKvYlHNOuv7Oa1xmb0oQuA3w==}
-    engines: {node: '>=4'}
-
-  postcss-selector-parser@6.1.1:
-    resolution: {integrity: sha512-b4dlw/9V8A71rLIDsSwVmak9z2DuBUB7CA1/wSdelNEzqsjoSPeADTWNO09lpH49Diy3/JIZ2bSPB1dI3LJCHg==}
     engines: {node: '>=4'}
 
   postcss-selector-parser@6.1.2:
@@ -4283,7 +4279,7 @@ snapshots:
     optionalDependencies:
       eslint-config-prettier: 9.1.0(eslint@9.15.0(jiti@1.21.6))
 
-  eslint-plugin-svelte@2.46.0(eslint@9.15.0(jiti@1.21.6))(svelte@4.2.19)(ts-node@10.9.2(@types/node@22.9.3)(typescript@5.7.2)):
+  eslint-plugin-svelte@2.46.1(eslint@9.15.0(jiti@1.21.6))(svelte@4.2.19)(ts-node@10.9.2(@types/node@22.9.3)(typescript@5.7.2)):
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@9.15.0(jiti@1.21.6))
       '@jridgewell/sourcemap-codec': 1.5.0
@@ -5176,11 +5172,6 @@ snapshots:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
 
-  postcss-selector-parser@6.1.1:
-    dependencies:
-      cssesc: 3.0.0
-      util-deprecate: 1.0.2
-
   postcss-selector-parser@6.1.2:
     dependencies:
       cssesc: 3.0.0
@@ -5225,7 +5216,7 @@ snapshots:
       commander: 12.1.0
       glob: 10.4.5
       postcss: 8.4.49
-      postcss-selector-parser: 6.1.1
+      postcss-selector-parser: 6.1.2
 
   queue-microtask@1.2.3: {}
 
