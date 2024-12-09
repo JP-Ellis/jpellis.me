@@ -72,8 +72,8 @@ importers:
         specifier: 0.5.15
         version: 0.5.15(tailwindcss@3.4.16(ts-node@10.9.2(@types/node@22.10.1)(typescript@5.7.2)))
       '@trivago/prettier-plugin-sort-imports':
-        specifier: 5.1.0
-        version: 5.1.0(prettier-plugin-svelte@3.3.2(prettier@3.4.2)(svelte@4.2.19))(prettier@3.4.2)(svelte@4.2.19)
+        specifier: 5.2.0
+        version: 5.2.0(prettier-plugin-svelte@3.3.2(prettier@3.4.2)(svelte@4.2.19))(prettier@3.4.2)(svelte@4.2.19)
       '@types/node':
         specifier: 22.10.1
         version: 22.10.1
@@ -1152,8 +1152,8 @@ packages:
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders || >=4.0.0-alpha.20'
 
-  '@trivago/prettier-plugin-sort-imports@5.1.0':
-    resolution: {integrity: sha512-IlzY6Qxd+T5lLS3JLgaXUMIedFJY2/RB4QlFV3K47l08Z2xIeEIRCMMlvuI/n/4Kjw6ofvq+g3YoBYKidnpJOg==}
+  '@trivago/prettier-plugin-sort-imports@5.2.0':
+    resolution: {integrity: sha512-yEIJ7xMKYQwyNRjxSdi4Gs37iszikAjxfky+3hu9bn24u8eHLJNDMAoOTyowp8p6EpSl8IQMdkfBx+WnJTttsw==}
     engines: {node: '>18.12'}
     peerDependencies:
       '@vue/compiler-sfc': 3.x
@@ -3794,7 +3794,7 @@ snapshots:
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.4.16(ts-node@10.9.2(@types/node@22.10.1)(typescript@5.7.2))
 
-  '@trivago/prettier-plugin-sort-imports@5.1.0(prettier-plugin-svelte@3.3.2(prettier@3.4.2)(svelte@4.2.19))(prettier@3.4.2)(svelte@4.2.19)':
+  '@trivago/prettier-plugin-sort-imports@5.2.0(prettier-plugin-svelte@3.3.2(prettier@3.4.2)(svelte@4.2.19))(prettier@3.4.2)(svelte@4.2.19)':
     dependencies:
       '@babel/generator': 7.26.3
       '@babel/parser': 7.26.3
