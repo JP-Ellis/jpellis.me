@@ -36,8 +36,8 @@ importers:
         specifier: 2.4.2
         version: 2.4.2
       '@steeze-ui/lucide-icons':
-        specifier: 1.2.0
-        version: 1.2.0
+        specifier: 1.4.1
+        version: 1.4.1
       '@steeze-ui/material-design-icons':
         specifier: 1.1.2
         version: 1.1.2
@@ -1085,8 +1085,8 @@ packages:
   '@steeze-ui/heroicons@2.4.2':
     resolution: {integrity: sha512-66luL+uaxyC6mcZigewH4phfDxNWj4sH+n6qK2VnY3zcgpMmNAgVQbMGfZYfKhLqrUo13BlqpmhWuHqAUpehlA==}
 
-  '@steeze-ui/lucide-icons@1.2.0':
-    resolution: {integrity: sha512-EHanG7TVXRh9hc0c7OGXgfcTGN3A8jnswH8vtS4ex27XDZxm2TT9u7ns5oNrDafvto6eYlDhNSlppgGQ56qlOA==}
+  '@steeze-ui/lucide-icons@1.4.1':
+    resolution: {integrity: sha512-hkiFMr81bkmuR5jeT475OhWVzCHkvdwtNv5sVSYMK+7+8ZHbT2dS8iLGr06qvOgjLAXo0a7cqvMkXwxd6WIhbA==}
 
   '@steeze-ui/material-design-icons@1.1.2':
     resolution: {integrity: sha512-p1csJ9RR8J2zG+ED3JJehVHxIi88B0ilUhg0ScbduVe54lgTZ1suAu5d94zOrBww/ImKDPhFshEXUWodVpELLw==}
@@ -3697,7 +3697,7 @@ snapshots:
 
   '@steeze-ui/heroicons@2.4.2': {}
 
-  '@steeze-ui/lucide-icons@1.2.0': {}
+  '@steeze-ui/lucide-icons@1.4.1': {}
 
   '@steeze-ui/material-design-icons@1.1.2': {}
 
