@@ -111,8 +111,8 @@ importers:
         specifier: 11.10.0
         version: 11.10.0
       katex:
-        specifier: 0.16.15
-        version: 0.16.15
+        specifier: 0.16.19
+        version: 0.16.19
       mdsvex:
         specifier: 0.12.3
         version: 0.12.3(svelte@4.2.19)
@@ -2025,8 +2025,8 @@ packages:
   json-stable-stringify-without-jsonify@1.0.1:
     resolution: {integrity: sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==}
 
-  katex@0.16.15:
-    resolution: {integrity: sha512-yE9YJIEAk2aZ+FL/G8r+UGw0CTUzEA8ZFy6E+8tc3spHUKq3qBnzCkI1CQwGoI9atJhVyFPEypQsTY7mJ1Pi9w==}
+  katex@0.16.19:
+    resolution: {integrity: sha512-3IA6DYVhxhBabjSLTNO9S4+OliA3Qvb8pBQXMfC4WxXJgLwZgnfDl0BmB4z6nBMdznBsZ+CGM8DrGZ5hcguDZg==}
     hasBin: true
 
   keyv@4.5.4:
@@ -4713,7 +4713,7 @@ snapshots:
 
   json-stable-stringify-without-jsonify@1.0.1: {}
 
-  katex@0.16.15:
+  katex@0.16.19:
     dependencies:
       commander: 8.3.0
 
