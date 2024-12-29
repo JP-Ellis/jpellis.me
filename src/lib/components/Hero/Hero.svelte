@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Code2, ServerCog } from "@steeze-ui/lucide-icons";
+  import { CodeXml, ServerCog } from "@steeze-ui/lucide-icons";
   import { Python, Rust } from "@steeze-ui/simple-icons";
   import { Icon } from "@steeze-ui/svelte-icon";
   import Img from "@zerodevx/svelte-img";
@@ -8,7 +8,7 @@
   import portrait from "$lib/assets/images/joshua-ellis/portrait-2022.png?as=run:0";
 
   const descriptions = [
-    { icon: Code2, text: "Software Engineer" },
+    { icon: CodeXml, text: "Software Engineer" },
     { icon: ServerCog, text: "Data Engineer" },
     { icon: Python, text: "Python Developer" },
     { icon: Rust, text: "Rust Developer" },
