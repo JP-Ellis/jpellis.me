@@ -51,7 +51,7 @@
     "eslint-plugin-svelte": "2.46.1",
     "flowbite": "2.5.2",
     "flowbite-svelte": "0.47.4",
-    "highlight.js": "11.10.0",
+    "highlight.js": "11.11.1",
     "katex": "0.16.19",
     "mdsvex": "0.12.3",
     "postcss": "8.4.49",
