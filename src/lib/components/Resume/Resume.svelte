@@ -3,12 +3,11 @@ Resume component, used to display a resume in a nice way and makes use of the
 Section component to display each section of the resume.
 -->
 <script lang="ts">
+  import Organization from "./Organization.svelte";
+  import Position from "./Position.svelte";
   import KPMGLogo from "./assets/kpmg.svg?component";
   import MelbourneUniversityLogo from "./assets/melbourne_university.svg?component";
   import SmartBearLogo from "./assets/smartbear.svg?component";
-
-  import Organization from "./Organization.svelte";
-  import Position from "./Position.svelte";
 </script>
 
 <!-- Resume -->

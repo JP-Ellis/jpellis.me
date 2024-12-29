@@ -1,5 +1,4 @@
 /* eslint-disable line-comment-position */
-
 /* eslint-disable no-inline-comments */
 import type { CustomThemeConfig } from "@skeletonlabs/tw-plugin";
 
