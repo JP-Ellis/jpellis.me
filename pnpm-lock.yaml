@@ -45,8 +45,8 @@ importers:
         specifier: 1.10.1
         version: 1.10.1
       '@steeze-ui/svelte-icon':
-        specifier: 1.5.0
-        version: 1.5.0(svelte@5.16.0)
+        specifier: 1.6.2
+        version: 1.6.2(svelte@5.16.0)
       '@steeze-ui/tabler-icons':
         specifier: 3.3.1
         version: 3.3.1
@@ -1339,10 +1339,10 @@ packages:
   '@steeze-ui/simple-icons@1.10.1':
     resolution: {integrity: sha512-pRdEIBR3qUG+wAjijePjFuqwB2Ikf0kHBTNTULEUiEsSSgEUKOM3/ArEgt8rgVu035rnsmwbNC/vHdciPGMdKw==}
 
-  '@steeze-ui/svelte-icon@1.5.0':
-    resolution: {integrity: sha512-Y0S7Qk2kO6byzOlD5SQGbOF2ZaKXJgfTkH78QUPcq579wiWMQJ5H14zL4XwtsPJ0DfkoL5qa3WaIdYkWb9A6AA==}
+  '@steeze-ui/svelte-icon@1.6.2':
+    resolution: {integrity: sha512-Q2WP/RkM1JhMueX0FJogSj4J1bncSHaAiiPCqjcseRcHKqfpjYFPJa8bA50I+4KbyOVJ9fdUvTQ3ww9X0ITRxQ==}
     peerDependencies:
-      svelte: ^4.0.0
+      svelte: ^5.0.0
 
   '@steeze-ui/tabler-icons@3.3.1':
     resolution: {integrity: sha512-9fUPEXsYMgBHazEX35Xca+yONIcVmLGVdKXacpCgOZ0I6l/s/cjQduHEnU/zJvPpwP4K1C8jJfUDq3PsZt6SSQ==}
@@ -4131,7 +4131,7 @@ snapshots:
 
   '@steeze-ui/simple-icons@1.10.1': {}
 
-  '@steeze-ui/svelte-icon@1.5.0(svelte@5.16.0)':
+  '@steeze-ui/svelte-icon@1.6.2(svelte@5.16.0)':
     dependencies:
       svelte: 5.16.0
 
