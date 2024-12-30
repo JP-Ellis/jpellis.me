@@ -58,4 +58,6 @@ repos:
         language: system
         files: ^(package\.json|pnpm-lock\.yaml)$
         pass_filenames: false
-        stages: [post-checkout]
+        stages:
+          - post-checkout
+          - post-merge
