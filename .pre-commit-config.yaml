@@ -34,7 +34,7 @@ repos:
     hooks:
       - id: prettier
         name: prettier
-        entry: npx prettier --write --ignore-unknown
+        entry: pnpm exec prettier --write --ignore-unknown
         language: system
         exclude: ^(pnpm-lock\.yaml)$
         types: [text]
