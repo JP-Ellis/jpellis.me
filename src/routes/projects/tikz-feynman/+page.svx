@@ -142,10 +142,8 @@ issue or pull request on [Github](https://github.com/JP-Ellis/TikZ-Feynman).
 
 <style lang="postcss">
   :global(.dark) {
-    .tikz-feynman {
-      :global(picture), :not(picture) > :global(img) {
-        filter: invert(1);
-      }
+    .tikz-feynman :global(picture) {
+      filter: invert(1);
     }
   }
 </style>
