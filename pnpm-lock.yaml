@@ -73,7 +73,7 @@ importers:
         version: 0.5.16(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@22.10.5)(typescript@5.7.3)))
       '@trivago/prettier-plugin-sort-imports':
         specifier: 5.2.1
-        version: 5.2.1(prettier-plugin-svelte@3.3.2(prettier@3.4.2)(svelte@5.17.3))(prettier@3.4.2)(svelte@5.17.3)
+        version: 5.2.1(prettier-plugin-svelte@3.3.3(prettier@3.4.2)(svelte@5.17.3))(prettier@3.4.2)(svelte@5.17.3)
       '@types/node':
         specifier: 22.10.5
         version: 22.10.5
@@ -123,8 +123,8 @@ importers:
         specifier: 3.4.2
         version: 3.4.2
       prettier-plugin-svelte:
-        specifier: 3.3.2
-        version: 3.3.2(prettier@3.4.2)(svelte@5.17.3)
+        specifier: 3.3.3
+        version: 3.3.3(prettier@3.4.2)(svelte@5.17.3)
       rehype-autolink-headings:
         specifier: 7.1.0
         version: 7.1.0
@@ -2648,8 +2648,8 @@ packages:
     resolution: {integrity: sha512-GbK2cP9nraSSUF9N2XwUwqfzlAFlMNYYl+ShE/V+H8a9uNl/oUqB1w2EL54Jh0OlyRSd8RfWYJ3coVS4TROP2w==}
     engines: {node: '>=6.0.0'}
 
-  prettier-plugin-svelte@3.3.2:
-    resolution: {integrity: sha512-kRPjH8wSj2iu+dO+XaUv4vD8qr5mdDmlak3IT/7AOgGIMRG86z/EHOLauFcClKEnOUf4A4nOA7sre5KrJD4Raw==}
+  prettier-plugin-svelte@3.3.3:
+    resolution: {integrity: sha512-yViK9zqQ+H2qZD1w/bH7W8i+bVfKrD8GIFjkFe4Thl6kCT9SlAsXVNmt3jCvQOCsnOhcvYgsoVlRV/Eu6x5nNw==}
     peerDependencies:
       prettier: ^3.0.0
       svelte: ^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0
@@ -4077,7 +4077,7 @@ snapshots:
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.4.17(ts-node@10.9.2(@types/node@22.10.5)(typescript@5.7.3))
 
-  '@trivago/prettier-plugin-sort-imports@5.2.1(prettier-plugin-svelte@3.3.2(prettier@3.4.2)(svelte@5.17.3))(prettier@3.4.2)(svelte@5.17.3)':
+  '@trivago/prettier-plugin-sort-imports@5.2.1(prettier-plugin-svelte@3.3.3(prettier@3.4.2)(svelte@5.17.3))(prettier@3.4.2)(svelte@5.17.3)':
     dependencies:
       '@babel/generator': 7.26.3
       '@babel/parser': 7.26.3
@@ -4087,7 +4087,7 @@ snapshots:
       lodash: 4.17.21
       prettier: 3.4.2
     optionalDependencies:
-      prettier-plugin-svelte: 3.3.2(prettier@3.4.2)(svelte@5.17.3)
+      prettier-plugin-svelte: 3.3.3(prettier@3.4.2)(svelte@5.17.3)
       svelte: 5.17.3
     transitivePeerDependencies:
       - supports-color
@@ -5606,7 +5606,7 @@ snapshots:
     dependencies:
       fast-diff: 1.3.0
 
-  prettier-plugin-svelte@3.3.2(prettier@3.4.2)(svelte@5.17.3):
+  prettier-plugin-svelte@3.3.3(prettier@3.4.2)(svelte@5.17.3):
     dependencies:
       prettier: 3.4.2
       svelte: 5.17.3
