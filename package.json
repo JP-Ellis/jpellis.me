@@ -56,7 +56,7 @@
     "highlight.js": "11.11.1",
     "katex": "0.16.20",
     "mdsvex": "0.12.3",
-    "postcss": "8.5.0",
+    "postcss": "8.5.1",
     "prettier": "3.4.2",
     "prettier-plugin-svelte": "3.3.3",
     "rehype-autolink-headings": "7.1.0",
