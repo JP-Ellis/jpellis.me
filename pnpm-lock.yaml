@@ -30,8 +30,8 @@ importers:
         specifier: 2.10.4
         version: 2.10.4(svelte@5.19.2)
       '@skeletonlabs/tw-plugin':
-        specifier: 0.4.0
-        version: 0.4.0(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@22.10.10)(typescript@5.7.3)))
+        specifier: 0.4.1
+        version: 0.4.1(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@22.10.10)(typescript@5.7.3)))
       '@steeze-ui/heroicons':
         specifier: 2.4.2
         version: 2.4.2
@@ -960,8 +960,8 @@ packages:
     peerDependencies:
       svelte: ^3.56.0 || ^4.0.0 || ^5.0.0
 
-  '@skeletonlabs/tw-plugin@0.4.0':
-    resolution: {integrity: sha512-v6Y4deBq9ByRx3kTRGgekhhYkWEYgNNNu8UXOwJngCStB7w8SwmbNFSeHkluxMbgCgMnJyp220EMpw9nj/rEsQ==}
+  '@skeletonlabs/tw-plugin@0.4.1':
+    resolution: {integrity: sha512-crrC8BGKis0GNTp7V2HF6mk1ECLUvAxgTTV26LMgt/rV3U6Xd7N7dL5qIL8fE4MTHvpKa1SBsdqsnMbEvATeEg==}
     peerDependencies:
       tailwindcss: '>=3.0.0'
 
@@ -3517,7 +3517,7 @@ snapshots:
       esm-env: 1.0.0
       svelte: 5.19.2
 
-  '@skeletonlabs/tw-plugin@0.4.0(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@22.10.10)(typescript@5.7.3)))':
+  '@skeletonlabs/tw-plugin@0.4.1(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@22.10.10)(typescript@5.7.3)))':
     dependencies:
       tailwindcss: 3.4.17(ts-node@10.9.2(@types/node@22.10.10)(typescript@5.7.3))
 
