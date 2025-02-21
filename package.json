@@ -52,7 +52,7 @@
     "eslint-plugin-prettier": "5.2.3",
     "eslint-plugin-svelte": "2.46.1",
     "flowbite": "3.1.2",
-    "flowbite-svelte": "0.47.4",
+    "flowbite-svelte": "0.48.1",
     "highlight.js": "11.11.1",
     "katex": "0.16.21",
     "mdsvex": "0.12.3",
