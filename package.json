@@ -57,7 +57,7 @@
     "katex": "0.16.21",
     "mdsvex": "0.12.3",
     "postcss": "8.5.3",
-    "prettier": "3.5.2",
+    "prettier": "3.5.3",
     "prettier-plugin-svelte": "3.3.3",
     "rehype-autolink-headings": "7.1.0",
     "rehype-slug": "6.0.0",
