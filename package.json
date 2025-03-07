@@ -48,7 +48,7 @@
     "@zerodevx/svelte-img": "2.1.2",
     "autoprefixer": "10.4.20",
     "eslint": "9.21.0",
-    "eslint-config-prettier": "10.0.2",
+    "eslint-config-prettier": "10.1.0",
     "eslint-plugin-prettier": "5.2.3",
     "eslint-plugin-svelte": "3.0.3",
     "flowbite": "3.1.2",
