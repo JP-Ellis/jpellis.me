@@ -99,8 +99,8 @@ importers:
         specifier: 5.2.6
         version: 5.2.6(eslint-config-prettier@10.1.1(eslint@9.24.0(jiti@1.21.7)))(eslint@9.24.0(jiti@1.21.7))(prettier@3.5.3)
       eslint-plugin-svelte:
-        specifier: 3.4.1
-        version: 3.4.1(eslint@9.24.0(jiti@1.21.7))(svelte@5.25.7)(ts-node@10.9.2(@types/node@22.14.0)(typescript@5.8.3))
+        specifier: 3.5.1
+        version: 3.5.1(eslint@9.24.0(jiti@1.21.7))(svelte@5.25.7)(ts-node@10.9.2(@types/node@22.14.0)(typescript@5.8.3))
       flowbite:
         specifier: 3.1.2
         version: 3.1.2(rollup@4.34.9)
@@ -1544,12 +1544,6 @@ packages:
     resolution: {integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==}
     engines: {node: '>=12'}
 
-  eslint-compat-utils@0.6.4:
-    resolution: {integrity: sha512-/u+GQt8NMfXO8w17QendT4gvO5acfxQsAKirAt0LVxDnr2N8YLCVbregaNc/Yhp7NM128DwCaRvr8PLDfeNkQw==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      eslint: '>=6.0.0'
-
   eslint-config-prettier@10.1.1:
     resolution: {integrity: sha512-4EQQr6wXwS+ZJSzaR5ZCrYgLxqvUjdXctaEtBqHcbkW944B1NQyO4qpdHQbXBONfwxXdkAY81HH4+LUfrg+zPw==}
     hasBin: true
@@ -1570,8 +1564,8 @@ packages:
       eslint-config-prettier:
         optional: true
 
-  eslint-plugin-svelte@3.4.1:
-    resolution: {integrity: sha512-wgbRwN/6FampBBiIuuLSmp4QRqmuHuexbuRJwx+kqzsxKOhakU8o8sVgGhsf/bQiZkOmWF/5Mrj2CHmVMwY+YQ==}
+  eslint-plugin-svelte@3.5.1:
+    resolution: {integrity: sha512-Qn1slddZHfqYiDO6IN8/iN3YL+VuHlgYjm30FT+hh0Jf/TX0jeZMTJXQMajFm5f6f6hURi+XO8P+NPYD+T4jkg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^8.57.1 || ^9.0.0
@@ -4108,11 +4102,6 @@ snapshots:
 
   escape-string-regexp@5.0.0: {}
 
-  eslint-compat-utils@0.6.4(eslint@9.24.0(jiti@1.21.7)):
-    dependencies:
-      eslint: 9.24.0(jiti@1.21.7)
-      semver: 7.7.1
-
   eslint-config-prettier@10.1.1(eslint@9.24.0(jiti@1.21.7)):
     dependencies:
       eslint: 9.24.0(jiti@1.21.7)
@@ -4126,12 +4115,11 @@ snapshots:
     optionalDependencies:
       eslint-config-prettier: 10.1.1(eslint@9.24.0(jiti@1.21.7))
 
-  eslint-plugin-svelte@3.4.1(eslint@9.24.0(jiti@1.21.7))(svelte@5.25.7)(ts-node@10.9.2(@types/node@22.14.0)(typescript@5.8.3)):
+  eslint-plugin-svelte@3.5.1(eslint@9.24.0(jiti@1.21.7))(svelte@5.25.7)(ts-node@10.9.2(@types/node@22.14.0)(typescript@5.8.3)):
     dependencies:
       '@eslint-community/eslint-utils': 4.4.1(eslint@9.24.0(jiti@1.21.7))
       '@jridgewell/sourcemap-codec': 1.5.0
       eslint: 9.24.0(jiti@1.21.7)
-      eslint-compat-utils: 0.6.4(eslint@9.24.0(jiti@1.21.7))
       esutils: 2.0.3
       known-css-properties: 0.35.0
       postcss: 8.5.3
