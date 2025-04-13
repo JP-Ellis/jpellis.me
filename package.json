@@ -22,7 +22,7 @@
   "devDependencies": {
     "@floating-ui/dom": "1.6.13",
     "@octokit/rest": "21.1.1",
-    "@octokit/types": "13.10.0",
+    "@octokit/types": "14.0.0",
     "@playwright/test": "1.51.1",
     "@poppanator/sveltekit-svg": "5.0.1",
     "@prettier/plugin-xml": "3.4.1",
