@@ -55,7 +55,7 @@
     "flowbite-svelte": "0.48.6",
     "highlight.js": "11.11.1",
     "katex": "0.16.22",
-    "mdsvex": "0.12.3",
+    "mdsvex": "0.12.5",
     "postcss": "8.5.3",
     "prettier": "3.5.3",
     "prettier-plugin-svelte": "3.3.3",
