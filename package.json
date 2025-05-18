@@ -58,7 +58,7 @@
     "mdsvex": "0.12.6",
     "postcss": "8.5.3",
     "prettier": "3.5.3",
-    "prettier-plugin-svelte": "3.3.3",
+    "prettier-plugin-svelte": "3.4.0",
     "rehype-autolink-headings": "7.1.0",
     "rehype-slug": "6.0.0",
     "remark-gfm": "4.0.1",
