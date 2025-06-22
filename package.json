@@ -50,7 +50,7 @@
     "eslint": "9.29.0",
     "eslint-config-prettier": "10.1.5",
     "eslint-plugin-prettier": "5.5.0",
-    "eslint-plugin-svelte": "3.9.2",
+    "eslint-plugin-svelte": "3.9.3",
     "flowbite": "3.1.2",
     "flowbite-svelte": "1.7.1",
     "highlight.js": "11.11.1",
