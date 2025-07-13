@@ -25,7 +25,7 @@
     "@octokit/types": "14.1.0",
     "@playwright/test": "1.53.2",
     "@poppanator/sveltekit-svg": "5.0.1",
-    "@prettier/plugin-xml": "3.4.1",
+    "@prettier/plugin-xml": "3.4.2",
     "@skeletonlabs/skeleton": "2.11.0",
     "@skeletonlabs/tw-plugin": "0.4.1",
     "@steeze-ui/heroicons": "2.4.2",
