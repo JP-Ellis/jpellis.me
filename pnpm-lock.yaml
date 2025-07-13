@@ -105,8 +105,8 @@ importers:
         specifier: 3.1.2
         version: 3.1.2(rollup@4.41.0)
       flowbite-svelte:
-        specifier: 1.8.3
-        version: 1.8.3(rollup@4.41.0)(svelte@5.35.2)(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@22.16.0)(typescript@5.8.3)))
+        specifier: 1.9.0
+        version: 1.9.0(rollup@4.41.0)(svelte@5.35.2)(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@22.16.0)(typescript@5.8.3)))
       highlight.js:
         specifier: 11.11.1
         version: 11.11.1
@@ -467,9 +467,6 @@ packages:
 
   '@floating-ui/utils@0.2.10':
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
-
-  '@floating-ui/utils@0.2.9':
-    resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -1365,6 +1362,9 @@ packages:
   data-uri-to-buffer@2.0.2:
     resolution: {integrity: sha512-ND9qDTLc6diwj+Xe5cdAgVTbLVdXbtxTJRXRhli8Mowuaan+0EJOtdqJ0QCHNSSPyoXGx9HX2/VMnKeC34AChA==}
 
+  date-fns@4.1.0:
+    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
+
   debug@4.4.1:
     resolution: {integrity: sha512-KcKCqiftBJcZr++7ykoDIEwSa3XWowTfNPo92BYxjXiyYEVrUQh2aLyhxBCwww+heortUFxEJYcRzosstTEBYQ==}
     engines: {node: '>=6.0'}
@@ -1641,8 +1641,8 @@ packages:
   flowbite-datepicker@1.3.2:
     resolution: {integrity: sha512-6Nfm0MCVX3mpaR7YSCjmEO2GO8CDt6CX8ZpQnGdeu03WUCWtEPQ/uy0PUiNtIJjJZWnX0Cm3H55MOhbD1g+E/g==}
 
-  flowbite-svelte@1.8.3:
-    resolution: {integrity: sha512-1qBJE8owK5iuhm3NdRNBkQI4yBjqqh3J9R9GOcPQ5Z8Td+Dpk5+aK7hWXsZEJ0EC5I1ZJlFW8mwK5v3b+QY/AQ==}
+  flowbite-svelte@1.9.0:
+    resolution: {integrity: sha512-r+Xb2kJEiKA9SzJTwC4oqqV4mWrTRr/fyduAl+WDfGUetyCT7a094ADgnzlanJjb1Zho/O7pOyjs+sGvZjRgxQ==}
     peerDependencies:
       svelte: ^5.0.0
       tailwindcss: ^4.1.4
@@ -3036,8 +3036,6 @@ snapshots:
 
   '@floating-ui/utils@0.2.10': {}
 
-  '@floating-ui/utils@0.2.9': {}
-
   '@humanfs/core@0.19.1': {}
 
   '@humanfs/node@0.16.6':
@@ -3885,6 +3883,8 @@ snapshots:
 
   data-uri-to-buffer@2.0.2: {}
 
+  date-fns@4.1.0: {}
+
   debug@4.4.1:
     dependencies:
       ms: 2.1.3
@@ -4175,12 +4175,13 @@ snapshots:
     transitivePeerDependencies:
       - rollup
 
-  flowbite-svelte@1.8.3(rollup@4.41.0)(svelte@5.35.2)(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@22.16.0)(typescript@5.8.3))):
+  flowbite-svelte@1.9.0(rollup@4.41.0)(svelte@5.35.2)(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@22.16.0)(typescript@5.8.3))):
     dependencies:
       '@floating-ui/dom': 1.7.2
-      '@floating-ui/utils': 0.2.9
+      '@floating-ui/utils': 0.2.10
       apexcharts: 4.7.0
       clsx: 2.1.1
+      date-fns: 4.1.0
       flowbite: 3.1.2(rollup@4.41.0)
       svelte: 5.35.2
       tailwind-merge: 3.3.1
