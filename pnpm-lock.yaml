@@ -99,8 +99,8 @@ importers:
         specifier: 5.5.3
         version: 5.5.3(eslint-config-prettier@10.1.8(eslint@9.31.0(jiti@1.21.7)))(eslint@9.31.0(jiti@1.21.7))(prettier@3.6.2)
       eslint-plugin-svelte:
-        specifier: 3.10.1
-        version: 3.10.1(eslint@9.31.0(jiti@1.21.7))(svelte@5.35.6)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3))
+        specifier: 3.11.0
+        version: 3.11.0(eslint@9.31.0(jiti@1.21.7))(svelte@5.35.6)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3))
       flowbite:
         specifier: 3.1.2
         version: 3.1.2(rollup@4.41.0)
@@ -1492,8 +1492,8 @@ packages:
       eslint-config-prettier:
         optional: true
 
-  eslint-plugin-svelte@3.10.1:
-    resolution: {integrity: sha512-csCh2x0ge/DugXC7dCANh46Igi7bjMZEy6rHZCdS13AoGVJSu7a90Kru3I8oMYLGEemPRE1hQXadxvRPVMAAXQ==}
+  eslint-plugin-svelte@3.11.0:
+    resolution: {integrity: sha512-KliWlkieHyEa65aQIkRwUFfHzT5Cn4u3BQQsu3KlkJOs7c1u7ryn84EWaOjEzilbKgttT4OfBURA8Uc4JBSQIw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^8.57.1 || ^9.0.0
@@ -3984,7 +3984,7 @@ snapshots:
     optionalDependencies:
       eslint-config-prettier: 10.1.8(eslint@9.31.0(jiti@1.21.7))
 
-  eslint-plugin-svelte@3.10.1(eslint@9.31.0(jiti@1.21.7))(svelte@5.35.6)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)):
+  eslint-plugin-svelte@3.11.0(eslint@9.31.0(jiti@1.21.7))(svelte@5.35.6)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)):
     dependencies:
       '@eslint-community/eslint-utils': 4.7.0(eslint@9.31.0(jiti@1.21.7))
       '@jridgewell/sourcemap-codec': 1.5.0
