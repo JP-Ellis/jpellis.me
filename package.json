@@ -23,7 +23,7 @@
     "@floating-ui/dom": "1.7.3",
     "@octokit/rest": "22.0.0",
     "@octokit/types": "14.1.0",
-    "@playwright/test": "1.54.1",
+    "@playwright/test": "1.54.2",
     "@poppanator/sveltekit-svg": "5.0.1",
     "@prettier/plugin-xml": "3.4.2",
     "@skeletonlabs/skeleton": "2.11.0",
