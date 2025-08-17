@@ -105,8 +105,8 @@ importers:
         specifier: 3.1.2
         version: 3.1.2(rollup@4.46.2)
       flowbite-svelte:
-        specifier: 1.11.4
-        version: 1.11.4(rollup@4.46.2)(svelte@5.38.0)(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@22.17.1)(typescript@5.9.2)))
+        specifier: 1.12.5
+        version: 1.12.5(rollup@4.46.2)(svelte@5.38.0)(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@22.17.1)(typescript@5.9.2)))
       highlight.js:
         specifier: 11.11.1
         version: 11.11.1
@@ -1627,8 +1627,8 @@ packages:
   flowbite-datepicker@1.3.2:
     resolution: {integrity: sha512-6Nfm0MCVX3mpaR7YSCjmEO2GO8CDt6CX8ZpQnGdeu03WUCWtEPQ/uy0PUiNtIJjJZWnX0Cm3H55MOhbD1g+E/g==}
 
-  flowbite-svelte@1.11.4:
-    resolution: {integrity: sha512-D+9O5+ATXIRCBYxZXgT8w1MaM0AQJqjUpJ+KUBXXuzc6X1/Qdcvq2o6rdt4axEDQ1QEm018HOk7mjOyYoVN4Hw==}
+  flowbite-svelte@1.12.5:
+    resolution: {integrity: sha512-a4up+mzSNJ6xRwHtUGHt0aJGBFJu3Y5j5vcTBXta6v8yenMizLxeLVs0Mx9aRshjfLdkcW3fTYXK4jDOr0Ae/Q==}
     peerDependencies:
       svelte: ^5.29.0
       tailwindcss: ^4.1.4
@@ -4154,7 +4154,7 @@ snapshots:
     transitivePeerDependencies:
       - rollup
 
-  flowbite-svelte@1.11.4(rollup@4.46.2)(svelte@5.38.0)(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@22.17.1)(typescript@5.9.2))):
+  flowbite-svelte@1.12.5(rollup@4.46.2)(svelte@5.38.0)(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@22.17.1)(typescript@5.9.2))):
     dependencies:
       '@floating-ui/dom': 1.7.3
       '@floating-ui/utils': 0.2.10
