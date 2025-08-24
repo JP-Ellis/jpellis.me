@@ -20,7 +20,7 @@
   },
   "packageManager": "pnpm@10.14.0",
   "devDependencies": {
-    "@floating-ui/dom": "1.7.3",
+    "@floating-ui/dom": "1.7.4",
     "@octokit/rest": "22.0.0",
     "@octokit/types": "14.1.0",
     "@playwright/test": "1.54.2",
