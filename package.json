@@ -21,8 +21,8 @@
   "packageManager": "pnpm@10.19.0",
   "devDependencies": {
     "@floating-ui/dom": "1.7.4",
-    "@octokit/rest": "22.0.0",
-    "@octokit/types": "15.0.1",
+    "@octokit/rest": "22.0.1",
+    "@octokit/types": "15.0.2",
     "@playwright/test": "1.56.1",
     "@poppanator/sveltekit-svg": "6.0.0",
     "@prettier/plugin-xml": "3.4.2",
