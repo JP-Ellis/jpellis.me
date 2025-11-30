@@ -25,7 +25,7 @@ importers:
         version: 6.0.0(rollup@4.46.2)(svelte@5.43.8)(vite@7.2.2(@types/node@24.10.1)(jiti@1.21.7)(yaml@2.8.0))
       '@prettier/plugin-xml':
         specifier: 3.4.2
-        version: 3.4.2(prettier@3.6.2)
+        version: 3.4.2(prettier@3.7.1)
       '@skeletonlabs/skeleton':
         specifier: 2.11.0
         version: 2.11.0(svelte@5.43.8)
@@ -73,7 +73,7 @@ importers:
         version: 0.5.19(tailwindcss@3.4.18(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.9.3)))
       '@trivago/prettier-plugin-sort-imports':
         specifier: 6.0.0
-        version: 6.0.0(prettier-plugin-svelte@3.4.0(prettier@3.6.2)(svelte@5.43.8))(prettier@3.6.2)(svelte@5.43.8)
+        version: 6.0.0(prettier-plugin-svelte@3.4.0(prettier@3.7.1)(svelte@5.43.8))(prettier@3.7.1)(svelte@5.43.8)
       '@types/node':
         specifier: 24.10.1
         version: 24.10.1
@@ -97,7 +97,7 @@ importers:
         version: 10.1.8(eslint@9.39.1(jiti@1.21.7))
       eslint-plugin-prettier:
         specifier: 5.5.4
-        version: 5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.1(jiti@1.21.7)))(eslint@9.39.1(jiti@1.21.7))(prettier@3.6.2)
+        version: 5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.1(jiti@1.21.7)))(eslint@9.39.1(jiti@1.21.7))(prettier@3.7.1)
       eslint-plugin-svelte:
         specifier: 3.13.0
         version: 3.13.0(eslint@9.39.1(jiti@1.21.7))(svelte@5.43.8)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.9.3))
@@ -120,11 +120,11 @@ importers:
         specifier: 8.5.6
         version: 8.5.6
       prettier:
-        specifier: 3.6.2
-        version: 3.6.2
+        specifier: 3.7.1
+        version: 3.7.1
       prettier-plugin-svelte:
         specifier: 3.4.0
-        version: 3.4.0(prettier@3.6.2)(svelte@5.43.8)
+        version: 3.4.0(prettier@3.7.1)(svelte@5.43.8)
       rehype-autolink-headings:
         specifier: 7.1.0
         version: 7.1.0
@@ -2264,8 +2264,8 @@ packages:
       prettier: ^3.0.0
       svelte: ^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0
 
-  prettier@3.6.2:
-    resolution: {integrity: sha512-I7AIg5boAr5R0FFtJ6rCfD+LFsWHp81dolrFD8S79U9tb8Az2nGrJncnMSnys+bpQJfRUzqs9hnA81OAA3hCuQ==}
+  prettier@3.7.1:
+    resolution: {integrity: sha512-RWKXE4qB3u5Z6yz7omJkjWwmTfLdcbv44jUVHC5NpfXwFGzvpQM798FGv/6WNK879tc+Cn0AAyherCl1KjbyZQ==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -3254,10 +3254,10 @@ snapshots:
 
   '@popperjs/core@2.11.8': {}
 
-  '@prettier/plugin-xml@3.4.2(prettier@3.6.2)':
+  '@prettier/plugin-xml@3.4.2(prettier@3.7.1)':
     dependencies:
       '@xml-tools/parser': 1.0.11
-      prettier: 3.6.2
+      prettier: 3.7.1
 
   '@rollup/plugin-node-resolve@15.3.1(rollup@4.46.2)':
     dependencies:
@@ -3450,7 +3450,7 @@ snapshots:
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.4.18(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.9.3))
 
-  '@trivago/prettier-plugin-sort-imports@6.0.0(prettier-plugin-svelte@3.4.0(prettier@3.6.2)(svelte@5.43.8))(prettier@3.6.2)(svelte@5.43.8)':
+  '@trivago/prettier-plugin-sort-imports@6.0.0(prettier-plugin-svelte@3.4.0(prettier@3.7.1)(svelte@5.43.8))(prettier@3.7.1)(svelte@5.43.8)':
     dependencies:
       '@babel/generator': 7.28.5
       '@babel/parser': 7.28.5
@@ -3460,9 +3460,9 @@ snapshots:
       lodash-es: 4.17.21
       minimatch: 9.0.5
       parse-imports-exports: 0.2.4
-      prettier: 3.6.2
+      prettier: 3.7.1
     optionalDependencies:
-      prettier-plugin-svelte: 3.4.0(prettier@3.6.2)(svelte@5.43.8)
+      prettier-plugin-svelte: 3.4.0(prettier@3.7.1)(svelte@5.43.8)
       svelte: 5.43.8
     transitivePeerDependencies:
       - supports-color
@@ -3984,10 +3984,10 @@ snapshots:
     dependencies:
       eslint: 9.39.1(jiti@1.21.7)
 
-  eslint-plugin-prettier@5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.1(jiti@1.21.7)))(eslint@9.39.1(jiti@1.21.7))(prettier@3.6.2):
+  eslint-plugin-prettier@5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.1(jiti@1.21.7)))(eslint@9.39.1(jiti@1.21.7))(prettier@3.7.1):
     dependencies:
       eslint: 9.39.1(jiti@1.21.7)
-      prettier: 3.6.2
+      prettier: 3.7.1
       prettier-linter-helpers: 1.0.0
       synckit: 0.11.8
     optionalDependencies:
@@ -4904,12 +4904,12 @@ snapshots:
     dependencies:
       fast-diff: 1.3.0
 
-  prettier-plugin-svelte@3.4.0(prettier@3.6.2)(svelte@5.43.8):
+  prettier-plugin-svelte@3.4.0(prettier@3.7.1)(svelte@5.43.8):
     dependencies:
-      prettier: 3.6.2
+      prettier: 3.7.1
       svelte: 5.43.8
 
-  prettier@3.6.2: {}
+  prettier@3.7.1: {}
 
   printable-characters@1.0.42: {}
 
