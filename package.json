@@ -24,7 +24,7 @@
     "@octokit/rest": "22.0.1",
     "@octokit/types": "16.0.0",
     "@playwright/test": "1.56.1",
-    "@poppanator/sveltekit-svg": "6.0.0",
+    "@poppanator/sveltekit-svg": "6.0.1",
     "@prettier/plugin-xml": "3.4.2",
     "@skeletonlabs/skeleton": "2.11.0",
     "@skeletonlabs/tw-plugin": "0.4.1",
