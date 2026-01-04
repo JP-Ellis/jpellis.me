@@ -27,8 +27,8 @@ importers:
         specifier: 3.4.2
         version: 3.4.2(prettier@3.7.4)
       '@skeletonlabs/skeleton':
-        specifier: 2.11.0
-        version: 2.11.0(svelte@5.46.1)
+        specifier: 4.9.0
+        version: 4.9.0(tailwindcss@3.4.19(ts-node@10.9.2(@types/node@24.10.4)(typescript@5.9.3)))
       '@skeletonlabs/tw-plugin':
         specifier: 0.4.1
         version: 0.4.1(tailwindcss@3.4.19(ts-node@10.9.2(@types/node@24.10.4)(typescript@5.9.3)))
@@ -991,10 +991,10 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@skeletonlabs/skeleton@2.11.0':
-    resolution: {integrity: sha512-ORMZYACsIlfKyBx2ZIHBy7zE877t99fxU7LzcY1dveVmn2//+OeqnbQb5RryNILsMR62Tuu1VLnCu01/ByHlbQ==}
+  '@skeletonlabs/skeleton@4.9.0':
+    resolution: {integrity: sha512-p9IbEALkg9r8RnWy4ZNhcqfEUn9x3ITW8dMxPMPmyQLs1ksLxcPBD0CacWm7BO6pxih3t/JlOM/utYCVKy1QfA==}
     peerDependencies:
-      svelte: ^3.56.0 || ^4.0.0 || ^5.0.0
+      tailwindcss: ^4.0.0
 
   '@skeletonlabs/tw-plugin@0.4.1':
     resolution: {integrity: sha512-crrC8BGKis0GNTp7V2HF6mk1ECLUvAxgTTV26LMgt/rV3U6Xd7N7dL5qIL8fE4MTHvpKa1SBsdqsnMbEvATeEg==}
@@ -1784,9 +1784,6 @@ packages:
     peerDependenciesMeta:
       jiti:
         optional: true
-
-  esm-env@1.0.0:
-    resolution: {integrity: sha512-Cf6VksWPsTuW01vU9Mk/3vRue91Zevka5SjyNf3nEpokFRuqt/KjUQoGAwq9qMmhpLTHmXzSIrFRw8zxWzmFBA==}
 
   esm-env@1.2.2:
     resolution: {integrity: sha512-Epxrv+Nr/CaL4ZcFGPJIYLWFom+YeV1DqMLHJoEd9SYRxNbaFruBwfEX/kkHUJf55j2+TUbmDcmuilbP1TmXHA==}
@@ -3733,10 +3730,9 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.46.2':
     optional: true
 
-  '@skeletonlabs/skeleton@2.11.0(svelte@5.46.1)':
+  '@skeletonlabs/skeleton@4.9.0(tailwindcss@3.4.19(ts-node@10.9.2(@types/node@24.10.4)(typescript@5.9.3)))':
     dependencies:
-      esm-env: 1.0.0
-      svelte: 5.46.1
+      tailwindcss: 3.4.19(ts-node@10.9.2(@types/node@24.10.4)(typescript@5.9.3))
 
   '@skeletonlabs/tw-plugin@0.4.1(tailwindcss@3.4.19(ts-node@10.9.2(@types/node@24.10.4)(typescript@5.9.3)))':
     dependencies:
@@ -4556,8 +4552,6 @@ snapshots:
       jiti: 2.6.1
     transitivePeerDependencies:
       - supports-color
-
-  esm-env@1.0.0: {}
 
   esm-env@1.2.2: {}
 
