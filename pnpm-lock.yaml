@@ -27,8 +27,8 @@ importers:
         specifier: 3.4.2
         version: 3.4.2(prettier@3.8.1)
       '@skeletonlabs/skeleton':
-        specifier: 2.11.0
-        version: 2.11.0(svelte@5.55.2(@typescript-eslint/types@8.58.1))
+        specifier: 4.15.2
+        version: 4.15.2(tailwindcss@3.4.19)
       '@skeletonlabs/tw-plugin':
         specifier: 0.4.1
         version: 0.4.1(tailwindcss@3.4.19)
@@ -1199,10 +1199,10 @@ packages:
     resolution: {integrity: sha512-P1Cz1dWaFfR4IR+U13mqqiGsLFf1KbayybWwdd2vfctdV6hDpUkgCY0nKOLLTMSoRd/jJNjtbqzf13K8DCCXQw==}
     engines: {node: '>=18'}
 
-  '@skeletonlabs/skeleton@2.11.0':
-    resolution: {integrity: sha512-ORMZYACsIlfKyBx2ZIHBy7zE877t99fxU7LzcY1dveVmn2//+OeqnbQb5RryNILsMR62Tuu1VLnCu01/ByHlbQ==}
+  '@skeletonlabs/skeleton@4.15.2':
+    resolution: {integrity: sha512-5O23Py76nw56aoieV2b2T7MJ6xS0DwDjUULpwLnCXxXOnmzADEoWoQxb/ABbqg04IMOygtRzK3HO22I1+kFsog==}
     peerDependencies:
-      svelte: ^3.56.0 || ^4.0.0 || ^5.0.0
+      tailwindcss: ^4.0.0
 
   '@skeletonlabs/tw-plugin@0.4.1':
     resolution: {integrity: sha512-crrC8BGKis0GNTp7V2HF6mk1ECLUvAxgTTV26LMgt/rV3U6Xd7N7dL5qIL8fE4MTHvpKa1SBsdqsnMbEvATeEg==}
@@ -1954,9 +1954,6 @@ packages:
     peerDependenciesMeta:
       jiti:
         optional: true
-
-  esm-env@1.0.0:
-    resolution: {integrity: sha512-Cf6VksWPsTuW01vU9Mk/3vRue91Zevka5SjyNf3nEpokFRuqt/KjUQoGAwq9qMmhpLTHmXzSIrFRw8zxWzmFBA==}
 
   esm-env@1.2.2:
     resolution: {integrity: sha512-Epxrv+Nr/CaL4ZcFGPJIYLWFom+YeV1DqMLHJoEd9SYRxNbaFruBwfEX/kkHUJf55j2+TUbmDcmuilbP1TmXHA==}
@@ -3969,10 +3966,9 @@ snapshots:
 
   '@sindresorhus/is@7.2.0': {}
 
-  '@skeletonlabs/skeleton@2.11.0(svelte@5.55.2(@typescript-eslint/types@8.58.1))':
+  '@skeletonlabs/skeleton@4.15.2(tailwindcss@3.4.19)':
     dependencies:
-      esm-env: 1.0.0
-      svelte: 5.55.2(@typescript-eslint/types@8.58.1)
+      tailwindcss: 3.4.19
 
   '@skeletonlabs/tw-plugin@0.4.1(tailwindcss@3.4.19)':
     dependencies:
@@ -4748,8 +4744,6 @@ snapshots:
       jiti: 1.21.7
     transitivePeerDependencies:
       - supports-color
-
-  esm-env@1.0.0: {}
 
   esm-env@1.2.2: {}
 
