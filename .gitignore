@@ -33,6 +33,9 @@ e2e/.auth/
 .DS_Store
 Thumbs.db
 
+# Git worktrees
+.worktrees/
+
 # Editor
 .vscode/
 .idea/
