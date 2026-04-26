@@ -1,0 +1,24 @@
+// .container — centred wrapper with responsive horizontal gutters.
+// .container--prose — narrower max-width for reading-optimised pages.
+//
+// Usage:
+//   <div class="container">          → index / work / résumé pages
+//   <div class="container container--prose">  → blog posts / case studies
+@use '../tokens/breakpoints' as *;
+
+@layer components {
+    .container {
+        width: 100%;
+        max-width: var(--width-index);
+        margin-inline: auto;
+        padding-inline: var(--gutter-page-mobile);
+
+        @media (min-width: $bp-lg) {
+            padding-inline: var(--gutter-page);
+        }
+    }
+
+    .container--prose {
+        max-width: var(--width-prose);
+    }
+}

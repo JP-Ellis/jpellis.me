@@ -1,0 +1,23 @@
+// .eyebrow-grid — two-column label + content pattern.
+// The left column (--gutter-eyebrow wide) holds a section number,
+// timestamp, or category label. The right column holds the content.
+// On mobile the label stacks above the content.
+//
+// Usage:
+//   <div class="eyebrow-grid">
+//     <span class="eyebrow">№ 01 / Intro</span>
+//     <div><!-- content --></div>
+//   </div>
+@use '../tokens/breakpoints' as *;
+
+@layer components {
+    .eyebrow-grid {
+        display: grid;
+        gap: var(--space-6);
+        grid-template-columns: 1fr; // mobile: single column
+
+        @media (min-width: $bp-md) {
+            grid-template-columns: var(--gutter-eyebrow) 1fr;
+        }
+    }
+}
