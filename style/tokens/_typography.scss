@@ -1,0 +1,39 @@
+// Font-family tokens and type ramp.
+// Inter is intentionally omitted — the Almanac direction uses Newsreader
+// for all prose and Fira Code for all technical / mono text.
+// clamp() on display and title means no per-breakpoint overrides are needed.
+@layer tokens {
+    :root {
+        // Font families
+        --font-display: "Fraunces", Georgia, serif;
+        --font-body: "Newsreader", Georgia, serif;
+        --font-mono: "Fira Code", ui-monospace, monospace;
+
+        // Display — Fraunces variable, large headings
+        --text-display-size: clamp(56px, 7vw, 96px);
+        --text-display-leading: 1.02;
+        --text-display-tracking: -0.025em;
+        --text-display-opsz: 144;
+
+        // Title — Fraunces, section headings
+        --text-title-size: clamp(28px, 3.5vw, 40px);
+        --text-title-leading: 1.05;
+        --text-title-tracking: -0.015em;
+
+        // Lead — Newsreader, introductory prose
+        --text-lead-size: 19px;
+        --text-lead-leading: 1.55;
+
+        // Body — Newsreader, running text
+        --text-body-size: clamp(15px, 1.1vw, 17px);
+        --text-body-leading: 1.55;
+
+        // Meta — Fira Code, timestamps / read-time / captions
+        --text-meta-size: 12px;
+        --text-meta-tracking: 0.04em;
+
+        // Eyebrow — Fira Code uppercase, section labels
+        --text-eyebrow-size: 11px;
+        --text-eyebrow-tracking: 0.14em;
+    }
+}
