@@ -9,6 +9,9 @@ use leptos_router::components::Router;
 use leptos_router::components::Routes;
 use leptos_router::path;
 
+#[cfg(debug_assertions)]
+mod test_pages;
+
 #[cfg(feature = "ssr")]
 pub fn shell(options: LeptosOptions) -> impl IntoView {
     view! {
@@ -34,6 +37,9 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
     }
 }
 
+// Two App() definitions: Leptos 0.8's <Routes> requires AnyNestedRoute children,
+// so #[cfg] inside view! breaks the type. Separate cfgs avoid the mismatch.
+#[cfg(not(debug_assertions))]
 #[component]
 pub fn App() -> impl IntoView {
     provide_meta_context();
@@ -45,6 +51,30 @@ pub fn App() -> impl IntoView {
             <main>
                 <Routes fallback=|| "Page not found.".into_view()>
                     <Route path=path!("") view=HomePage />
+                </Routes>
+            </main>
+        </Router>
+    }
+}
+
+#[cfg(debug_assertions)]
+#[component]
+pub fn App() -> impl IntoView {
+    use leptos_router::components::ParentRoute;
+
+    provide_meta_context();
+
+    view! {
+        <Stylesheet id="leptos" href="/pkg/jpellis-me.css" />
+        <Title text="Joshua Ellis" />
+        <Router>
+            <main>
+                <Routes fallback=|| "Page not found.".into_view()>
+                    <Route path=path!("") view=HomePage />
+                    <ParentRoute path=path!("__test") view=test_pages::TestLayout>
+                        <Route path=path!("") view=test_pages::TestIndex />
+                        <Route path=path!("css-foundation") view=test_pages::CssFoundationPage />
+                    </ParentRoute>
                 </Routes>
             </main>
         </Router>

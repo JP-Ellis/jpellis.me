@@ -1,3 +1,6 @@
+#:schema https://mise.jdx.dev/schema/mise.json
+#:tombi lint.disabled = true
+
 [tools]
 "core:node" = "24"
 "core:rust" = {

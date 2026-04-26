@@ -13,7 +13,8 @@
   },
   "vcs": {
     "enabled": true,
-    "clientKind": "git"
+    "clientKind": "git",
+    "useIgnoreFile": true
   },
   "linter": {
     "enabled": true,
@@ -42,7 +43,8 @@
             "noExcessiveLinesPerFunction": "off"
           },
           "nursery": {
-            "useAwaitThenable": "off"
+            "useAwaitThenable": "off",
+            "useConsistentTestIt": "off"
           }
         }
       }

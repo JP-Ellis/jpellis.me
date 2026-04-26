@@ -1,8 +1,10 @@
 ---
 lockfileVersion: '9.0'
+
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
+
 time:
   '@playwright/test@1.59.1': 2026-04-01T17:59:00.155000Z
   '@types/node@20.19.39': 2026-04-03T11:15:12.785000Z
@@ -11,6 +13,7 @@ time:
   playwright@1.59.1: 2026-04-01T17:58:48.894000Z
   typescript@5.9.3: 2025-09-30T21:19:38.784000Z
   undici-types@6.21.0: 2024-11-13T13:37:09.135000Z
+
 importers:
   .:
     devDependencies:
@@ -23,6 +26,7 @@ importers:
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
+
 packages:
   '@playwright/test@1.59.1':
     resolution: {integrity: sha512-PG6q63nQg5c9rIi4/Z5lR5IVF7yU5MqmKaPOe0HSc0O2cX1fPi96sUQu5j7eo4gKCkB2AnNGoWt7y4/Xx3Kcqg==}
@@ -33,7 +37,8 @@ packages:
   fsevents@2.3.2:
     resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
-    os: [darwin]
+    os:
+      - darwin
   playwright-core@1.59.1:
     resolution: {integrity: sha512-HBV/RJg81z5BiiZ9yPzIiClYV/QMsDCKUyogwH9p3MCP6IYjUFu/MActgYAvK0oWyV9NlwM3GLBjADyWgydVyg==}
     engines: {node: '>=18'}
@@ -48,6 +53,7 @@ packages:
     hasBin: true
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
+
 snapshots:
   '@playwright/test@1.59.1':
     dependencies:

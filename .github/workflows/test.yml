@@ -1,5 +1,6 @@
 ---
 name: Test
+
 on:
   push:
     branches:
@@ -7,6 +8,7 @@ on:
   pull_request:
     branches:
       - main
+
 jobs:
   completion:
     name: CI completed

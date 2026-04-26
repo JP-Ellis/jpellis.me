@@ -1,6 +1,10 @@
 /** biome-ignore-all lint/style/useNamingConvention: configuration uses camelCase */
 /** biome-ignore-all lint/style/noMagicNumbers: configuration file */
 /** biome-ignore-all lint/nursery/noTernary: more succinct for configuration */
+/** biome-ignore-all lint/style/noDefaultExport: Playwright requires a default export */
+/** biome-ignore-all lint/nursery/noRedundantDefaultExport: Playwright requires a default export */
+/** biome-ignore-all lint/style/noProcessEnv: process.env is idiomatic for CI detection */
+/** biome-ignore-all lint/complexity/useLiteralKeys: bracket notation for env keys is conventional */
 
 import process from "node:process";
 import type { PlaywrightTestConfig } from "@playwright/test";
