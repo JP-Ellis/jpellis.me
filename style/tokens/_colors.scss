@@ -23,7 +23,7 @@
     // three source tokens are reassigned for dark mode.
     :root {
         // Tinted paper
-        --color-paper-deep: oklch(from var(--color-paper) calc(l - 4%) c h); // #ece7db
+        --color-paper-deep: oklch(from var(--color-paper) calc(l - 0.04) c h); // #ece7db
 
         // Ink at opacity
         --color-muted: oklch(from var(--color-ink) l c h / 55%); // rgba(26,22,18,0.55)
@@ -32,7 +32,7 @@
 
         // Accent variant
         --color-accent-soft: oklch(
-            from var(--color-accent) calc(l + 23%) calc(c * 0.56) h
+            from var(--color-accent) calc(l + 0.23) calc(c * 0.56) h
         ); // #e8a78f
 
         // Dark contrast band tokens — HARDCODED, not references to
