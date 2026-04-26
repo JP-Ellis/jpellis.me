@@ -1,0 +1,45 @@
+// Tag components — two shape variants, one colour modifier.
+//
+// .tag           — base styles (Fira Code, border)
+// .tag--pill     — fully rounded corners (tech stack tags on résumé)
+// .tag--hash     — slightly rounded corners (category tags on writing)
+// .tag--accent   — accent colour border and text (active filter)
+//
+// Usage:
+//   <span class="tag tag--pill">rust</span>
+//   <span class="tag tag--hash">#engineering</span>
+//   <span class="tag tag--hash tag--accent">#engineering</span>
+@layer components {
+    .tag {
+        display: inline-flex;
+        align-items: center;
+        font-family: var(--font-mono);
+        font-size: var(--text-eyebrow-size);
+        letter-spacing: 0.04em;
+        padding: var(--space-1) var(--space-2);
+        border: 1px solid var(--color-rule);
+        color: var(--color-ink);
+        line-height: 1.4;
+        white-space: nowrap;
+        text-decoration: none;
+    }
+
+    .tag--pill {
+        border-radius: 999px;
+    }
+
+    .tag--hash {
+        border-radius: 3px;
+    }
+
+    .tag--accent {
+        color: var(--color-accent);
+        border-color: var(--color-accent-soft);
+    }
+
+    // Hover: background shift only — no colour or border change (spec §8 motion)
+    .tag:hover,
+    a.tag:hover {
+        background-color: var(--color-faint);
+    }
+}
