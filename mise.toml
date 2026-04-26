@@ -1,6 +1,11 @@
 [tools]
-"core:rust"                      = { version = "stable", components = ["rustfmt", "clippy", "llvm-tools"], targets = ["wasm32-unknown-unknown"] }
-"aqua:j178/prek"                 = "latest"
+"core:node" = "24"
+"core:rust" = {
+  version = "stable",
+  components = ["rustfmt", "clippy", "llvm-tools"],
+  targets = ["wasm32-unknown-unknown"],
+}
+
 "aqua:cargo-bins/cargo-binstall" = "latest"
 "github:endevco/aube" = "1"
 "cargo:uv" = "0.11"
@@ -15,10 +20,22 @@
 "pipx:yamlfix" = "1"
 
 [tasks.format]
-run = ["cargo fmt --check", "leptosfmt --check ."]
+run = [
+  "cargo +nightly fmt --check",
+  "leptosfmt --check .",
+  "biome format .",
+  "tombi format --check .",
+  "yamlfix -c {{cwd}}/.yamlfix.toml --check .",
+]
 
 [tasks."format:fix"]
-run = ["cargo fmt", "leptosfmt ."]
+run = [
+  "cargo +nightly fmt",
+  "leptosfmt .",
+  "biome format --write .",
+  "tombi format .",
+  "yamlfix -c {{cwd}}/.yamlfix.toml .",
+]
 
 [tasks.lint]
 run = [
