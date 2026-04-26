@@ -1,0 +1,76 @@
+// Color tokens in three layers:
+//   1. Source tokens     — 3 values; the only ones that change in dark mode
+//   2. Derived tokens    — computed from sources; auto-update on mode switch
+//   3. Dark mode         — reassign the 3 source tokens only
+//
+// OKLCH values are accurate conversions of the Almanac prototype's hex
+// values. The original hex / RGBA is preserved as a comment on each token
+// for verification — if the rendered output drifts from the prototype,
+// nudge the OKLCH values and update the comment.
+//
+// CSS relative color syntax (oklch(from <source> …)) requires:
+//   Chrome 119+, Firefox 128+, Safari 16.4+ — acceptable for 2026.
+@layer tokens {
+    // ── Source tokens (light mode defaults) ──────────────────────────
+    :root {
+        --color-paper: oklch(0.9593 0.0103 81.8); // #f5f1ea
+        --color-ink: oklch(0.2035 0.0101 67.21); // #1a1612
+        --color-accent: oklch(0.5497 0.1497 34.55); // #b8492f
+    }
+
+    // ── Derived tokens ────────────────────────────────────────────────
+    // These never need to change — they recompute automatically when the
+    // three source tokens are reassigned for dark mode.
+    :root {
+        // Tinted paper
+        --color-paper-deep: oklch(from var(--color-paper) calc(l - 4%) c h); // #ece7db
+
+        // Ink at opacity
+        --color-muted: oklch(from var(--color-ink) l c h / 55%); // rgba(26,22,18,0.55)
+        --color-faint: oklch(from var(--color-ink) l c h / 10%); // rgba(26,22,18,0.10)
+        --color-rule: oklch(from var(--color-ink) l c h / 18%); // rgba(26,22,18,0.18)
+
+        // Accent variant
+        --color-accent-soft: oklch(
+            from var(--color-accent) calc(l + 23%) calc(c * 0.56) h
+        ); // #e8a78f
+
+        // Dark contrast band tokens — HARDCODED, not references to
+        // --color-ink / --color-paper. Those tokens swap in dark mode,
+        // which would turn the band light. The band must always be dark.
+        --color-band-bg: oklch(0.2035 0.0101 67.21); // always #1a1612
+        --color-band-text: oklch(0.9593 0.0103 81.8); // always #f5f1ea
+        --color-band-muted: oklch(
+            from var(--color-band-text) l c h / 55%
+        ); // rgba(245,241,234,0.55)
+        --color-band-faint: oklch(
+            from var(--color-band-text) l c h / 12%
+        ); // rgba(245,241,234,0.12)
+    }
+
+    // ── Dark mode: system preference ─────────────────────────────────
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --color-paper: oklch(0.2035 0.0101 67.21); // #1a1612
+            --color-ink: oklch(0.9593 0.0103 81.8); // #f5f1ea
+            --color-accent: oklch(0.6205 0.1486 33.49); // #d05f47
+        }
+    }
+
+    // ── Dark mode: manual JS toggle ───────────────────────────────────
+    // [data-theme] is set on <html> by the ThemeToggle component from a
+    // server-read cookie, preventing any flash on load.
+    // [data-theme="light"] hard-overrides back to light even if the OS
+    // is in dark mode.
+    [data-theme="light"] {
+        --color-paper: oklch(0.9593 0.0103 81.8); // #f5f1ea
+        --color-ink: oklch(0.2035 0.0101 67.21); // #1a1612
+        --color-accent: oklch(0.5497 0.1497 34.55); // #b8492f
+    }
+
+    [data-theme="dark"] {
+        --color-paper: oklch(0.2035 0.0101 67.21); // #1a1612
+        --color-ink: oklch(0.9593 0.0103 81.8); // #f5f1ea
+        --color-accent: oklch(0.6205 0.1486 33.49); // #d05f47
+    }
+}
