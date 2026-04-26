@@ -1,0 +1,14 @@
+// Horizontal rule components.
+// .rule-section — full-weight 1px ink line between major sections
+// .rule-list    — lightweight 1px faint line between list items
+@layer components {
+    .rule-section {
+        border: none;
+        border-top: 1px solid var(--color-ink);
+    }
+
+    .rule-list {
+        border: none;
+        border-top: 1px solid var(--color-faint);
+    }
+}
