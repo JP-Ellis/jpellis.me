@@ -1,0 +1,5 @@
+// Cascade layer order — lowest to highest priority.
+// This file is @used first in main.scss so this declaration compiles to
+// the top of the CSS output, before any layer content is defined.
+// Never use !important to override layers; adjust this order instead.
+@layer reset, tokens, base, components, utilities;
