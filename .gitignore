@@ -1,0 +1,39 @@
+# Rust / Cargo
+/target/
+Cargo.lock
+
+# cargo-leptos output
+/pkg/
+
+# Cloudflare Workers
+/.wrangler/
+/dist/
+
+# Stylance generated
+/style/stylance/
+
+# Leptos
+.leptos_*
+
+# Node (e2e)
+e2e/node_modules/
+e2e/playwright-report/
+e2e/test-results/
+e2e/.auth/
+
+# mise
+.mise.local.toml
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
