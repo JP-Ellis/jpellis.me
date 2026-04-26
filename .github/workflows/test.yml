@@ -1,0 +1,89 @@
+---
+name: Test
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  completion:
+    name: CI completed
+    runs-on: ubuntu-latest
+    needs:
+      - prek
+      - clippy
+      - format
+      - machete
+      - test
+    if: always()
+    steps:
+      - name: Check all jobs passed
+        run: |
+          results="${{ join(needs.*.result, ' ') }}"
+          for result in $results; do
+            if [[ "$result" != "success" && "$result" != "skipped" ]]; then
+              echo "A required job failed: $result"
+              exit 1
+            fi
+          done
+
+  committed:
+    name: Committed
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
+      - uses: crate-ci/committed@v1.1.11
+
+  prek:
+    name: Pre-commit hooks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: jdx/mise-action@v4.0.1
+      - name: Cache prek environments
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/prek
+          key: prek-${{ hashFiles('prek.toml') }}
+      - name: Run hooks (skip Rust — covered by dedicated jobs)
+        env:
+          SKIP: cargo-fmt,cargo-clippy,cargo-machete
+        run: prek run -a
+
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: jdx/mise-action@v4.0.1
+      - run: cargo clippy --all-targets --all-features -- -D warnings
+
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: jdx/mise-action@v4.0.1
+      - run: cargo +nightly fmt --all --check
+
+  machete:
+    name: Machete
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: jdx/mise-action@v4.0.1
+      - run: cargo machete
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: jdx/mise-action@v4.0.1
+      - name: Run tests
+        run: mise run test
