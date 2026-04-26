@@ -1,6 +1,8 @@
 // Wires the html and body elements to the color and typography tokens.
 // After this file, every page has the correct background, foreground,
 // and base font without any component-level CSS.
+@use '../mixins/focus';
+
 @layer base {
     html {
         color-scheme: light dark;
@@ -12,5 +14,9 @@
         line-height: var(--text-body-leading);
         color: var(--color-ink);
         background-color: var(--color-paper);
+    }
+
+    :focus-visible {
+        @include focus.focus-ring;
     }
 }

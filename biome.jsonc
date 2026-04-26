@@ -42,7 +42,16 @@
           "complexity": {
             "noExcessiveLinesPerFunction": "off"
           },
+          "performance": {
+            "noAwaitInLoops": "off"
+          },
+          "style": {
+            "noMagicNumbers": "off",
+            "noNonNullAssertion": "off"
+          },
           "nursery": {
+            "noConditionalExpect": "off",
+            "noTernary": "off",
             "useAwaitThenable": "off",
             "useConsistentTestIt": "off"
           }
