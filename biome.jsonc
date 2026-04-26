@@ -1,0 +1,51 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.13/schema.json",
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "formatter": {
+    "useEditorconfig": true
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git"
+  },
+  "linter": {
+    "enabled": true,
+    "domains": { "test": "all" },
+    "rules": {
+      "recommended": true,
+      "a11y": "error",
+      "complexity": "error",
+      "correctness": "error",
+      "nursery": "warn",
+      "performance": "error",
+      "security": "error",
+      "style": "error",
+      "suspicious": "error"
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["e2e/**/*"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noNodejsModules": "off"
+          },
+          "complexity": {
+            "noExcessiveLinesPerFunction": "off"
+          },
+          "nursery": {
+            "useAwaitThenable": "off"
+          }
+        }
+      }
+    }
+  ]
+}
