@@ -1,0 +1,6 @@
+#:schema https://json.schemastore.org/rust-toolchain.json
+
+[toolchain]
+channel = "stable"
+components = ["rustfmt", "clippy", "llvm-tools"]
+targets = ["wasm32-unknown-unknown"]
