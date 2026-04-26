@@ -1,0 +1,30 @@
+// Site footer — three-column layout with copyright, licence, location.
+//
+// .footer            — the <footer> element
+// .footer__item      — each of the three columns
+@use '../tokens/breakpoints' as *;
+
+@layer components {
+    .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: var(--space-3);
+        padding-block: var(--space-5);
+        padding-inline: var(--gutter-page-mobile);
+        border-top: 1px solid var(--color-ink);
+
+        @media (min-width: $bp-lg) {
+            padding-inline: var(--gutter-page);
+        }
+    }
+
+    .footer__item {
+        font-family: var(--font-mono);
+        font-size: var(--text-eyebrow-size);
+        letter-spacing: var(--text-eyebrow-tracking);
+        text-transform: uppercase;
+        color: var(--color-muted);
+    }
+}

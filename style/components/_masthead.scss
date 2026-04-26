@@ -1,0 +1,82 @@
+// Site masthead — sticky header with logo, nav, and volume label.
+//
+// .masthead              — the <header> element
+// .masthead__logo        — "Joshua Ellis" in Fraunces
+// .masthead__nav         — <nav> with flex links
+// .masthead__nav-link    — individual nav items
+// .masthead__nav-link--active — current page indicator
+// .masthead__volume      — "vol. iii · mmxxvi" in Fira Code
+@use '../tokens/breakpoints' as *;
+@use '../mixins/focus';
+
+@layer components {
+    .masthead {
+        position: sticky;
+        top: 0;
+        z-index: var(--z-top);
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding-block: var(--space-5) var(--space-4);
+        padding-inline: var(--gutter-page-mobile);
+        background-color: var(--color-paper);
+        border-bottom: 1px solid var(--color-ink);
+
+        @media (min-width: $bp-lg) {
+            padding-inline: var(--gutter-page);
+        }
+    }
+
+    .masthead__logo {
+        font-family: var(--font-display);
+        font-size: 22px;
+        font-weight: 500;
+        letter-spacing: -0.005em;
+        text-decoration: none;
+        color: var(--color-ink);
+
+        em {
+            font-style: italic;
+            font-weight: 400;
+            color: var(--color-muted);
+        }
+    }
+
+    .masthead__nav {
+        display: flex;
+        gap: var(--space-6);
+    }
+
+    .masthead__nav-link {
+        font-family: var(--font-body);
+        font-size: 15px;
+        color: var(--color-muted);
+        text-decoration: none;
+        padding-bottom: 2px;
+
+        &:hover {
+            color: var(--color-ink);
+        }
+
+        &:focus-visible {
+            @include focus.focus-ring;
+        }
+    }
+
+    .masthead__nav-link--active {
+        color: var(--color-ink);
+        border-bottom: 1px solid var(--color-accent);
+    }
+
+    .masthead__volume {
+        font-family: var(--font-mono);
+        font-size: var(--text-eyebrow-size);
+        color: var(--color-muted);
+        letter-spacing: var(--text-eyebrow-tracking);
+
+        // Hide on small screens — not essential content
+        @media (max-width: $bp-md) {
+            display: none;
+        }
+    }
+}
