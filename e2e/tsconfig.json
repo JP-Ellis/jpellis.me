@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2024",
     "module": "node20",
-    "moduleResolution": "node",
+    "moduleResolution": "node20",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
