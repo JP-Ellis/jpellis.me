@@ -1,0 +1,16 @@
+// Wires the html and body elements to the color and typography tokens.
+// After this file, every page has the correct background, foreground,
+// and base font without any component-level CSS.
+@layer base {
+    html {
+        color-scheme: light dark;
+    }
+
+    body {
+        font-family: var(--font-body);
+        font-size: var(--text-body-size);
+        line-height: var(--text-body-leading);
+        color: var(--color-ink);
+        background-color: var(--color-paper);
+    }
+}
