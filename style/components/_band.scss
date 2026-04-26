@@ -1,0 +1,40 @@
+// .band — full-bleed dark contrast section.
+// Always dark (uses --color-band-* tokens which are hardcoded, not
+// swappable). Use --color-band-{text,muted,faint} for any text or
+// rules inside a band — never use --color-ink or --color-paper.
+//
+// Usage:
+//   <section class="band">
+//     <div class="container">
+//       <span class="eyebrow">label</span>   ← will appear muted here
+//       <p>content</p>
+//     </div>
+//   </section>
+@layer components {
+    .band {
+        background-color: var(--color-band-bg);
+        color: var(--color-band-text);
+
+        // Reset inherited link colour inside bands
+        a {
+            color: var(--color-band-text);
+
+            &:hover {
+                color: var(--color-accent);
+            }
+        }
+
+        // Eyebrow inside a band uses band-muted, not the accent colour
+        .eyebrow {
+            color: var(--color-band-muted);
+        }
+
+        .rule-section {
+            border-top-color: var(--color-band-text);
+        }
+
+        .rule-list {
+            border-top-color: var(--color-band-faint);
+        }
+    }
+}
