@@ -1,0 +1,6 @@
+#:schema https://json.schemastore.org/wranglerv3.json
+
+name = "jpellis-me"
+main = "./target/site/pkg/jpellis-me.js"
+compatibility_date = "2026-04-26"
+compatibility_flags = ["nodejs_compat"]
