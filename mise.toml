@@ -1,0 +1,73 @@
+[tools]
+"core:rust"                      = { version = "stable", components = ["rustfmt", "clippy", "llvm-tools"], targets = ["wasm32-unknown-unknown"] }
+"aqua:j178/prek"                 = "latest"
+"aqua:cargo-bins/cargo-binstall" = "latest"
+"github:endevco/aube" = "1"
+"cargo:uv" = "0.11"
+
+"cargo:prek" = "0.3"
+"cargo:cargo-leptos" = "0.3"
+"cargo:cargo-nextest" = "0.9"
+"cargo:cargo-llvm-cov" = "0.8"
+"cargo:cargo-machete" = "0.9"
+"cargo:leptosfmt" = "0.1"
+"npm:wrangler" = "4"
+"pipx:yamlfix" = "1"
+
+[tasks.format]
+run = ["cargo fmt --check", "leptosfmt --check ."]
+
+[tasks."format:fix"]
+run = ["cargo fmt", "leptosfmt ."]
+
+[tasks.lint]
+run = [
+  "cargo clippy --all-targets --",
+  "biome lint .",
+  "tombi lint .",
+]
+
+[tasks."lint:fix"]
+run = [
+  "cargo clippy --all-targets --fix --",
+  "biome lint --write .",
+]
+
+[tasks.check]
+run = { tasks = ["format", "lint"] }
+
+[tasks."check:fix"]
+run = [
+  { task = "format:fix" },
+  { task = "lint:fix" },
+]
+
+[tasks.test]
+depends = ["test:nextest", "e2e:test"]
+
+[tasks."test:nextest"]
+run = "cargo nextest run"
+
+[tasks.coverage]
+run = "cargo llvm-cov nextest"
+
+[tasks.machete]
+run = "cargo machete"
+
+[tasks.watch]
+run = "cargo leptos watch"
+
+[tasks."watch:wrangler"]
+run = "wrangler dev"
+
+[tasks.build]
+run = "cargo leptos build --release"
+
+[tasks."e2e:install"]
+dir = "e2e"
+run = "aube install"
+
+[tasks."e2e:test"]
+dir = "e2e"
+depends = ["e2e:install"]
+run = "aube exec playwright test"
