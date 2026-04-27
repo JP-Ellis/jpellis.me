@@ -1,0 +1,21 @@
+[global]
+# All rules enabled by default. Disable selectively below.
+enable = ["ALL"]
+disable = [
+  "MD013",
+]
+
+[MD040]
+unknown-language-action = "error"
+
+[MD046]
+style = "fenced"
+
+[MD048]
+style = "backtick"
+
+[MD049]
+style = "underscore"
+
+[MD050]
+style = "asterisk"

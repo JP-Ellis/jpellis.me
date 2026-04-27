@@ -1,4 +1,0 @@
-# All rules enabled by default. Disable selectively below.
-
-[rules]
-MD013 = false  # line-length: not enforced
