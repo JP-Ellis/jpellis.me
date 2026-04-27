@@ -18,7 +18,9 @@ pub fn Footer() -> impl IntoView {
                     "linkedin"
                 </a>
                 " · "
-                <a href="mailto:josh@jpellis.me">"email"</a>
+                <a href="mailto:josh@jpellis.me" rel="noopener noreferrer">
+                    "email"
+                </a>
             </span>
             <span class=style::item>"cc by 4.0"</span>
         </footer>
