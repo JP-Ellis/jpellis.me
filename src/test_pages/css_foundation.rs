@@ -1,5 +1,9 @@
 use leptos::prelude::*;
 
+use crate::components::Band;
+use crate::components::Footer;
+use crate::components::Masthead;
+
 #[component]
 fn SpacingRow(#[prop(into)] token: String) -> impl IntoView {
     let bar_style = format!(
@@ -176,8 +180,8 @@ pub fn CssFoundationPage() -> impl IntoView {
             </div>
         </div>
 
-        <section data-testid="section-band" class="band" style="padding-block: var(--space-7);">
-            <div class="container">
+        <Band test_id="section-band">
+            <div class="container" style="padding-block: var(--space-7);">
                 <span class="eyebrow">"Band"</span>
                 <h2>"Always the inverse of the page colour scheme."</h2>
                 <div style="display: flex; flex-wrap: wrap; gap: var(--space-3); margin-block: var(--space-5);">
@@ -188,7 +192,7 @@ pub fn CssFoundationPage() -> impl IntoView {
                     "Light mode → dark band. Dark mode → light band. Uses --color-band-* tokens derived from --color-ink / --color-paper."
                 </p>
             </div>
-        </section>
+        </Band>
 
         <div class="container" style="padding-block: var(--space-7);">
             <div
@@ -197,25 +201,8 @@ pub fn CssFoundationPage() -> impl IntoView {
                 style="margin-block: var(--space-7);"
             >
                 <span class="eyebrow">"Masthead"</span>
-                <div style="position: relative; overflow: hidden; height: 64px;">
-                    <header class="masthead">
-                        <a class="masthead__logo" href="#">
-                            "Joshua "
-                            <em>"Ellis"</em>
-                        </a>
-                        <nav class="masthead__nav">
-                            <a class="masthead__nav-link masthead__nav-link--active" href="#">
-                                "Writing"
-                            </a>
-                            <a class="masthead__nav-link" href="#">
-                                "Projects"
-                            </a>
-                            <a class="masthead__nav-link" href="#">
-                                "About"
-                            </a>
-                        </nav>
-                        <span class="masthead__volume">"vol. iii · mmxxvi"</span>
-                    </header>
+                <div style="position: relative; overflow: hidden;">
+                    <Masthead />
                 </div>
             </div>
 
@@ -225,11 +212,7 @@ pub fn CssFoundationPage() -> impl IntoView {
                 style="margin-block: var(--space-7);"
             >
                 <span class="eyebrow">"Footer"</span>
-                <footer class="footer">
-                    <span class="footer__item">"© 2026 Joshua Ellis"</span>
-                    <span class="footer__item">"CC BY 4.0"</span>
-                    <span class="footer__item">"Auckland, NZ"</span>
-                </footer>
+                <Footer />
             </div>
 
             <div

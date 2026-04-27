@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+const JOSHUA_RE = /Joshua/u;
+
 test.describe("/__test/css-foundation sections 7-12", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/__test/css-foundation");
@@ -17,7 +19,7 @@ test.describe("/__test/css-foundation sections 7-12", () => {
   }) => {
     const [bandBg, isDark] = await page.evaluate((): [string, boolean] => {
       const band = document.querySelector(
-        '[data-testid="section-band"].band',
+        '[data-testid="section-band"]',
       ) as HTMLElement;
       const c = document.createElement("canvas");
       c.width = 1;
@@ -84,16 +86,17 @@ test.describe("/__test/css-foundation sections 7-12", () => {
   test("section-masthead contains masthead markup", async ({ page }) => {
     const s = page.locator('[data-testid="section-masthead"]');
     await expect(s).toBeVisible();
-    await expect(s.locator(".masthead")).toBeVisible();
-    await expect(s.locator(".masthead__logo")).toBeVisible();
-    await expect(s.locator(".masthead__nav")).toBeVisible();
-    await expect(s.locator(".masthead__nav-link--active")).toBeVisible();
+    await expect(s.locator("header")).toBeVisible();
+    await expect(s.locator("nav[aria-label='Site']")).toBeVisible();
+    await expect(
+      s.locator("a").filter({ hasText: JOSHUA_RE }).first(),
+    ).toBeVisible();
   });
 
-  test("section-footer has three footer__item elements", async ({ page }) => {
+  test("section-footer has three footer items", async ({ page }) => {
     const s = page.locator('[data-testid="section-footer"]');
     await expect(s).toBeVisible();
-    await expect(s.locator(".footer__item")).toHaveCount(3);
+    await expect(s.locator("footer > span")).toHaveCount(3);
   });
 
   test("focused button in section-focus has solid outline", async ({
