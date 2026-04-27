@@ -9,6 +9,9 @@ use leptos_router::components::Router;
 use leptos_router::components::Routes;
 use leptos_router::path;
 
+mod components;
+mod pages;
+
 #[cfg(debug_assertions)]
 mod test_pages;
 
@@ -37,8 +40,6 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
     }
 }
 
-// Two App() definitions: Leptos 0.8's <Routes> requires AnyNestedRoute children,
-// so #[cfg] inside view! breaks the type. Separate cfgs avoid the mismatch.
 #[cfg(not(debug_assertions))]
 #[component]
 pub fn App() -> impl IntoView {
@@ -48,11 +49,9 @@ pub fn App() -> impl IntoView {
         <Stylesheet id="leptos" href="/pkg/jpellis-me.css" />
         <Title text="Joshua Ellis" />
         <Router>
-            <main>
-                <Routes fallback=|| "Page not found.".into_view()>
-                    <Route path=path!("") view=HomePage />
-                </Routes>
-            </main>
+            <Routes fallback=|| "Page not found.".into_view()>
+                <Route path=path!("") view=pages::HomePage />
+            </Routes>
         </Router>
     }
 }
@@ -68,22 +67,15 @@ pub fn App() -> impl IntoView {
         <Stylesheet id="leptos" href="/pkg/jpellis-me.css" />
         <Title text="Joshua Ellis" />
         <Router>
-            <main>
-                <Routes fallback=|| "Page not found.".into_view()>
-                    <Route path=path!("") view=HomePage />
-                    <ParentRoute path=path!("__test") view=test_pages::TestLayout>
-                        <Route path=path!("") view=test_pages::TestIndex />
-                        <Route path=path!("css-foundation") view=test_pages::CssFoundationPage />
-                    </ParentRoute>
-                </Routes>
-            </main>
+            <Routes fallback=|| "Page not found.".into_view()>
+                <Route path=path!("") view=pages::HomePage />
+                <ParentRoute path=path!("__test") view=test_pages::TestLayout>
+                    <Route path=path!("") view=test_pages::TestIndex />
+                    <Route path=path!("css-foundation") view=test_pages::CssFoundationPage />
+                </ParentRoute>
+            </Routes>
         </Router>
     }
-}
-
-#[component]
-fn HomePage() -> impl IntoView {
-    view! { <h1>"Hello, world!"</h1> }
 }
 
 #[cfg(feature = "hydrate")]
