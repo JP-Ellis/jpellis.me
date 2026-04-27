@@ -28,6 +28,7 @@ leptos = { version = "0.8" }
 leptos_axum = { version = "0.8", default-features = false }
 leptos_meta = { version = "0.8" }
 leptos_router = { version = "0.8" }
+stylance = "0.8"
 wasm-bindgen = "0.2"
 
 [dev-dependencies]
