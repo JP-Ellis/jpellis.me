@@ -1,5 +1,5 @@
-@use '../../../style/tokens/breakpoints' as *;
-@use '../../../style/mixins/focus';
+@use '../tokens/breakpoints' as *;
+@use '../mixins/focus';
 
 .masthead {
     position: sticky;

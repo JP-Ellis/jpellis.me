@@ -1,7 +1,7 @@
 use leptos::prelude::*;
 use stylance::import_style;
 
-import_style!(style, "style.module.scss");
+import_style!(style, "band.module.scss");
 
 /// Full-bleed contrast section — dark in light mode, light in dark mode.
 ///

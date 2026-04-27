@@ -2,7 +2,7 @@ use leptos::prelude::*;
 use leptos_router::hooks::use_location;
 use stylance::import_style;
 
-import_style!(style, "style.module.scss");
+import_style!(style, "masthead.module.scss");
 
 const NAV: &[(&str, &str)] = &[
     ("Index", "/"),

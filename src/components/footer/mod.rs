@@ -1,7 +1,7 @@
 use leptos::prelude::*;
 use stylance::import_style;
 
-import_style!(style, "style.module.scss");
+import_style!(style, "footer.module.scss");
 
 /// Site-wide footer with copyright, social links, and licence.
 #[component]
