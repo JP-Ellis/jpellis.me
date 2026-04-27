@@ -22,8 +22,9 @@
     // These never need to change — they recompute automatically when the
     // three source tokens are reassigned for dark mode.
     :root {
-        // Tinted paper
+        // Tinted paper variants
         --color-paper-deep: oklch(from var(--color-paper) calc(l - 0.04) c h); // #ece7db
+        --color-panel: oklch(from var(--color-paper) calc(l + 0.025) c h); // slightly lighter/raised surface
 
         // Ink at opacity
         --color-muted: oklch(from var(--color-ink) l c h / 55%); // rgba(26,22,18,0.55)
@@ -35,17 +36,14 @@
             from var(--color-accent) calc(l + 0.23) calc(c * 0.56) h
         ); // #e8a78f
 
-        // Dark contrast band tokens — HARDCODED, not references to
-        // --color-ink / --color-paper. Those tokens swap in dark mode,
-        // which would turn the band light. The band must always be dark.
-        --color-band-bg: oklch(0.2035 0.0101 67.21); // always #1a1612
-        --color-band-text: oklch(0.9593 0.0103 81.8); // always #f5f1ea
-        --color-band-muted: oklch(
-            from var(--color-band-text) l c h / 55%
-        ); // rgba(245,241,234,0.55)
-        --color-band-faint: oklch(
-            from var(--color-band-text) l c h / 12%
-        ); // rgba(245,241,234,0.12)
+        // Contrast band tokens — inverted relative to the page.
+        //   light mode → dark band  (ink bg, paper text)
+        //   dark mode  → light band (paper bg, ink text)
+        // Derived tokens (muted, faint) recompute automatically as band-text flips.
+        --color-band-bg: var(--color-ink);
+        --color-band-text: var(--color-paper);
+        --color-band-muted: oklch(from var(--color-band-text) l c h / 55%);
+        --color-band-faint: oklch(from var(--color-band-text) l c h / 12%);
     }
 
     // ── Dark mode: system preference ─────────────────────────────────

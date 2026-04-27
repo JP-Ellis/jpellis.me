@@ -23,7 +23,7 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
                 <link
-                    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Fira+Code:wght@300;400;500;600&display=swap"
+                    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..700;1,9..144,100..600&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&family=Fira+Code:wght@300;400;500;600&display=swap"
                     rel="stylesheet"
                 />
                 <AutoReload options=options.clone() />

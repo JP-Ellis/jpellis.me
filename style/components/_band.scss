@@ -1,7 +1,9 @@
-// .band — full-bleed dark contrast section.
-// Always dark (uses --color-band-* tokens which are hardcoded, not
-// swappable). Use --color-band-{text,muted,faint} for any text or
-// rules inside a band — never use --color-ink or --color-paper.
+// .band — full-bleed contrast section, always the inverse of the page.
+// Light mode → dark band. Dark mode → light band.
+// Uses --color-band-* tokens which are derived from --color-ink/--color-paper,
+// so they flip automatically with the colour scheme.
+// Always use --color-band-{text,muted,faint} for text and rules inside a band
+// — never use --color-ink or --color-paper directly.
 //
 // Usage:
 //   <section class="band">

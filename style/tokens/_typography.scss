@@ -1,7 +1,6 @@
 // Font-family tokens and type ramp.
-// Inter is intentionally omitted — the Almanac direction uses Newsreader
-// for all prose and Fira Code for all technical / mono text.
-// clamp() on display and title means no per-breakpoint overrides are needed.
+// Fraunces (display), Newsreader (body), Fira Code (mono).
+// clamp() on display and section means no per-breakpoint overrides are needed.
 @layer tokens {
     :root {
         // Font families
@@ -9,31 +8,36 @@
         --font-body: "Newsreader", Georgia, serif;
         --font-mono: "Fira Code", ui-monospace, monospace;
 
-        // Display — Fraunces variable, large headings
-        --text-display-size: clamp(56px, 7vw, 96px);
+        // Display — Fraunces 300, large headings (h1)  spec: display/96
+        --text-display-size: clamp(64px, 8vw, 96px);
         --text-display-leading: 1.02;
         --text-display-tracking: -0.025em;
         --text-display-opsz: 144;
 
-        // Title — Fraunces, section headings
-        --text-title-size: clamp(28px, 3.5vw, 40px);
-        --text-title-leading: 1.05;
-        --text-title-tracking: -0.015em;
+        // Section — Fraunces 400, section headings (h2)  spec: title/40, user: slightly larger
+        --text-section-size: clamp(32px, 4vw, 46px);
+        --text-section-leading: 1.1;
+        --text-section-tracking: -0.015em;
 
-        // Lead — Newsreader, introductory prose
+        // Title — Newsreader 500, sub-section headings (h3)  spec: 26px
+        --text-title-size: 26px;
+        --text-title-leading: 1.2;
+        --text-title-tracking: -0.005em;
+
+        // Lead — introductory prose
         --text-lead-size: 19px;
         --text-lead-leading: 1.55;
 
-        // Body — Newsreader, running text
+        // Body — running text  spec: body/17
         --text-body-size: clamp(15px, 1.1vw, 17px);
         --text-body-leading: 1.55;
 
-        // Meta — Fira Code, timestamps / read-time / captions
+        // Meta — Fira Code, timestamps / read-time / captions  spec: meta/12
         --text-meta-size: 12px;
         --text-meta-tracking: 0.04em;
 
-        // Eyebrow — Fira Code uppercase, section labels
+        // Eyebrow — Fira Code uppercase, section labels  spec: eyebrow/11
         --text-eyebrow-size: 11px;
-        --text-eyebrow-tracking: 0.14em;
+        --text-eyebrow-tracking: 0.16em;
     }
 }

@@ -179,13 +179,13 @@ pub fn CssFoundationPage() -> impl IntoView {
         <section data-testid="section-band" class="band" style="padding-block: var(--space-7);">
             <div class="container">
                 <span class="eyebrow">"Band"</span>
-                <h2>"Always dark — both light and dark modes show a dark band."</h2>
+                <h2>"Always the inverse of the page colour scheme."</h2>
                 <div style="display: flex; flex-wrap: wrap; gap: var(--space-3); margin-block: var(--space-5);">
                     <span class="tag tag--pill">"band-tag"</span>
                 </div>
                 <hr class="rule-list" />
                 <p style="margin-block-start: var(--space-5);">
-                    "This section uses --color-band-* tokens, which are hardcoded dark."
+                    "Light mode → dark band. Dark mode → light band. Uses --color-band-* tokens derived from --color-ink / --color-paper."
                 </p>
             </div>
         </section>
