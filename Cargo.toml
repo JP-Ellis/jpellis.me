@@ -16,7 +16,6 @@ publish = false
     end2end-dir = "e2e"
 
     [package.metadata.stylance]
-    folders = ["./src/", "./style/"]
     output_dir = "./style/"
 
 [lib]

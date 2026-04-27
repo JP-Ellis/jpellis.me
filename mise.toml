@@ -13,12 +13,15 @@
 "github:endevco/aube" = "1"
 "cargo:uv" = "0.11"
 
-"cargo:prek" = "0.3"
 "cargo:cargo-leptos" = "0.3"
-"cargo:cargo-nextest" = "0.9"
 "cargo:cargo-llvm-cov" = "0.8"
 "cargo:cargo-machete" = "0.9"
+"cargo:cargo-nextest" = "0.9"
+"cargo:committed" = "1"
 "cargo:leptosfmt" = "0.1"
+"cargo:prek" = "0.3"
+"cargo:stylance-cli" = "0.8"
+"cargo:typos-cli" = "1"
 "npm:wrangler" = "4"
 "pipx:yamlfix" = "1"
 
@@ -75,7 +78,17 @@ run = "cargo llvm-cov nextest"
 run = "cargo machete"
 
 [tasks.watch]
-run = "cargo leptos watch"
+run = '''
+#!/usr/bin/env bash
+stylance --watch . &
+STYLANCE_PID=$!
+cargo leptos watch &
+CARGO_PID=$!
+
+trap "kill $STYLANCE_PID $CARGO_PID 2>/dev/null; exit" INT TERM
+
+wait
+'''
 
 [tasks."watch:wrangler"]
 run = "wrangler dev"
