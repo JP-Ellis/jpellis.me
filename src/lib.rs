@@ -71,6 +71,9 @@ pub fn App() -> impl IntoView {
                 <Route path=path!("") view=pages::HomePage />
                 <ParentRoute path=path!("__test") view=test_pages::TestLayout>
                     <Route path=path!("") view=test_pages::TestIndex />
+                    <Route path=path!("masthead") view=test_pages::MastheadPage />
+                    <Route path=path!("footer") view=test_pages::FooterPage />
+                    <Route path=path!("band") view=test_pages::BandPage />
                     <Route path=path!("css-foundation") view=test_pages::CssFoundationPage />
                 </ParentRoute>
             </Routes>
