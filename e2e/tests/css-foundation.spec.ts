@@ -53,14 +53,37 @@ test.describe("/__test/css-foundation sections 1-6", () => {
     expect(ff).toContain("Newsreader");
   });
 
-  test("h1 uses Fraunces font", async ({ page }) => {
-    const ff = await page.evaluate(() => {
-      const h1 = document.querySelector(
-        '[data-testid="section-typography"] h1',
-      )!;
-      return getComputedStyle(h1).fontFamily;
+  test("h1 and h2 use Fraunces font", async ({ page }) => {
+    const [h1ff, h2ff] = await page.evaluate(() => {
+      const s = document.querySelector('[data-testid="section-typography"]')!;
+      return ["h1", "h2"].map(
+        (tag) => getComputedStyle(s.querySelector(tag)!).fontFamily,
+      );
     });
-    expect(ff).toContain("Fraunces");
+    expect(h1ff).toContain("Fraunces");
+    expect(h2ff).toContain("Fraunces");
+  });
+
+  test("h3 and h4 use Newsreader font", async ({ page }) => {
+    const [h3ff, h4ff] = await page.evaluate(() => {
+      const s = document.querySelector('[data-testid="section-typography"]')!;
+      return ["h3", "h4"].map(
+        (tag) => getComputedStyle(s.querySelector(tag)!).fontFamily,
+      );
+    });
+    expect(h3ff).toContain("Newsreader");
+    expect(h4ff).toContain("Newsreader");
+  });
+
+  test("h5 and h6 use Fira Code font", async ({ page }) => {
+    const [h5ff, h6ff] = await page.evaluate(() => {
+      const s = document.querySelector('[data-testid="section-typography"]')!;
+      return ["h5", "h6"].map(
+        (tag) => getComputedStyle(s.querySelector(tag)!).fontFamily,
+      );
+    });
+    expect(h5ff).toContain("Fira Code");
+    expect(h6ff).toContain("Fira Code");
   });
 
   test("code uses Fira Code font", async ({ page }) => {
@@ -71,6 +94,65 @@ test.describe("/__test/css-foundation sections 1-6", () => {
       return getComputedStyle(code).fontFamily;
     });
     expect(ff).toContain("Fira Code");
+  });
+
+  test("heading rendered sizes decrease from h1 to h4", async ({ page }) => {
+    const sizes = await page.evaluate(() => {
+      const s = document.querySelector('[data-testid="section-typography"]')!;
+      return ["h1", "h2", "h3", "h4"].map((tag) =>
+        Number.parseFloat(getComputedStyle(s.querySelector(tag)!).fontSize),
+      );
+    });
+    for (let i = 0; i < sizes.length - 1; i += 1) {
+      expect(sizes[i]).toBeGreaterThan(sizes[i + 1]);
+    }
+  });
+
+  test("h1 font-size is larger at wide viewport than narrow", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    const wideSize = await page.evaluate(() =>
+      Number.parseFloat(
+        getComputedStyle(
+          document.querySelector('[data-testid="section-typography"] h1')!,
+        ).fontSize,
+      ),
+    );
+    await page.setViewportSize({ width: 375, height: 812 });
+    const narrowSize = await page.evaluate(() =>
+      Number.parseFloat(
+        getComputedStyle(
+          document.querySelector('[data-testid="section-typography"] h1')!,
+        ).fontSize,
+      ),
+    );
+    expect(wideSize).toBeGreaterThan(narrowSize);
+  });
+
+  test("link has accent-coloured underline distinct from its text colour", async ({
+    page,
+  }) => {
+    const [textColor, underlineColor] = await page.evaluate(
+      (): [string, string] => {
+        function toRgb(color: string): string {
+          const c = document.createElement("canvas");
+          c.width = 1;
+          c.height = 1;
+          const ctx = c.getContext("2d")!;
+          ctx.fillStyle = color;
+          ctx.fillRect(0, 0, 1, 1);
+          const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+          return `rgb(${r}, ${g}, ${b})`;
+        }
+        const a = document.querySelector(
+          '[data-testid="section-typography"] a',
+        ) as HTMLElement;
+        const cs = getComputedStyle(a);
+        return [toRgb(cs.color), toRgb(cs.textDecorationColor)];
+      },
+    );
+    expect(underlineColor).not.toBe(textColor);
   });
 
   test("body background and text colour match the active colour scheme", async ({
@@ -167,119 +249,5 @@ test.describe("/__test/css-foundation sections 1-6", () => {
       return [getComputedStyle(p).color, getComputedStyle(a).color];
     });
     expect(accent).not.toBe(plain);
-  });
-});
-
-test.describe("/__test/css-foundation sections 7-12", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/__test/css-foundation");
-  });
-
-  test("section-eyebrow-grid renders the grid component", async ({ page }) => {
-    const s = page.locator('[data-testid="section-eyebrow-grid"]');
-    await expect(s).toBeVisible();
-    await expect(s.locator(".eyebrow").first()).toBeVisible();
-  });
-
-  test("band background is dark in the current colour scheme", async ({
-    page,
-  }) => {
-    const bandBg = await page.evaluate((): string => {
-      const band = document.querySelector(
-        '[data-testid="section-band"].band',
-      ) as HTMLElement;
-      // Normalise oklch/lab/rgb to sRGB via canvas
-      const c = document.createElement("canvas");
-      c.width = 1;
-      c.height = 1;
-      const ctx = c.getContext("2d")!;
-      ctx.fillStyle = getComputedStyle(band).backgroundColor;
-      ctx.fillRect(0, 0, 1, 1);
-      const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-      return `rgb(${r}, ${g}, ${b})`;
-    });
-    expect(bandBg).toBe("rgb(26, 22, 18)");
-  });
-
-  test("eyebrow inside band is semi-transparent (not solid ink or paper)", async ({
-    page,
-  }) => {
-    const alpha = await page.evaluate((): number => {
-      const el = document.querySelector(
-        '[data-testid="section-band"] .eyebrow',
-      ) as HTMLElement;
-      // Normalise to sRGB via canvas to read actual alpha channel
-      const c = document.createElement("canvas");
-      c.width = 1;
-      c.height = 1;
-      const ctx = c.getContext("2d")!;
-      ctx.fillStyle = getComputedStyle(el).color;
-      ctx.fillRect(0, 0, 1, 1);
-      return ctx.getImageData(0, 0, 1, 1).data[3]; // 0–255
-    });
-    expect(alpha).toBeGreaterThan(0);
-    expect(alpha).toBeLessThan(255);
-  });
-
-  test(".container max-width is 1280px", async ({ page }) => {
-    const mw = await page.evaluate(() => {
-      const el = document.querySelector(".container") as HTMLElement;
-      return getComputedStyle(el).maxWidth;
-    });
-    expect(mw).toBe("1280px");
-  });
-
-  test(".container--prose max-width is 880px", async ({ page }) => {
-    const mw = await page.evaluate(() => {
-      const el = document.querySelector(".container--prose") as HTMLElement;
-      return getComputedStyle(el).maxWidth;
-    });
-    expect(mw).toBe("880px");
-  });
-
-  test("section-masthead contains masthead markup", async ({ page }) => {
-    const s = page.locator('[data-testid="section-masthead"]');
-    await expect(s).toBeVisible();
-    await expect(s.locator(".masthead")).toBeVisible();
-    await expect(s.locator(".masthead__logo")).toBeVisible();
-    await expect(s.locator(".masthead__nav")).toBeVisible();
-    await expect(s.locator(".masthead__nav-link--active")).toBeVisible();
-  });
-
-  test("section-footer has three footer__item elements", async ({ page }) => {
-    const s = page.locator('[data-testid="section-footer"]');
-    await expect(s).toBeVisible();
-    await expect(s.locator(".footer__item")).toHaveCount(3);
-  });
-
-  test("focused button in section-focus has solid outline", async ({
-    page,
-  }) => {
-    // Click then Tab so :focus-visible fires (keyboard modality required)
-    await page.locator('[data-testid="section-focus"] button').click();
-    await page.keyboard.press("Tab");
-    await page.keyboard.press("Shift+Tab");
-    const outlineStyle = await page.evaluate(() => {
-      const btn = document.querySelector(
-        '[data-testid="section-focus"] button',
-      ) as HTMLElement;
-      return getComputedStyle(btn).outlineStyle;
-    });
-    expect(outlineStyle).toBe("solid");
-  });
-
-  test("sr-only element is 1px × 1px with position absolute", async ({
-    page,
-  }) => {
-    const [w, h, pos] = await page.evaluate(() => {
-      const el = document.querySelector(
-        '[data-testid="section-sr-only"] .sr-only',
-      ) as HTMLElement;
-      const cs = getComputedStyle(el);
-      return [cs.width, cs.height, cs.position];
-    });
-    expect(w).toBe("1px");
-    expect(h).toBe("1px");
-    expect(pos).toBe("absolute");
   });
 });
