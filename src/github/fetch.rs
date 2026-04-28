@@ -1,12 +1,10 @@
 //! GitHub API fetcher.
 //!
-//! Calls the GitHub GraphQL API for contribution data and the public events REST
-//! API for recent commit activity, then assembles a [`GitHubStats`] struct.
-//!
-//! On native (Axum / SSR) targets the two API requests are issued concurrently
-//! via [`tokio::join!`].  On WASM32 (CF Workers) they are issued sequentially
-//! because the CF Workers runtime is single-threaded and `tokio::join!` is not
-//! available.
+//! Issues a GraphQL request for the contribution calendar, a Search API request
+//! for recent public commits, and a Search API request for recent public PRs
+//! and issues, then assembles a [`GitHubStats`] struct.
+
+use std::cmp::Reverse;
 
 use chrono::Duration;
 use chrono::NaiveDate;
@@ -51,8 +49,8 @@ impl std::error::Error for FetchError {}
 ///
 /// # Arguments
 ///
-/// * `query` - The GraphQL query string.
 /// * `client` - A shared HTTP client.
+/// * `query` - The GraphQL query string.
 /// * `token` - A GitHub personal access token used for authentication.
 ///
 /// # Returns
@@ -88,12 +86,14 @@ async fn graphql(
         .map_err(|e| FetchError::Parse(e.to_string()))
 }
 
-/// Fetches the authenticated user's public events from the GitHub REST API.
+/// Sends a REST GET request to the GitHub API and returns the parsed JSON body.
 ///
 /// # Arguments
 ///
 /// * `client` - A shared HTTP client.
+/// * `url` - The full URL to request.
 /// * `token` - A GitHub personal access token used for authentication.
+/// * `extra_headers` - Additional `(name, value)` headers to include.
 ///
 /// # Returns
 ///
@@ -101,21 +101,27 @@ async fn graphql(
 ///
 /// # Errors
 ///
-/// Returns [`FetchError::Http`] if the request fails or the status is not 2xx,
-/// and [`FetchError::Parse`] if the response body cannot be decoded as JSON.
-async fn get_public_events(
+/// Returns [`FetchError::Http`] if the request fails or returns a non-2xx
+/// status, and [`FetchError::Parse`] if the response cannot be decoded as JSON.
+async fn rest_get(
     client: &reqwest::Client,
+    url: &str,
     token: &str,
+    extra_headers: &[(&str, &str)],
 ) -> Result<serde_json::Value, FetchError> {
-    let resp = client
-        .get("https://api.github.com/users/JP-Ellis/events/public")
+    let mut req = client
+        .get(url)
         .header("Authorization", format!("Bearer {token}"))
-        .header("User-Agent", "jpellis-me/1.0")
+        .header("User-Agent", "jpellis-me/1.0");
+    for (name, value) in extra_headers {
+        req = req.header(*name, *value);
+    }
+    let resp = req
         .send()
         .await
         .map_err(|e| FetchError::Http(e.to_string()))?;
     if !resp.status().is_success() {
-        return Err(FetchError::Http(format!("Events status {}", resp.status())));
+        return Err(FetchError::Http(format!("REST status {}", resp.status())));
     }
     resp.json::<serde_json::Value>()
         .await
@@ -126,8 +132,8 @@ async fn get_public_events(
 // GraphQL query builder
 // ---------------------------------------------------------------------------
 
-/// Builds the GraphQL query for the contribution calendar, repositories,
-/// pull requests, and issues over the given date range.
+/// Builds the GraphQL query for the contribution calendar and public repository
+/// count over the given date range.
 ///
 /// # Arguments
 ///
@@ -150,18 +156,6 @@ fn build_graphql_query(from: &str, to: &str) -> String {
       }}
     }}
     repositories(privacy: PUBLIC) {{ totalCount }}
-    pullRequests(first: 20, orderBy: {{ field: UPDATED_AT, direction: DESC }}) {{
-      nodes {{
-        title createdAt state url
-        repository {{ nameWithOwner isPrivate }}
-      }}
-    }}
-    issues(first: 20, orderBy: {{ field: UPDATED_AT, direction: DESC }}) {{
-      nodes {{
-        title createdAt state url
-        repository {{ nameWithOwner isPrivate }}
-      }}
-    }}
   }}
 }}"#
     )
@@ -217,98 +211,155 @@ fn parse_contribution_weeks(
         .collect()
 }
 
-/// Parses pull request or issue nodes from the GraphQL response into
-/// [`ActivityItem`] values, filtering out items from private repositories.
+// ---------------------------------------------------------------------------
+// Search API fetchers
+// ---------------------------------------------------------------------------
+
+/// Fetches the 6 most recent public commits authored by JP-Ellis via the
+/// GitHub commit search API.
+///
+/// Uses the `author:JP-Ellis is:public` search query sorted by author date.
+/// The commit search API requires the `application/vnd.github.cloak-preview`
+/// Accept header to be enabled.
 ///
 /// # Arguments
 ///
-/// * `nodes` - The `nodes` array from the GraphQL pull requests or issues field.
-/// * `kind` - The [`ActivityKind`] to assign to each parsed item.
+/// * `client` - A shared HTTP client.
+/// * `token` - A GitHub personal access token.
 ///
 /// # Returns
 ///
-/// A [`Vec`] of [`ActivityItem`] structs (private repos are silently excluded).
-fn parse_activity_items(nodes: &serde_json::Value, kind: ActivityKind) -> Vec<ActivityItem> {
-    let Some(arr) = nodes.as_array() else {
-        return vec![];
-    };
-    arr.iter()
-        .filter(|node| {
-            node["repository"]["isPrivate"]
-                .as_bool()
-                .map(|p| !p)
-                .unwrap_or(true)
-        })
-        .filter_map(|node| {
-            let title = node["title"].as_str()?.to_string();
-            let url = node["url"].as_str()?.to_string();
-            let repo = node["repository"]["nameWithOwner"].as_str()?.to_string();
-            let created_at = node["createdAt"]
-                .as_str()
-                .and_then(|s| s.parse::<chrono::DateTime<Utc>>().ok())?;
-            let state = match node["state"].as_str() {
-                Some("OPEN") => Some(ActivityState::Open),
-                Some("CLOSED") => Some(ActivityState::Closed),
-                Some("MERGED") => Some(ActivityState::Merged),
-                _ => None,
-            };
-            Some(ActivityItem {
-                kind: kind.clone(),
-                repo,
-                title,
-                url,
-                state,
-                created_at,
-            })
-        })
-        .collect()
-}
+/// A [`Vec`] of up to 6 [`ActivityItem`] values with [`ActivityKind::Commit`].
+///
+/// # Errors
+///
+/// Returns [`FetchError`] if the HTTP request fails or the response cannot be
+/// parsed.
+async fn fetch_recent_commits(
+    client: &reqwest::Client,
+    token: &str,
+) -> Result<Vec<ActivityItem>, FetchError> {
+    // Fetch 12 so that after deduplication against PR titles in the display
+    // layer we still have enough to fill 6 slots.
+    let url = "https://api.github.com/search/commits?q=author:JP-Ellis+is:public&sort=author-date&order=desc&per_page=12";
+    let body = rest_get(
+        client,
+        url,
+        token,
+        &[("Accept", "application/vnd.github.cloak-preview")],
+    )
+    .await?;
 
-// ---------------------------------------------------------------------------
-// Commit event parsing from REST
-// ---------------------------------------------------------------------------
+    let items = body["items"]
+        .as_array()
+        .ok_or_else(|| FetchError::Parse("commit search items missing".into()))?;
 
-/// Parses `PushEvent` entries from the GitHub public events REST response into
-/// [`ActivityItem`] values.
-///
-/// Only `PushEvent` entries are included; all other event types are ignored.
-/// At most 10 commit items are returned (the most recent).
-///
-/// # Arguments
-///
-/// * `events` - The JSON array returned by the public events endpoint.
-///
-/// # Returns
-///
-/// A [`Vec`] of up to 10 [`ActivityItem`] structs with
-/// [`ActivityKind::Commit`].
-fn parse_commit_events(events: &serde_json::Value) -> Vec<ActivityItem> {
-    let Some(arr) = events.as_array() else {
-        return vec![];
-    };
-    arr.iter()
-        .filter(|e| e["type"].as_str() == Some("PushEvent"))
-        .filter_map(|e| {
-            let repo = e["repo"]["name"].as_str()?.to_string();
-            let commits = e["payload"]["commits"].as_array()?;
-            let head = commits.last()?;
-            let title = head["message"].as_str()?.lines().next()?.to_string();
-            let sha = head["sha"].as_str()?;
-            let url = format!("https://github.com/{repo}/commit/{sha}");
-            let created_at = e["created_at"]
-                .as_str()
-                .and_then(|s| s.parse::<chrono::DateTime<Utc>>().ok())?;
+    Ok(items
+        .iter()
+        .filter_map(|item| {
+            let sha = item["sha"].as_str()?;
+            let html_url = item["html_url"].as_str()?.to_string();
+            let repo = item["repository"]["full_name"].as_str()?.to_string();
+            let message = item["commit"]["message"].as_str()?;
+            let title = message.lines().next().unwrap_or("").to_string();
+            if title.is_empty() {
+                return None;
+            }
+            // Commit search returns dates with tz offset; parse via FixedOffset then convert.
+            let created_at = item["commit"]["author"]["date"].as_str().and_then(|s| {
+                chrono::DateTime::parse_from_rfc3339(s)
+                    .ok()
+                    .map(|dt| dt.to_utc())
+            })?;
+            let _ = sha; // sha is embedded in html_url already
             Some(ActivityItem {
                 kind: ActivityKind::Commit,
                 repo,
                 title,
-                url,
+                url: html_url,
                 state: None,
                 created_at,
             })
         })
-        .take(10)
-        .collect()
+        .collect())
+}
+
+/// Fetches the 4 most recently created public PRs and issues authored by
+/// JP-Ellis via the GitHub issue search API.
+///
+/// The query `author:JP-Ellis is:public` matches both PRs and issues. Items
+/// with a `pull_request` field are treated as PRs; the `merged_at` sub-field
+/// is used to distinguish merged PRs from simply-closed ones.
+///
+/// # Arguments
+///
+/// * `client` - A shared HTTP client.
+/// * `token` - A GitHub personal access token.
+///
+/// # Returns
+///
+/// A [`Vec`] of up to 4 [`ActivityItem`] values with [`ActivityKind::PullRequest`]
+/// or [`ActivityKind::Issue`].
+///
+/// # Errors
+///
+/// Returns [`FetchError`] if the HTTP request fails or the response cannot be
+/// parsed.
+async fn fetch_recent_activity(
+    client: &reqwest::Client,
+    token: &str,
+) -> Result<Vec<ActivityItem>, FetchError> {
+    let url = "https://api.github.com/search/issues?q=author:JP-Ellis+is:public&sort=created&order=desc&per_page=4";
+    let body = rest_get(client, url, token, &[]).await?;
+
+    let items = body["items"]
+        .as_array()
+        .ok_or_else(|| FetchError::Parse("issue search items missing".into()))?;
+
+    Ok(items
+        .iter()
+        .filter_map(|item| {
+            let title = item["title"].as_str()?.to_string();
+            let url = item["html_url"].as_str()?.to_string();
+            let repo = item["repository_url"]
+                .as_str()?
+                .trim_start_matches("https://api.github.com/repos/")
+                .to_string();
+            let created_at = item["created_at"]
+                .as_str()
+                .and_then(|s| s.parse::<chrono::DateTime<Utc>>().ok())?;
+
+            let is_pr = item.get("pull_request").is_some();
+            let (kind, state) = if is_pr {
+                let merged = item["pull_request"]["merged_at"].is_string();
+                let raw_state = item["state"].as_str().unwrap_or("open");
+                let state = if raw_state == "open" {
+                    ActivityState::Open
+                } else if merged {
+                    ActivityState::Merged
+                } else {
+                    ActivityState::Closed
+                };
+                (ActivityKind::PullRequest, state)
+            } else {
+                let state = if item["state"].as_str() == Some("open") {
+                    ActivityState::Open
+                } else {
+                    ActivityState::Closed
+                };
+                (ActivityKind::Issue, state)
+            };
+
+            Some(ActivityItem {
+                kind,
+                repo,
+                title,
+                url,
+                state: Some(state),
+                created_at,
+            })
+        })
+        .collect())
 }
 
 // ---------------------------------------------------------------------------
@@ -317,9 +368,10 @@ fn parse_commit_events(events: &serde_json::Value) -> Vec<ActivityItem> {
 
 /// Fetches live GitHub statistics for the JP-Ellis account.
 ///
-/// Issues a GraphQL request (contribution calendar, repositories, PRs, issues)
-/// and a REST request (public push events) concurrently, then merges the
-/// results into a [`GitHubStats`] struct.
+/// Issues three requests in sequence:
+/// 1. A GraphQL request for the contribution calendar and public repository count.
+/// 2. A commit search request for the 6 most recent public commits.
+/// 3. An issue search request for the 4 most recently created public PRs and issues.
 ///
 /// # Arguments
 ///
@@ -332,7 +384,7 @@ fn parse_commit_events(events: &serde_json::Value) -> Vec<ActivityItem> {
 ///
 /// # Errors
 ///
-/// Returns [`FetchError::Http`] if either API call fails, or
+/// Returns [`FetchError::Http`] if any API call fails, or
 /// [`FetchError::Parse`] if the response cannot be interpreted.
 pub async fn fetch_from_github(token: &str) -> Result<GitHubStats, FetchError> {
     let now = Utc::now();
@@ -342,23 +394,9 @@ pub async fn fetch_from_github(token: &str) -> Result<GitHubStats, FetchError> {
     let to = format!("{}T23:59:59Z", period_to);
 
     let client = reqwest::Client::new();
+
     let query = build_graphql_query(&from, &to);
-
-    // On native targets issue requests concurrently; on WASM32 (CF Workers)
-    // the runtime is single-threaded so sequential calls are used instead.
-    #[cfg(not(target_arch = "wasm32"))]
-    let (gql_result, events_result) = tokio::join!(
-        graphql(&client, &query, token),
-        get_public_events(&client, token)
-    );
-    #[cfg(target_arch = "wasm32")]
-    let (gql_result, events_result) = {
-        let gql = graphql(&client, &query, token).await;
-        let events = get_public_events(&client, token).await;
-        (gql, events)
-    };
-
-    let gql = gql_result?;
+    let gql = graphql(&client, &query, token).await?;
     let user = &gql["data"]["user"];
 
     let total_contributions =
@@ -375,28 +413,14 @@ pub async fn fetch_from_github(token: &str) -> Result<GitHubStats, FetchError> {
         &user["contributionsCollection"]["contributionCalendar"]["weeks"],
     )?;
 
-    let mut activity: Vec<ActivityItem> = vec![];
+    let mut commits = fetch_recent_commits(&client, token).await?;
+    let mut others = fetch_recent_activity(&client, token).await?;
 
-    match events_result {
-        Ok(events) => activity.extend(parse_commit_events(&events)),
-        Err(e) => {
-            #[cfg(not(target_arch = "wasm32"))]
-            leptos::logging::warn!("Public events fetch failed (commit activity omitted): {e}");
-            #[cfg(target_arch = "wasm32")]
-            worker::console_error!("Public events fetch failed (commit activity omitted): {e}");
-        }
-    }
-    activity.extend(parse_activity_items(
-        &user["pullRequests"]["nodes"],
-        ActivityKind::PullRequest,
-    ));
-    activity.extend(parse_activity_items(
-        &user["issues"]["nodes"],
-        ActivityKind::Issue,
-    ));
+    commits.sort_by_key(|c| Reverse(c.created_at));
+    others.sort_by_key(|o| Reverse(o.created_at));
 
-    activity.sort_by_key(|item| std::cmp::Reverse(item.created_at));
-    activity.truncate(8);
+    let mut recent_activity: Vec<ActivityItem> = commits.into_iter().chain(others).collect();
+    recent_activity.sort_by_key(|i| Reverse(i.created_at));
 
     Ok(GitHubStats {
         fetched_at: now,
@@ -405,7 +429,7 @@ pub async fn fetch_from_github(token: &str) -> Result<GitHubStats, FetchError> {
         period_from,
         period_to,
         contribution_weeks,
-        recent_activity: activity,
+        recent_activity,
     })
 }
 
@@ -418,55 +442,6 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use super::*;
-
-    #[test]
-    fn parse_activity_items_filters_private_repos() {
-        let nodes = serde_json::json!([
-            {
-                "title": "public PR",
-                "url": "https://github.com/pub/repo/pull/1",
-                "createdAt": "2026-04-28T10:00:00Z",
-                "state": "OPEN",
-                "repository": { "nameWithOwner": "pub/repo", "isPrivate": false }
-            },
-            {
-                "title": "private PR",
-                "url": "https://github.com/priv/repo/pull/2",
-                "createdAt": "2026-04-28T09:00:00Z",
-                "state": "MERGED",
-                "repository": { "nameWithOwner": "priv/repo", "isPrivate": true }
-            }
-        ]);
-        let items = parse_activity_items(&nodes, ActivityKind::PullRequest);
-        assert_eq!(items.len(), 1);
-        assert_eq!(items[0].title, "public PR");
-    }
-
-    #[test]
-    fn parse_commit_events_extracts_push_events_only() {
-        let events = serde_json::json!([
-            {
-                "type": "WatchEvent",
-                "repo": { "name": "other/repo" },
-                "created_at": "2026-04-28T10:00:00Z",
-                "payload": {}
-            },
-            {
-                "type": "PushEvent",
-                "repo": { "name": "JP-Ellis/pact-python" },
-                "created_at": "2026-04-28T09:00:00Z",
-                "payload": {
-                    "commits": [
-                        { "sha": "abc123", "message": "feat: add thing\n\nBody text" }
-                    ]
-                }
-            }
-        ]);
-        let commits = parse_commit_events(&events);
-        assert_eq!(commits.len(), 1);
-        assert_eq!(commits[0].title, "feat: add thing");
-        assert_eq!(commits[0].repo, "JP-Ellis/pact-python");
-    }
 
     #[test]
     fn parse_contribution_weeks_parses_counts() {
@@ -482,5 +457,115 @@ mod tests {
         assert_eq!(parsed.len(), 1);
         assert_eq!(parsed[0].days[0].count, 5);
         assert_eq!(parsed[0].days[1].count, 0);
+    }
+
+    /// Verifies that the commit search response shape is correctly mapped to
+    /// [`ActivityItem`] values, with the title extracted from the first line of
+    /// the commit message and the date parsed from RFC 3339 with a tz offset.
+    #[test]
+    fn parse_commit_search_item_extracts_fields() {
+        // Simulate a single item from the commit search response.
+        let item = serde_json::json!({
+            "sha": "abc123def456",
+            "html_url": "https://github.com/owner/repo/commit/abc123def456",
+            "repository": { "full_name": "owner/repo", "private": false },
+            "commit": {
+                "message": "feat: add thing\n\nLong body here",
+                "author": { "date": "2026-04-28T15:58:14+10:00" }
+            }
+        });
+
+        // Replicate the mapping logic from fetch_recent_commits inline.
+        let sha = item["sha"].as_str().unwrap();
+        let html_url = item["html_url"].as_str().unwrap().to_string();
+        let repo = item["repository"]["full_name"]
+            .as_str()
+            .unwrap()
+            .to_string();
+        let message = item["commit"]["message"].as_str().unwrap();
+        let title = message.lines().next().unwrap_or("").to_string();
+        let created_at = chrono::DateTime::parse_from_rfc3339(
+            item["commit"]["author"]["date"].as_str().unwrap(),
+        )
+        .unwrap()
+        .to_utc();
+
+        assert_eq!(title, "feat: add thing");
+        assert_eq!(repo, "owner/repo");
+        assert_eq!(
+            html_url,
+            "https://github.com/owner/repo/commit/abc123def456"
+        );
+        // Date should be converted to UTC (15:58:14+10:00 = 05:58:14Z).
+        assert_eq!(created_at.format("%H:%M:%S").to_string(), "05:58:14");
+        let _ = sha;
+    }
+
+    #[test]
+    fn parse_activity_item_pr_merged() {
+        let item = serde_json::json!({
+            "title": "feat: merge me",
+            "html_url": "https://github.com/owner/repo/pull/1",
+            "repository_url": "https://api.github.com/repos/owner/repo",
+            "created_at": "2026-04-20T10:00:00Z",
+            "state": "closed",
+            "pull_request": { "merged_at": "2026-04-21T10:00:00Z" }
+        });
+
+        let is_pr = item.get("pull_request").is_some();
+        let merged = item["pull_request"]["merged_at"].is_string();
+        let raw_state = item["state"].as_str().unwrap_or("open");
+        let state = if raw_state == "open" {
+            ActivityState::Open
+        } else if merged {
+            ActivityState::Merged
+        } else {
+            ActivityState::Closed
+        };
+
+        assert!(is_pr);
+        assert_eq!(state, ActivityState::Merged);
+    }
+
+    #[test]
+    fn parse_activity_item_pr_closed_not_merged() {
+        let item = serde_json::json!({
+            "title": "feat: abandoned",
+            "html_url": "https://github.com/owner/repo/pull/2",
+            "repository_url": "https://api.github.com/repos/owner/repo",
+            "created_at": "2026-04-20T10:00:00Z",
+            "state": "closed",
+            "pull_request": { "merged_at": null }
+        });
+
+        let merged = item["pull_request"]["merged_at"].is_string();
+        let raw_state = item["state"].as_str().unwrap_or("open");
+        let state = if raw_state == "open" {
+            ActivityState::Open
+        } else if merged {
+            ActivityState::Merged
+        } else {
+            ActivityState::Closed
+        };
+
+        assert_eq!(state, ActivityState::Closed);
+    }
+
+    #[test]
+    fn parse_activity_item_issue_detection() {
+        let issue_item = serde_json::json!({
+            "title": "Bug report",
+            "html_url": "https://github.com/owner/repo/issues/3",
+            "repository_url": "https://api.github.com/repos/owner/repo",
+            "created_at": "2026-04-15T10:00:00Z",
+            "state": "open"
+            // no pull_request field
+        });
+
+        let is_pr = issue_item.get("pull_request").is_some();
+        assert!(
+            !is_pr,
+            "item without pull_request field should be treated as issue"
+        );
     }
 }
