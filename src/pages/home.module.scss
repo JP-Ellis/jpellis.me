@@ -10,6 +10,18 @@
     color: var(--color-accent);
 }
 
+.accent-python {
+    color: oklch(0.55 0.14 148);
+}
+
+.antimatter {
+    color: var(--color-paper);
+    text-shadow:
+        0 0 0.1ex var(--color-ink),
+        0 0 0.25ex var(--color-ink),
+        0 0 0.5ex var(--color-ink);
+}
+
 .lead {
     font-size: var(--text-lead-size);
     line-height: var(--text-lead-leading);

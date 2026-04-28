@@ -49,16 +49,20 @@ pub fn HomePage() -> impl IntoView {
                 <div class="container">
                     <p class="eyebrow">"Hello, again"</p>
                     <h1>
-                        "I write " <em>"contracts"</em> " between systems for a living, in "
-                        <span class=style::accent>"Rust"</span>
-                        " and Python — and once spent a decade chasing where the "
-                        <em>"antimatter"</em> " went."
+                        "I codify " <em>"contracts"</em> " between systems for a living, in "
+                        <span class=style::accent>"Rust"</span> " and "
+                        <span class=style::accent_python>"Python"</span> "; "
+                        " and once spent a decade chasing where the "
+                        <em class=style::antimatter>"antimatter"</em> " went."
                     </h1>
                     <p class=style::lead>
-                        "Senior software engineer at " <strong>"SmartBear / PactFlow"</strong>
-                        ", working on the open-source " <code>"pact-python"</code>
-                        " rewrite over a Rust FFI core. Previously: data "
-                        "engineering at KPMG, and a PhD in theoretical particle physics."
+                        "Senior software engineer at " <strong>"PactFlow (SmartBear)"</strong>
+                        ". Open source contributor to " <code>"pact-python"</code> ", "
+                        <code>"tikz-feynman"</code> ", " <code>"rust-skiplist"</code> ", and more. "
+                    </p>
+                    <p class=style::lead>
+                        "Previously: data and cloud engineering at KPMG, "
+                        "and a PhD in theoretical particle physics."
                     </p>
                 </div>
             </section>
