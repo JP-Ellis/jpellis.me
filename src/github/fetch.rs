@@ -38,6 +38,8 @@ impl std::fmt::Display for FetchError {
     }
 }
 
+impl std::error::Error for FetchError {}
+
 // ---------------------------------------------------------------------------
 // HTTP helpers
 // ---------------------------------------------------------------------------
@@ -47,6 +49,7 @@ impl std::fmt::Display for FetchError {
 /// # Arguments
 ///
 /// * `query` - The GraphQL query string.
+/// * `client` - A shared HTTP client.
 /// * `token` - A GitHub personal access token used for authentication.
 ///
 /// # Returns
@@ -57,9 +60,12 @@ impl std::fmt::Display for FetchError {
 ///
 /// Returns [`FetchError::Http`] if the request fails or the status is not 2xx,
 /// and [`FetchError::Parse`] if the response body cannot be decoded as JSON.
-async fn graphql(query: &str, token: &str) -> Result<serde_json::Value, FetchError> {
+async fn graphql(
+    client: &reqwest::Client,
+    query: &str,
+    token: &str,
+) -> Result<serde_json::Value, FetchError> {
     let body = serde_json::json!({ "query": query });
-    let client = reqwest::Client::new();
     let resp = client
         .post("https://api.github.com/graphql")
         .header("Authorization", format!("Bearer {token}"))
@@ -83,6 +89,7 @@ async fn graphql(query: &str, token: &str) -> Result<serde_json::Value, FetchErr
 ///
 /// # Arguments
 ///
+/// * `client` - A shared HTTP client.
 /// * `token` - A GitHub personal access token used for authentication.
 ///
 /// # Returns
@@ -93,8 +100,10 @@ async fn graphql(query: &str, token: &str) -> Result<serde_json::Value, FetchErr
 ///
 /// Returns [`FetchError::Http`] if the request fails or the status is not 2xx,
 /// and [`FetchError::Parse`] if the response body cannot be decoded as JSON.
-async fn get_public_events(token: &str) -> Result<serde_json::Value, FetchError> {
-    let client = reqwest::Client::new();
+async fn get_public_events(
+    client: &reqwest::Client,
+    token: &str,
+) -> Result<serde_json::Value, FetchError> {
     let resp = client
         .get("https://api.github.com/users/JP-Ellis/events/public")
         .header("Authorization", format!("Bearer {token}"))
@@ -217,9 +226,8 @@ fn parse_contribution_weeks(
 ///
 /// A [`Vec`] of [`ActivityItem`] structs (private repos are silently excluded).
 fn parse_activity_items(nodes: &serde_json::Value, kind: ActivityKind) -> Vec<ActivityItem> {
-    let arr = match nodes.as_array() {
-        Some(a) => a,
-        None => return vec![],
+    let Some(arr) = nodes.as_array() else {
+        return vec![];
     };
     arr.iter()
         .filter(|node| {
@@ -272,9 +280,8 @@ fn parse_activity_items(nodes: &serde_json::Value, kind: ActivityKind) -> Vec<Ac
 /// A [`Vec`] of up to 10 [`ActivityItem`] structs with
 /// [`ActivityKind::Commit`].
 fn parse_commit_events(events: &serde_json::Value) -> Vec<ActivityItem> {
-    let arr = match events.as_array() {
-        Some(a) => a,
-        None => return vec![],
+    let Some(arr) = events.as_array() else {
+        return vec![];
     };
     arr.iter()
         .filter(|e| e["type"].as_str() == Some("PushEvent"))
@@ -283,7 +290,7 @@ fn parse_commit_events(events: &serde_json::Value) -> Vec<ActivityItem> {
             let commits = e["payload"]["commits"].as_array()?;
             let head = commits.last()?;
             let title = head["message"].as_str()?.lines().next()?.to_string();
-            let sha = head["sha"].as_str().unwrap_or_default();
+            let sha = head["sha"].as_str()?;
             let url = format!("https://github.com/{repo}/commit/{sha}");
             let created_at = e["created_at"]
                 .as_str()
@@ -331,9 +338,12 @@ pub async fn fetch_from_github(token: &str) -> Result<GitHubStats, FetchError> {
     let from = format!("{}T00:00:00Z", period_from);
     let to = format!("{}T23:59:59Z", period_to);
 
+    let client = reqwest::Client::new();
     let query = build_graphql_query(&from, &to);
-    let (gql_result, events_result) =
-        tokio::join!(graphql(&query, token), get_public_events(token));
+    let (gql_result, events_result) = tokio::join!(
+        graphql(&client, &query, token),
+        get_public_events(&client, token)
+    );
 
     let gql = gql_result?;
     let user = &gql["data"]["user"];
@@ -354,8 +364,11 @@ pub async fn fetch_from_github(token: &str) -> Result<GitHubStats, FetchError> {
 
     let mut activity: Vec<ActivityItem> = vec![];
 
-    if let Ok(events) = events_result {
-        activity.extend(parse_commit_events(&events));
+    match events_result {
+        Ok(events) => activity.extend(parse_commit_events(&events)),
+        Err(e) => {
+            leptos::logging::warn!("Public events fetch failed (commit activity omitted): {e}")
+        }
     }
     activity.extend(parse_activity_items(
         &user["pullRequests"]["nodes"],
@@ -366,7 +379,7 @@ pub async fn fetch_from_github(token: &str) -> Result<GitHubStats, FetchError> {
         ActivityKind::Issue,
     ));
 
-    activity.sort_by(|a, b| b.created_at.cmp(&a.created_at));
+    activity.sort_by_key(|item| std::cmp::Reverse(item.created_at));
     activity.truncate(8);
 
     Ok(GitHubStats {
