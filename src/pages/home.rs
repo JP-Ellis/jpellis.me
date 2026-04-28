@@ -115,7 +115,7 @@ fn build_grid_levels(stats: &GitHubStats) -> Vec<Vec<u8>> {
 fn time_ago(dt: &DateTime<Utc>) -> String {
     let secs = (Utc::now() - *dt).num_seconds().max(0);
     if secs < 3600 {
-        format!("{}h", secs / 3600 + 1)
+        format!("{}m", (secs / 60).max(1))
     } else if secs < 86400 {
         format!("{}h", secs / 3600)
     } else if secs < 604800 {
@@ -182,38 +182,44 @@ fn year_in_code_view(stats: GitHubStats, grid: Vec<Vec<u8>>) -> impl IntoView {
                 <div class=style::band_content>
                     <div>
                         <p class=format!("eyebrow {}", style::latest_label)>"Latest"</p>
-                        {stats
-                            .recent_activity
-                            .iter()
-                            .map(|item| {
-                                let kind_label = match item.kind {
-                                    ActivityKind::Commit => "commit",
-                                    ActivityKind::PullRequest => "PR",
-                                    ActivityKind::Issue => "issue",
-                                };
-                                let state_label = item
-                                    .state
-                                    .as_ref()
-                                    .map(|s| match s {
-                                        ActivityState::Open => " · open",
-                                        ActivityState::Closed => " · closed",
-                                        ActivityState::Merged => " · merged",
-                                    });
-                                let ago = time_ago(&item.created_at);
-                                view! {
-                                    <div class=style::commit_row data-testid="commit-row">
-                                        <span class=style::commit_repo>
-                                            {item.repo.clone()}
-                                            <span class=style::commit_kind>
-                                                {format!(" [{kind_label}{}]", state_label.unwrap_or(""))}
+                        {if stats.recent_activity.is_empty() {
+                            view! { <p>"No recent activity."</p> }.into_any()
+                        } else {
+                            stats
+                                .recent_activity
+                                .iter()
+                                .map(|item| {
+                                    let kind_label = match item.kind {
+                                        ActivityKind::Commit => "commit",
+                                        ActivityKind::PullRequest => "PR",
+                                        ActivityKind::Issue => "issue",
+                                    };
+                                    let state_label = item
+                                        .state
+                                        .as_ref()
+                                        .map(|s| match s {
+                                            ActivityState::Open => " · open",
+                                            ActivityState::Closed => " · closed",
+                                            ActivityState::Merged => " · merged",
+                                        });
+                                    let ago = time_ago(&item.created_at);
+                                    // TODO: wrap row in <a href={item.url.clone()}> once link styling is ready
+                                    view! {
+                                        <div class=style::commit_row data-testid="commit-row">
+                                            <span class=style::commit_repo>
+                                                {item.repo.clone()}
+                                                <span class=style::commit_kind>
+                                                    {format!(" [{kind_label}{}]", state_label.unwrap_or(""))}
+                                                </span>
                                             </span>
-                                        </span>
-                                        <span class=style::commit_msg>{item.title.clone()}</span>
-                                        <span class=style::commit_age>{ago}</span>
-                                    </div>
-                                }
-                            })
-                            .collect_view()}
+                                            <span class=style::commit_msg>{item.title.clone()}</span>
+                                            <span class=style::commit_age>{ago}</span>
+                                        </div>
+                                    }
+                                })
+                                .collect_view()
+                                .into_any()
+                        }}
                     </div>
                     <div class=style::band_aside>
                         <p class=style::band_quote>
@@ -228,6 +234,77 @@ fn year_in_code_view(stats: GitHubStats, grid: Vec<Vec<u8>>) -> impl IntoView {
                 </div>
             </div>
         </Band>
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use chrono::Duration;
+    use pretty_assertions::assert_eq;
+
+    use super::*;
+
+    #[test]
+    fn cell_level_from_count_edge_cases() {
+        assert_eq!(cell_level_from_count(0, 0), 0);
+        assert_eq!(cell_level_from_count(0, 10), 0);
+        assert_eq!(cell_level_from_count(10, 10), 4);
+        assert_eq!(cell_level_from_count(1, 10), 1); // ratio 0.10 → level 1
+        assert_eq!(cell_level_from_count(3, 10), 2); // ratio 0.30 → level 2
+        assert_eq!(cell_level_from_count(6, 10), 3); // ratio 0.60 → level 3
+        assert_eq!(cell_level_from_count(8, 10), 4); // ratio 0.80 → level 4
+    }
+
+    #[test]
+    fn build_grid_levels_normalises_correctly() {
+        use chrono::NaiveDate;
+        use chrono::Utc;
+
+        use crate::github::model::ContributionDay;
+        use crate::github::model::ContributionWeek;
+        use crate::github::model::GitHubStats;
+
+        let stats = GitHubStats {
+            fetched_at: Utc::now(),
+            total_contributions: 10,
+            public_repos: 1,
+            period_from: NaiveDate::from_ymd_opt(2025, 1, 1).expect("valid date"),
+            period_to: NaiveDate::from_ymd_opt(2025, 1, 7).expect("valid date"),
+            contribution_weeks: vec![ContributionWeek {
+                days: vec![
+                    ContributionDay {
+                        date: NaiveDate::from_ymd_opt(2025, 1, 1).expect("valid date"),
+                        count: 0,
+                    },
+                    ContributionDay {
+                        date: NaiveDate::from_ymd_opt(2025, 1, 2).expect("valid date"),
+                        count: 10,
+                    },
+                ],
+            }],
+            recent_activity: vec![],
+        };
+        let grid = build_grid_levels(&stats);
+        assert_eq!(grid.len(), 1);
+        assert_eq!(grid[0][0], 0); // count 0 → level 0
+        assert_eq!(grid[0][1], 4); // count 10/10 = max → level 4
+    }
+
+    #[test]
+    fn time_ago_boundaries() {
+        let now = Utc::now();
+        // 30 seconds ago → "1m" (floor to 1 minute minimum)
+        assert_eq!(time_ago(&(now - Duration::seconds(30))), "1m");
+        // 90 seconds ago → "1m"
+        assert_eq!(time_ago(&(now - Duration::seconds(90))), "1m");
+        // 30 minutes ago → "30m"
+        assert_eq!(time_ago(&(now - Duration::minutes(30))), "30m");
+        // 2 hours ago → "2h"
+        assert_eq!(time_ago(&(now - Duration::hours(2))), "2h");
+        // 3 days ago → "3d"
+        assert_eq!(time_ago(&(now - Duration::days(3))), "3d");
+        // 2 weeks ago → "2w"
+        assert_eq!(time_ago(&(now - Duration::weeks(2))), "2w");
     }
 }
 

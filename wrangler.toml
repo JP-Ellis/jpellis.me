@@ -14,7 +14,9 @@ crons = ["0 13 * * *"]
 # Run: wrangler kv namespace create GITHUB_STATS --preview
 [[kv_namespaces]]
 binding = "GITHUB_STATS"
-id = "TODO_PRODUCTION_ID"
-preview_id = "TODO_PREVIEW_ID"
+# Run: wrangler kv namespace create GITHUB_STATS
+id = ""
+# Run: wrangler kv namespace create GITHUB_STATS --preview
+preview_id = ""
 
 # Secret: run `wrangler secret put GITHUB_TOKEN` to set the GitHub PAT

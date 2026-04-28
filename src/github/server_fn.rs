@@ -25,6 +25,7 @@ use crate::github::model::GitHubStats;
 #[derive(Clone)]
 pub struct GitHubToken(pub String);
 
+#[cfg(target_arch = "wasm32")]
 const CACHE_TTL_SECS: i64 = 3600; // 1 hour
 
 /// Fetches GitHub stats, using KV cache on CF Workers and direct API on Axum dev.
@@ -121,6 +122,9 @@ async fn cf_workers_get_stats() -> Result<GitHubStats, ServerFnError> {
             }
             Ok(stats)
         }
+        // TODO: deduplicate – the Ok(None) and Err(_) arms share identical
+        // cold-start logic. Extract into a helper once async fn items inside
+        // cfg blocks are better supported in stable Rust.
         Ok(None) => {
             // Cache miss: block on live fetch (cold start).
             match fetch_from_github(&token).await {
