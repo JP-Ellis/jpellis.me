@@ -47,19 +47,32 @@ pretty_assertions = "1"
   tokio = { version = "1", features = ["macros", "net", "rt-multi-thread"] }
 
   [target.'cfg(target_arch = "wasm32")'.dependencies]
-  axum = { version = "0.8", default-features = false }
+  # SSR-only: not needed for hydrate/browser builds (prevents wasm-streams duplicate
+  # symbol errors — reqwest and worker each bring a different version).
+  axum = { version = "0.8", default-features = false, optional = true }
   chrono = { version = "0.4", features = ["serde", "wasmbind"] }
   getrandom = { version = "0.4", features = ["wasm_js"] }
   getrandom03 = { package = "getrandom", version = "0.3", features = ["wasm_js"] }
-  leptos_axum = { version = "0.8", default-features = false, features = ["wasm"] }
-  reqwest = { version = "0.12", default-features = false, features = ["json"] }
-  send_wrapper = "0.6"
-  tower = { version = "0.5", default-features = false, features = ["util"] }
-  worker = { version = "0.5", features = ["axum", "http"] }
+  leptos_axum = { version = "0.8", default-features = false, features = ["wasm"], optional = true }
+  reqwest = { version = "0.12", default-features = false, features = ["json"], optional = true }
+  send_wrapper = { version = "0.6", optional = true }
+  tower = { version = "0.5", default-features = false, features = ["util"], optional = true }
+  worker = { version = "0.5", features = ["axum", "http"], optional = true }
 
 [features]
 hydrate = ["dep:console_error_panic_hook", "leptos/hydrate"]
-ssr = ["leptos_meta/ssr", "leptos_router/ssr", "leptos/ssr"]
+ssr = [
+  # wasm32-only SSR deps (no-op on native; activates the optional wasm32 deps above)
+  "dep:axum",
+  "dep:leptos_axum",
+  "dep:reqwest",
+  "dep:send_wrapper",
+  "dep:tower",
+  "dep:worker",
+  "leptos_meta/ssr",
+  "leptos_router/ssr",
+  "leptos/ssr",
+]
 
 [profile.wasm-release]
 inherits = "release"

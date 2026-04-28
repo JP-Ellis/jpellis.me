@@ -10,6 +10,7 @@
 use leptos::prelude::*;
 
 use crate::github::model::GitHubStats;
+#[cfg(any(not(target_arch = "wasm32"), feature = "ssr"))]
 use crate::github::provider::StatsProvider;
 
 /// Fetches GitHub stats using the [`StatsProvider`] from Leptos context.

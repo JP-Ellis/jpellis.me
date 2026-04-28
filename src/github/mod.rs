@@ -1,6 +1,7 @@
 //! GitHub statistics data model and API integration.
 
 pub mod defaults;
+#[cfg(any(not(target_arch = "wasm32"), feature = "ssr"))]
 pub mod fetch;
 pub mod model;
 pub mod provider;
