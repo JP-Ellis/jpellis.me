@@ -12,3 +12,4 @@ pub use model::ActivityState;
 pub use model::ContributionDay;
 pub use model::ContributionWeek;
 pub use model::GitHubStats;
+pub use server_fn::GitHubToken;
