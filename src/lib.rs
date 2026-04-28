@@ -13,6 +13,9 @@ mod components;
 mod github;
 mod pages;
 
+#[cfg(target_arch = "wasm32")]
+mod workers;
+
 #[cfg(debug_assertions)]
 mod test_pages;
 

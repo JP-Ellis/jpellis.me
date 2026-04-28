@@ -4,3 +4,17 @@ name = "jpellis-me"
 main = "./target/site/pkg/jpellis-me.js"
 compatibility_date = "2026-04-26"
 compatibility_flags = ["nodejs_compat"]
+
+[triggers]
+crons = ["0 13 * * *"]
+
+# KV namespace for caching GitHub stats
+# TODO: Replace placeholder IDs with actual namespace IDs
+# Run: wrangler kv namespace create GITHUB_STATS
+# Run: wrangler kv namespace create GITHUB_STATS --preview
+[[kv_namespaces]]
+binding = "GITHUB_STATS"
+id = "TODO_PRODUCTION_ID"
+preview_id = "TODO_PREVIEW_ID"
+
+# Secret: run `wrangler secret put GITHUB_TOKEN` to set the GitHub PAT

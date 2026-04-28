@@ -1,9 +1,12 @@
-//! GitHub API fetcher — SSR/native only.
+//! GitHub API fetcher.
 //!
 //! Calls the GitHub GraphQL API for contribution data and the public events REST
 //! API for recent commit activity, then assembles a [`GitHubStats`] struct.
-
-#![cfg(not(target_arch = "wasm32"))]
+//!
+//! On native (Axum / SSR) targets the two API requests are issued concurrently
+//! via [`tokio::join!`].  On WASM32 (CF Workers) they are issued sequentially
+//! because the CF Workers runtime is single-threaded and `tokio::join!` is not
+//! available.
 
 use chrono::Duration;
 use chrono::NaiveDate;
@@ -340,10 +343,20 @@ pub async fn fetch_from_github(token: &str) -> Result<GitHubStats, FetchError> {
 
     let client = reqwest::Client::new();
     let query = build_graphql_query(&from, &to);
+
+    // On native targets issue requests concurrently; on WASM32 (CF Workers)
+    // the runtime is single-threaded so sequential calls are used instead.
+    #[cfg(not(target_arch = "wasm32"))]
     let (gql_result, events_result) = tokio::join!(
         graphql(&client, &query, token),
         get_public_events(&client, token)
     );
+    #[cfg(target_arch = "wasm32")]
+    let (gql_result, events_result) = {
+        let gql = graphql(&client, &query, token).await;
+        let events = get_public_events(&client, token).await;
+        (gql, events)
+    };
 
     let gql = gql_result?;
     let user = &gql["data"]["user"];
@@ -367,7 +380,10 @@ pub async fn fetch_from_github(token: &str) -> Result<GitHubStats, FetchError> {
     match events_result {
         Ok(events) => activity.extend(parse_commit_events(&events)),
         Err(e) => {
-            leptos::logging::warn!("Public events fetch failed (commit activity omitted): {e}")
+            #[cfg(not(target_arch = "wasm32"))]
+            leptos::logging::warn!("Public events fetch failed (commit activity omitted): {e}");
+            #[cfg(target_arch = "wasm32")]
+            worker::console_error!("Public events fetch failed (commit activity omitted): {e}");
         }
     }
     activity.extend(parse_activity_items(
