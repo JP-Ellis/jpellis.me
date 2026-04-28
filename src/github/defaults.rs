@@ -42,6 +42,9 @@ pub fn fallback_stats() -> GitHubStats {
     GitHubStats {
         fetched_at: now,
         total_contributions,
+        commit_contributions: 547,
+        pr_contributions: 23,
+        issue_contributions: 18,
         public_repos: 14,
         period_from,
         period_to,

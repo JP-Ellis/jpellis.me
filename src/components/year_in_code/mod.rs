@@ -200,7 +200,9 @@ fn year_in_code_skeleton() -> impl IntoView {
 }
 
 fn year_in_code_inner(stats: GitHubStats, grid: Vec<Vec<u8>>) -> impl IntoView {
-    let commit_count = stats.total_contributions.to_string();
+    let commit_count = stats.commit_contributions.to_string();
+    let pr_count = stats.pr_contributions.to_string();
+    let issue_count = stats.issue_contributions.to_string();
     let repo_count = stats.public_repos.to_string();
     let date_range = format!(
         "{} — {}",
@@ -222,7 +224,11 @@ fn year_in_code_inner(stats: GitHubStats, grid: Vec<Vec<u8>>) -> impl IntoView {
                         <p class="eyebrow">"The year in code"</p>
                         <p class=style::stats_headline>
                             <em>{commit_count}</em>
-                            " commits across "
+                            " commits, "
+                            <em>{pr_count}</em>
+                            " PRs, and "
+                            <em>{issue_count}</em>
+                            " issues across "
                             <em>{repo_count}</em>
                             " repositories."
                         </p>
@@ -389,6 +395,9 @@ mod tests {
         let stats = GitHubStats {
             fetched_at: Utc::now(),
             total_contributions: 10,
+            commit_contributions: 8,
+            pr_contributions: 1,
+            issue_contributions: 1,
             public_repos: 1,
             period_from: NaiveDate::from_ymd_opt(2025, 1, 1).expect("valid date"),
             period_to: NaiveDate::from_ymd_opt(2025, 1, 7).expect("valid date"),

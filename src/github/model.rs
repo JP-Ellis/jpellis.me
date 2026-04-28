@@ -9,8 +9,14 @@ use serde::Serialize;
 pub struct GitHubStats {
     /// Timestamp when the stats were fetched.
     pub fetched_at: DateTime<Utc>,
-    /// Total number of contributions in the period.
+    /// Total number of contributions in the period (all types including reviews).
     pub total_contributions: u32,
+    /// Number of commits in the period.
+    pub commit_contributions: u32,
+    /// Number of pull requests opened in the period.
+    pub pr_contributions: u32,
+    /// Number of issues opened in the period.
+    pub issue_contributions: u32,
     /// Number of public repositories.
     pub public_repos: u32,
     /// Start date of the contribution period.
@@ -94,6 +100,9 @@ mod tests {
                 .single()
                 .expect("valid test date literal"),
             total_contributions: 1247,
+            commit_contributions: 950,
+            pr_contributions: 45,
+            issue_contributions: 32,
             public_repos: 14,
             period_from: NaiveDate::from_ymd_opt(2025, 4, 28).expect("valid test date literal"),
             period_to: NaiveDate::from_ymd_opt(2026, 4, 28).expect("valid test date literal"),

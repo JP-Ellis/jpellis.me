@@ -154,6 +154,9 @@ fn build_graphql_query(from: &str, to: &str) -> String {
           contributionDays {{ date contributionCount }}
         }}
       }}
+      totalCommitContributions
+      totalPullRequestContributions
+      totalIssueContributions
     }}
     repositories(privacy: PUBLIC) {{ totalCount }}
   }}
@@ -399,19 +402,35 @@ pub async fn fetch_from_github(token: &str) -> Result<GitHubStats, FetchError> {
     let gql = graphql(&client, &query, token).await?;
     let user = &gql["data"]["user"];
 
-    let total_contributions =
-        user["contributionsCollection"]["contributionCalendar"]["totalContributions"]
-            .as_u64()
-            .ok_or_else(|| FetchError::Parse("totalContributions missing".into()))? as u32;
+    let contributions = &user["contributionsCollection"];
+
+    let total_contributions = contributions["contributionCalendar"]["totalContributions"]
+        .as_u64()
+        .ok_or_else(|| FetchError::Parse("totalContributions missing".into()))?
+        as u32;
+
+    let commit_contributions = contributions["totalCommitContributions"]
+        .as_u64()
+        .ok_or_else(|| FetchError::Parse("totalCommitContributions missing".into()))?
+        as u32;
+
+    let pr_contributions = contributions["totalPullRequestContributions"]
+        .as_u64()
+        .ok_or_else(|| FetchError::Parse("totalPullRequestContributions missing".into()))?
+        as u32;
+
+    let issue_contributions = contributions["totalIssueContributions"]
+        .as_u64()
+        .ok_or_else(|| FetchError::Parse("totalIssueContributions missing".into()))?
+        as u32;
 
     let public_repos = user["repositories"]["totalCount"]
         .as_u64()
         .ok_or_else(|| FetchError::Parse("totalCount missing".into()))?
         as u32;
 
-    let contribution_weeks = parse_contribution_weeks(
-        &user["contributionsCollection"]["contributionCalendar"]["weeks"],
-    )?;
+    let contribution_weeks =
+        parse_contribution_weeks(&contributions["contributionCalendar"]["weeks"])?;
 
     let mut commits = fetch_recent_commits(&client, token).await?;
     let mut others = fetch_recent_activity(&client, token).await?;
@@ -425,6 +444,9 @@ pub async fn fetch_from_github(token: &str) -> Result<GitHubStats, FetchError> {
     Ok(GitHubStats {
         fetched_at: now,
         total_contributions,
+        commit_contributions,
+        pr_contributions,
+        issue_contributions,
         public_repos,
         period_from,
         period_to,
