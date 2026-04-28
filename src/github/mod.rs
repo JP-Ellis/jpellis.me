@@ -1,3 +1,5 @@
+//! GitHub statistics data model and API integration.
+
 pub mod defaults;
 pub mod fetch;
 pub mod model;

@@ -5,7 +5,7 @@ use serde::Deserialize;
 use serde::Serialize;
 
 /// GitHub statistics including contributions and recent activity.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct GitHubStats {
     /// Timestamp when the stats were fetched.
     pub fetched_at: DateTime<Utc>,
@@ -24,14 +24,14 @@ pub struct GitHubStats {
 }
 
 /// A week of contribution data.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ContributionWeek {
     /// Daily contribution counts for the week.
     pub days: Vec<ContributionDay>,
 }
 
 /// A single day's contribution count.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ContributionDay {
     /// Date of the contribution.
     pub date: NaiveDate,
@@ -40,7 +40,7 @@ pub struct ContributionDay {
 }
 
 /// An activity item (commit, PR, or issue).
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ActivityItem {
     /// Type of activity.
     pub kind: ActivityKind,
@@ -83,19 +83,23 @@ pub enum ActivityState {
 #[cfg(test)]
 mod tests {
     use chrono::TimeZone;
+    use pretty_assertions::assert_eq;
 
     use super::*;
 
     fn sample_stats() -> GitHubStats {
         GitHubStats {
-            fetched_at: Utc.with_ymd_and_hms(2026, 4, 28, 10, 0, 0).unwrap(),
+            fetched_at: Utc
+                .with_ymd_and_hms(2026, 4, 28, 10, 0, 0)
+                .single()
+                .expect("valid test date literal"),
             total_contributions: 1247,
             public_repos: 14,
-            period_from: NaiveDate::from_ymd_opt(2025, 4, 28).unwrap(),
-            period_to: NaiveDate::from_ymd_opt(2026, 4, 28).unwrap(),
+            period_from: NaiveDate::from_ymd_opt(2025, 4, 28).expect("valid test date literal"),
+            period_to: NaiveDate::from_ymd_opt(2026, 4, 28).expect("valid test date literal"),
             contribution_weeks: vec![ContributionWeek {
                 days: vec![ContributionDay {
-                    date: NaiveDate::from_ymd_opt(2025, 4, 28).unwrap(),
+                    date: NaiveDate::from_ymd_opt(2025, 4, 28).expect("valid test date literal"),
                     count: 3,
                 }],
             }],
@@ -105,7 +109,10 @@ mod tests {
                 title: "feat: bind verifier results".to_string(),
                 url: "https://github.com/JP-Ellis/pact-python/commit/abc".to_string(),
                 state: None,
-                created_at: Utc.with_ymd_and_hms(2026, 4, 28, 6, 0, 0).unwrap(),
+                created_at: Utc
+                    .with_ymd_and_hms(2026, 4, 28, 6, 0, 0)
+                    .single()
+                    .expect("valid test date literal"),
             }],
         }
     }
@@ -115,10 +122,7 @@ mod tests {
         let stats = sample_stats();
         let json = serde_json::to_string(&stats).unwrap();
         let decoded: GitHubStats = serde_json::from_str(&json).unwrap();
-        assert_eq!(decoded.total_contributions, stats.total_contributions);
-        assert_eq!(decoded.public_repos, stats.public_repos);
-        assert_eq!(decoded.recent_activity[0].kind, ActivityKind::Commit);
-        assert_eq!(decoded.recent_activity[0].state, None);
+        assert_eq!(decoded, stats);
     }
 
     #[test]
@@ -129,10 +133,14 @@ mod tests {
             title: "title".to_string(),
             url: "url".to_string(),
             state: Some(ActivityState::Merged),
-            created_at: Utc::now(),
+            created_at: Utc
+                .with_ymd_and_hms(2026, 4, 28, 6, 0, 0)
+                .single()
+                .expect("valid test date literal"),
         };
         let json = serde_json::to_string(&item).unwrap();
-        assert!(json.contains("\"pull_request\""));
-        assert!(json.contains("\"merged\""));
+        let decoded: ActivityItem = serde_json::from_str(&json).unwrap();
+        assert_eq!(decoded.kind, ActivityKind::PullRequest);
+        assert_eq!(decoded.state, Some(ActivityState::Merged));
     }
 }
