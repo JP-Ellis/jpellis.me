@@ -1,0 +1,127 @@
+@use '../tokens/breakpoints' as *;
+
+.band-inner {
+    padding-block: var(--space-7);
+}
+
+.band-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--space-5);
+
+    @media (max-width: $bp-md) {
+        flex-direction: column;
+        gap: var(--space-2);
+    }
+}
+
+.stats-headline {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(28px, 4vw, 36px);
+    margin-top: var(--space-2);
+    letter-spacing: -0.015em;
+}
+
+.date-range {
+    font-family: var(--font-mono);
+    font-size: var(--text-eyebrow-size);
+    color: var(--color-band-muted);
+}
+
+.commit-grid {
+    display: flex;
+    gap: 3px;
+    overflow-x: auto;
+}
+
+.commit-col {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex-shrink: 0;
+}
+
+.commit-cell {
+    width: 13px;
+    height: 13px;
+    border-radius: 2.5px;
+    flex-shrink: 0;
+
+    &[data-commit-level="0"] { background: var(--color-band-faint); }
+    &[data-commit-level="1"] { background: color-mix(in oklch, var(--color-accent-soft) 28%, transparent); }
+    &[data-commit-level="2"] { background: color-mix(in oklch, var(--color-accent-soft) 55%, transparent); }
+    &[data-commit-level="3"] { background: color-mix(in oklch, var(--color-accent-soft) 80%, transparent); }
+    &[data-commit-level="4"] { background: var(--color-accent-soft); }
+}
+
+.band-content {
+    margin-top: var(--space-6);
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: var(--space-7);
+
+    @media (max-width: $bp-md) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.latest-label {
+    margin-bottom: var(--space-3);
+}
+
+.commit-row {
+    display: grid;
+    grid-template-columns: 180px 1fr 50px;
+    gap: var(--space-4);
+    padding-block: var(--space-3);
+    border-top: 1px solid var(--color-band-faint);
+    align-items: baseline;
+
+    @media (max-width: $bp-md) {
+        grid-template-columns: 1fr 50px;
+        gap: var(--space-2);
+    }
+}
+
+.commit-repo {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--color-accent-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.commit-kind {
+    font-size: var(--text-meta-size, 11px);
+    color: var(--color-band-muted);
+}
+
+.commit-msg {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.commit-age {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-band-muted);
+    text-align: right;
+}
+
+.band-aside {
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-leading);
+    color: color-mix(in oklch, var(--color-band-text) 85%, transparent);
+}
+
+.band-quote {
+    margin: 0 0 var(--space-3);
+    font-style: italic;
+    color: var(--color-band-muted);
+}

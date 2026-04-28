@@ -12,5 +12,5 @@ pub use model::ActivityState;
 pub use model::ContributionDay;
 pub use model::ContributionWeek;
 pub use model::GitHubStats;
-#[cfg(target_arch = "wasm32")]
+#[cfg(all(target_arch = "wasm32", feature = "ssr"))]
 pub use server_fn::GitHubToken;

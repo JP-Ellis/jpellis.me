@@ -22,11 +22,11 @@ use crate::github::model::GitHubStats;
 ///
 /// This is used to avoid ambiguity when storing a `String` in Leptos context,
 /// ensuring only the GitHub token is retrieved and not any other `String` value.
-#[cfg(target_arch = "wasm32")]
+#[cfg(all(target_arch = "wasm32", feature = "ssr"))]
 #[derive(Clone)]
 pub struct GitHubToken(pub String);
 
-#[cfg(target_arch = "wasm32")]
+#[cfg(all(target_arch = "wasm32", feature = "ssr"))]
 const CACHE_TTL_SECS: i64 = 3600; // 1 hour
 
 /// Fetches GitHub stats, using KV cache on CF Workers and direct API on Axum dev.
@@ -51,7 +51,7 @@ const CACHE_TTL_SECS: i64 = 3600; // 1 hour
 /// in the Workers fetch handler and should not occur in production.
 #[server]
 pub async fn get_github_stats() -> Result<GitHubStats, ServerFnError> {
-    #[cfg(not(target_arch = "wasm32"))]
+    #[cfg(not(all(target_arch = "wasm32", feature = "ssr")))]
     {
         use crate::github::fetch::fetch_from_github;
 
@@ -69,13 +69,13 @@ pub async fn get_github_stats() -> Result<GitHubStats, ServerFnError> {
             }
         }
     }
-    #[cfg(target_arch = "wasm32")]
+    #[cfg(all(target_arch = "wasm32", feature = "ssr"))]
     {
         cf_workers_get_stats().await
     }
 }
 
-#[cfg(target_arch = "wasm32")]
+#[cfg(all(target_arch = "wasm32", feature = "ssr"))]
 async fn cf_workers_get_stats() -> Result<GitHubStats, ServerFnError> {
     use chrono::Utc;
     use leptos::prelude::use_context;

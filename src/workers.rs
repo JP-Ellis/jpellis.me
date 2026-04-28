@@ -12,7 +12,7 @@
 //!   and writes the result to the `GITHUB_STATS` KV namespace so subsequent
 //!   requests are served from cache.
 
-#![cfg(target_arch = "wasm32")]
+#![cfg(all(target_arch = "wasm32", feature = "ssr"))]
 
 use leptos::prelude::*;
 use leptos_axum::LeptosRoutes;

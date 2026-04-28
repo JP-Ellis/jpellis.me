@@ -24,7 +24,6 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 console_error_panic_hook = { version = "0.1", optional = true }
 leptos = { version = "0.8" }
-leptos_axum = { version = "0.8", default-features = false }
 leptos_meta = { version = "0.8" }
 leptos_router = { version = "0.8" }
 serde = { version = "1", features = ["derive"] }
@@ -39,6 +38,7 @@ pretty_assertions = "1"
   [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
   axum = { version = "0.8" }
   chrono = { version = "0.4", features = ["serde"] }
+  leptos_axum = { version = "0.8" }
   leptos_config = { version = "0.8" }
   reqwest = { version = "0.12", default-features = false, features = [
     "json",
@@ -50,17 +50,13 @@ pretty_assertions = "1"
   chrono = { version = "0.4", features = ["serde", "wasmbind"] }
   getrandom = { version = "0.4", features = ["wasm_js"] }
   getrandom03 = { package = "getrandom", version = "0.3", features = ["wasm_js"] }
+  leptos_axum = { version = "0.8", default-features = false, features = ["wasm"] }
   reqwest = { version = "0.12", default-features = false, features = ["json"] }
   worker = { version = "0.5", features = ["axum"] }
 
 [features]
 hydrate = ["dep:console_error_panic_hook", "leptos/hydrate"]
-ssr = [
-  "leptos_axum/default",
-  "leptos_meta/ssr",
-  "leptos_router/ssr",
-  "leptos/ssr"
-]
+ssr = ["leptos_meta/ssr", "leptos_router/ssr", "leptos/ssr"]
 
 [profile.wasm-release]
 inherits = "release"

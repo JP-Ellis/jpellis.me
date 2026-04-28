@@ -13,7 +13,7 @@ mod components;
 mod github;
 mod pages;
 
-#[cfg(target_arch = "wasm32")]
+#[cfg(all(target_arch = "wasm32", feature = "ssr"))]
 mod workers;
 
 #[cfg(debug_assertions)]

@@ -14,6 +14,7 @@
 "cargo:uv" = "0.11"
 
 "cargo:cargo-leptos" = "0.3"
+"cargo:worker-build" = "0.8"
 "cargo:cargo-llvm-cov" = "0.8"
 "cargo:cargo-machete" = "0.9"
 "cargo:cargo-nextest" = "0.9"
