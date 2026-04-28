@@ -10,6 +10,7 @@ use leptos_router::components::Routes;
 use leptos_router::path;
 
 mod components;
+mod github;
 mod pages;
 
 #[cfg(debug_assertions)]

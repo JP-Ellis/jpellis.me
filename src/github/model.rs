@@ -1,0 +1,138 @@
+use chrono::DateTime;
+use chrono::NaiveDate;
+use chrono::Utc;
+use serde::Deserialize;
+use serde::Serialize;
+
+/// GitHub statistics including contributions and recent activity.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GitHubStats {
+    /// Timestamp when the stats were fetched.
+    pub fetched_at: DateTime<Utc>,
+    /// Total number of contributions in the period.
+    pub total_contributions: u32,
+    /// Number of public repositories.
+    pub public_repos: u32,
+    /// Start date of the contribution period.
+    pub period_from: NaiveDate,
+    /// End date of the contribution period.
+    pub period_to: NaiveDate,
+    /// Contribution data by week.
+    pub contribution_weeks: Vec<ContributionWeek>,
+    /// Recent activity items.
+    pub recent_activity: Vec<ActivityItem>,
+}
+
+/// A week of contribution data.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ContributionWeek {
+    /// Daily contribution counts for the week.
+    pub days: Vec<ContributionDay>,
+}
+
+/// A single day's contribution count.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ContributionDay {
+    /// Date of the contribution.
+    pub date: NaiveDate,
+    /// Number of contributions on this day.
+    pub count: u32,
+}
+
+/// An activity item (commit, PR, or issue).
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ActivityItem {
+    /// Type of activity.
+    pub kind: ActivityKind,
+    /// Repository name.
+    pub repo: String,
+    /// Activity title (commit message, PR title, etc.).
+    pub title: String,
+    /// URL to the activity.
+    pub url: String,
+    /// State of the activity (if applicable).
+    pub state: Option<ActivityState>,
+    /// When the activity was created.
+    pub created_at: DateTime<Utc>,
+}
+
+/// Type of GitHub activity.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "snake_case")]
+pub enum ActivityKind {
+    /// A commit to a repository.
+    Commit,
+    /// A pull request.
+    PullRequest,
+    /// An issue.
+    Issue,
+}
+
+/// State of an activity item.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "snake_case")]
+pub enum ActivityState {
+    /// The activity is open.
+    Open,
+    /// The activity is closed.
+    Closed,
+    /// The activity is merged (for PRs).
+    Merged,
+}
+
+#[cfg(test)]
+mod tests {
+    use chrono::TimeZone;
+
+    use super::*;
+
+    fn sample_stats() -> GitHubStats {
+        GitHubStats {
+            fetched_at: Utc.with_ymd_and_hms(2026, 4, 28, 10, 0, 0).unwrap(),
+            total_contributions: 1247,
+            public_repos: 14,
+            period_from: NaiveDate::from_ymd_opt(2025, 4, 28).unwrap(),
+            period_to: NaiveDate::from_ymd_opt(2026, 4, 28).unwrap(),
+            contribution_weeks: vec![ContributionWeek {
+                days: vec![ContributionDay {
+                    date: NaiveDate::from_ymd_opt(2025, 4, 28).unwrap(),
+                    count: 3,
+                }],
+            }],
+            recent_activity: vec![ActivityItem {
+                kind: ActivityKind::Commit,
+                repo: "pact-python".to_string(),
+                title: "feat: bind verifier results".to_string(),
+                url: "https://github.com/JP-Ellis/pact-python/commit/abc".to_string(),
+                state: None,
+                created_at: Utc.with_ymd_and_hms(2026, 4, 28, 6, 0, 0).unwrap(),
+            }],
+        }
+    }
+
+    #[test]
+    fn round_trips_through_json() {
+        let stats = sample_stats();
+        let json = serde_json::to_string(&stats).unwrap();
+        let decoded: GitHubStats = serde_json::from_str(&json).unwrap();
+        assert_eq!(decoded.total_contributions, stats.total_contributions);
+        assert_eq!(decoded.public_repos, stats.public_repos);
+        assert_eq!(decoded.recent_activity[0].kind, ActivityKind::Commit);
+        assert_eq!(decoded.recent_activity[0].state, None);
+    }
+
+    #[test]
+    fn activity_state_serialises_to_snake_case() {
+        let item = ActivityItem {
+            kind: ActivityKind::PullRequest,
+            repo: "repo".to_string(),
+            title: "title".to_string(),
+            url: "url".to_string(),
+            state: Some(ActivityState::Merged),
+            created_at: Utc::now(),
+        };
+        let json = serde_json::to_string(&item).unwrap();
+        assert!(json.contains("\"pull_request\""));
+        assert!(json.contains("\"merged\""));
+    }
+}
