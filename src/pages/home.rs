@@ -1,24 +1,18 @@
+use chrono::DateTime;
+use chrono::Utc;
 use leptos::prelude::*;
 use stylance::import_style;
 
 use crate::components::Band;
 use crate::components::Footer;
 use crate::components::Masthead;
+use crate::github::defaults::fallback_stats;
+use crate::github::model::ActivityKind;
+use crate::github::model::ActivityState;
+use crate::github::model::GitHubStats;
+use crate::github::server_fn::get_github_stats;
 
 import_style!(style, "home.module.scss");
-
-// TODO: replace with GitHub API server function
-const COMMIT_COUNT: &str = "1,247";
-const REPO_COUNT: &str = "14";
-const DATE_RANGE: &str = "May 2025 — Apr 2026";
-
-const LATEST_COMMITS: [(&str, &str, &str); 5] = [
-    ("pact-python", "feat(ffi): bind verifier results", "4h"),
-    ("pact-python", "fix: v4 matchers on dict roots", "1d"),
-    ("boltzmann-solver", "perf(quad): cache leaf weights", "1w"),
-    ("dotfiles", "feat(helix): soft-wrap default", "1w"),
-    ("tikz-feynman", "docs: 2025 dependency note", "3w"),
-];
 
 const SELECTED_WORK: [(&str, &str, &str); 3] = [
     (
@@ -51,50 +45,196 @@ const CROSS_POSTS: [(&str, &str, &str); 2] = [
     ),
 ];
 
-fn commit_grid() -> Vec<Vec<f64>> {
-    fn lcg(s: &mut u64) -> f64 {
-        *s = s.wrapping_mul(9301).wrapping_add(49297) % 233280;
-        *s as f64 / 233280.0
+/// Returns the contribution level (0–4) for a given count relative to the maximum.
+///
+/// # Arguments
+///
+/// * `count` - The contribution count for the day.
+/// * `max` - The maximum contribution count across all days.
+///
+/// # Returns
+///
+/// A level from 0 (no contributions) to 4 (highest activity).
+fn cell_level_from_count(count: u32, max: u32) -> u8 {
+    if max == 0 || count == 0 {
+        return 0;
     }
-
-    let mut s: u64 = 11;
-    let mut grid = Vec::with_capacity(53);
-
-    for w in 0..53_usize {
-        let mut col = Vec::with_capacity(7);
-        for _ in 0..7 {
-            let v = lcg(&mut s).powf(1.6);
-            let r2 = lcg(&mut s);
-            let burst = if w > 32 && w < 44 && r2 > 0.4 {
-                0.3_f64
-            } else {
-                0.0_f64
-            };
-            col.push((v + burst).min(1.0));
-        }
-        grid.push(col);
-    }
-    grid
-}
-
-fn cell_level(v: f64) -> u8 {
-    if v < 0.05 {
-        0
-    } else if v < 0.25 {
+    let ratio = count as f64 / max as f64;
+    if ratio < 0.25 {
         1
-    } else if v < 0.5 {
+    } else if ratio < 0.50 {
         2
-    } else if v < 0.75 {
+    } else if ratio < 0.75 {
         3
     } else {
         4
     }
 }
 
+/// Converts contribution week data from [`GitHubStats`] into a 2-D grid of levels.
+///
+/// Each level is in the range 0–4, normalised relative to the maximum daily count
+/// across the entire period.
+///
+/// # Arguments
+///
+/// * `stats` - The GitHub stats containing contribution weeks.
+///
+/// # Returns
+///
+/// A `Vec<Vec<u8>>` where the outer vec is weeks and the inner vec is days (levels).
+fn build_grid_levels(stats: &GitHubStats) -> Vec<Vec<u8>> {
+    let max = stats
+        .contribution_weeks
+        .iter()
+        .flat_map(|w| w.days.iter())
+        .map(|d| d.count)
+        .max()
+        .unwrap_or(1);
+    stats
+        .contribution_weeks
+        .iter()
+        .map(|week| {
+            week.days
+                .iter()
+                .map(|day| cell_level_from_count(day.count, max))
+                .collect()
+        })
+        .collect()
+}
+
+/// Returns a human-readable relative time string for a [`DateTime<Utc>`].
+///
+/// # Arguments
+///
+/// * `dt` - The datetime to format as a relative string.
+///
+/// # Returns
+///
+/// A string like `"1h"`, `"3d"`, or `"2w"`.
+fn time_ago(dt: &DateTime<Utc>) -> String {
+    let secs = (Utc::now() - *dt).num_seconds().max(0);
+    if secs < 3600 {
+        format!("{}h", secs / 3600 + 1)
+    } else if secs < 86400 {
+        format!("{}h", secs / 3600)
+    } else if secs < 604800 {
+        format!("{}d", secs / 86400)
+    } else {
+        format!("{}w", secs / 604800)
+    }
+}
+
+/// Renders the "Year in Code" band with live contribution grid and recent activity.
+///
+/// # Arguments
+///
+/// * `stats` - Owned [`GitHubStats`] to render.
+/// * `grid` - Pre-computed grid levels from [`build_grid_levels`].
+fn year_in_code_view(stats: GitHubStats, grid: Vec<Vec<u8>>) -> impl IntoView {
+    let commit_count = stats.total_contributions.to_string();
+    let repo_count = stats.public_repos.to_string();
+    let date_range = format!(
+        "{} — {}",
+        stats.period_from.format("%b %Y"),
+        stats.period_to.format("%b %Y")
+    );
+
+    view! {
+        <Band test_id="year-in-code">
+            <div class=format!("container {}", style::band_inner)>
+                <div class=style::band_header>
+                    <div>
+                        <p class="eyebrow">"The year in code"</p>
+                        <p class=style::stats_headline>
+                            <em>{commit_count}</em>
+                            " commits across "
+                            <em>{repo_count}</em>
+                            " repositories."
+                        </p>
+                    </div>
+                    <span class=style::date_range>{date_range}</span>
+                </div>
+
+                <div class=style::commit_grid>
+                    {grid
+                        .iter()
+                        .map(|col| {
+                            view! {
+                                <div class=style::commit_col data-testid="commit-col">
+                                    {col
+                                        .iter()
+                                        .map(|&level| {
+                                            view! {
+                                                <span
+                                                    class=style::commit_cell
+                                                    data-commit-level=level.to_string()
+                                                />
+                                            }
+                                        })
+                                        .collect_view()}
+                                </div>
+                            }
+                        })
+                        .collect_view()}
+                </div>
+
+                <div class=style::band_content>
+                    <div>
+                        <p class=format!("eyebrow {}", style::latest_label)>"Latest"</p>
+                        {stats
+                            .recent_activity
+                            .iter()
+                            .map(|item| {
+                                let kind_label = match item.kind {
+                                    ActivityKind::Commit => "commit",
+                                    ActivityKind::PullRequest => "PR",
+                                    ActivityKind::Issue => "issue",
+                                };
+                                let state_label = item
+                                    .state
+                                    .as_ref()
+                                    .map(|s| match s {
+                                        ActivityState::Open => " · open",
+                                        ActivityState::Closed => " · closed",
+                                        ActivityState::Merged => " · merged",
+                                    });
+                                let ago = time_ago(&item.created_at);
+                                view! {
+                                    <div class=style::commit_row data-testid="commit-row">
+                                        <span class=style::commit_repo>
+                                            {item.repo.clone()}
+                                            <span class=style::commit_kind>
+                                                {format!(" [{kind_label}{}]", state_label.unwrap_or(""))}
+                                            </span>
+                                        </span>
+                                        <span class=style::commit_msg>{item.title.clone()}</span>
+                                        <span class=style::commit_age>{ago}</span>
+                                    </div>
+                                }
+                            })
+                            .collect_view()}
+                    </div>
+                    <div class=style::band_aside>
+                        <p class=style::band_quote>
+                            "\"If the code is the body of work, this is the index.\""
+                        </p>
+                        <p>
+                            "Most of what I make is open. The grid above is the truthful "
+                            "version of a résumé — public, dated, and dense in the parts "
+                            "where I was paying attention."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </Band>
+    }
+}
+
 /// Almanac home page.
 #[component]
 pub fn HomePage() -> impl IntoView {
-    let grid = commit_grid();
+    let stats_res = Resource::new(|| (), |_| get_github_stats());
 
     view! {
         <Masthead />
@@ -119,73 +259,21 @@ pub fn HomePage() -> impl IntoView {
             </section>
 
             // ── Year in Code ──────────────────────────────────────
-            <Band test_id="year-in-code">
-                <div class=format!("container {}", style::band_inner)>
-                    <div class=style::band_header>
-                        <div>
-                            <p class="eyebrow">"The year in code"</p>
-                            <p class=style::stats_headline>
-                                <em>{COMMIT_COUNT}</em>
-                                " commits across "
-                                <em>{REPO_COUNT}</em>
-                                " repositories."
-                            </p>
-                        </div>
-                        <span class=style::date_range>{DATE_RANGE}</span>
-                    </div>
-
-                    <div class=style::commit_grid>
-                        {grid
-                            .iter()
-                            .map(|col| {
-                                view! {
-                                    <div class=style::commit_col data-testid="commit-col">
-                                        {col
-                                            .iter()
-                                            .map(|&v| {
-                                                view! {
-                                                    <span
-                                                        class=style::commit_cell
-                                                        data-commit-level=cell_level(v).to_string()
-                                                    />
-                                                }
-                                            })
-                                            .collect_view()}
-                                    </div>
-                                }
-                            })
-                            .collect_view()}
-                    </div>
-
-                    <div class=style::band_content>
-                        <div>
-                            <p class=format!("eyebrow {}", style::latest_label)>"Latest"</p>
-                            {LATEST_COMMITS
-                                .iter()
-                                .map(|&(repo, msg, ago)| {
-                                    view! {
-                                        <div class=style::commit_row data-testid="commit-row">
-                                            <span class=style::commit_repo>{repo}</span>
-                                            <span class=style::commit_msg>{msg}</span>
-                                            <span class=style::commit_age>{ago}</span>
-                                        </div>
-                                    }
-                                })
-                                .collect_view()}
-                        </div>
-                        <div class=style::band_aside>
-                            <p class=style::band_quote>
-                                "\"If the code is the body of work, this is the index.\""
-                            </p>
-                            <p>
-                                "Most of what I make is open. The grid above is the truthful "
-                                "version of a résumé — public, dated, and dense in the parts "
-                                "where I was paying attention."
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </Band>
+            <Suspense fallback=move || {
+                let fb = fallback_stats();
+                let grid = build_grid_levels(&fb);
+                year_in_code_view(fb, grid)
+            }>
+                {move || {
+                    stats_res
+                        .get()
+                        .map(|result| {
+                            let stats = result.unwrap_or_else(|_| fallback_stats());
+                            let grid = build_grid_levels(&stats);
+                            year_in_code_view(stats, grid)
+                        })
+                }}
+            </Suspense>
 
             // ── Selected Work ─────────────────────────────────────
             <section class=style::work_section>

@@ -122,6 +122,11 @@
     white-space: nowrap;
 }
 
+.commit-kind {
+    font-size: var(--text-meta-size, 11px);
+    color: var(--color-band-muted);
+}
+
 .commit-msg {
     font-family: var(--font-mono);
     font-size: 12.5px;
