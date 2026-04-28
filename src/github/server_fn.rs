@@ -22,6 +22,7 @@ use crate::github::model::GitHubStats;
 ///
 /// This is used to avoid ambiguity when storing a `String` in Leptos context,
 /// ensuring only the GitHub token is retrieved and not any other `String` value.
+#[cfg(target_arch = "wasm32")]
 #[derive(Clone)]
 pub struct GitHubToken(pub String);
 
