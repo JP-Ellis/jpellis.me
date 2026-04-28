@@ -8,6 +8,7 @@ pub mod provider;
 pub mod server_fn;
 
 pub use defaults::fallback_stats;
+pub use model::ActivityItem;
 pub use model::ActivityKind;
 pub use model::ActivityState;
 pub use model::GitHubStats;

@@ -8,7 +8,7 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    margin-bottom: var(--space-5);
+    margin-bottom: var(--space-4);
 
     @media (max-width: $bp-md) {
         flex-direction: column;
@@ -30,10 +30,19 @@
     color: var(--color-band-muted);
 }
 
+.band-intro {
+    margin-bottom: var(--space-5);
+    max-width: 65ch;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-leading);
+    color: color-mix(in oklch, var(--color-band-text) 85%, transparent);
+}
+
 .commit-grid {
     display: flex;
     gap: 3px;
     overflow-x: auto;
+    justify-content: center;
 }
 
 .commit-col {
@@ -56,10 +65,10 @@
     &[data-commit-level="4"] { background: var(--color-accent-soft); }
 }
 
-.band-content {
+.band-latest {
     margin-top: var(--space-6);
     display: grid;
-    grid-template-columns: 1.4fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: var(--space-7);
 
     @media (max-width: $bp-md) {
@@ -73,16 +82,37 @@
 
 .commit-row {
     display: grid;
-    grid-template-columns: 180px 1fr 50px;
-    gap: var(--space-4);
+    grid-template-columns: minmax(0, 160px) 1fr 40px;
+    gap: var(--space-3);
     padding-block: var(--space-3);
     border-top: 1px solid var(--color-band-faint);
     align-items: baseline;
 
     @media (max-width: $bp-md) {
-        grid-template-columns: 1fr 50px;
+        grid-template-columns: 1fr 40px;
         gap: var(--space-2);
     }
+}
+
+.activity-row {
+    display: grid;
+    grid-template-columns: minmax(0, 160px) 1fr 40px;
+    gap: var(--space-3);
+    padding-block: var(--space-3);
+    border-top: 1px solid var(--color-band-faint);
+    align-items: start;
+
+    @media (max-width: $bp-md) {
+        grid-template-columns: 1fr 40px;
+        gap: var(--space-2);
+    }
+}
+
+.activity-repo-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
 }
 
 .commit-repo {
@@ -94,9 +124,11 @@
     white-space: nowrap;
 }
 
-.commit-kind {
+.activity-kind {
+    font-family: var(--font-mono);
     font-size: var(--text-meta-size, 11px);
-    color: var(--color-band-muted);
+    color: var(--color-accent-soft);
+    opacity: 0.75;
 }
 
 .commit-msg {
@@ -114,14 +146,29 @@
     text-align: right;
 }
 
-.band-aside {
+.no-activity {
+    padding-block: var(--space-3);
+    border-top: 1px solid var(--color-band-faint);
     font-size: var(--text-body-size);
-    line-height: var(--text-body-leading);
-    color: color-mix(in oklch, var(--color-band-text) 85%, transparent);
+    color: var(--color-band-muted);
 }
 
-.band-quote {
-    margin: 0 0 var(--space-3);
-    font-style: italic;
-    color: var(--color-band-muted);
+@keyframes skeleton-shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.skeleton-line {
+    display: inline-block;
+    border-radius: 3px;
+    height: 0.8em;
+    vertical-align: middle;
+    background: linear-gradient(
+        90deg,
+        var(--color-band-faint) 25%,
+        color-mix(in oklch, var(--color-band-faint) 50%, var(--color-band-muted)) 50%,
+        var(--color-band-faint) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.8s ease-in-out infinite;
 }

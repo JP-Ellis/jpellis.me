@@ -46,7 +46,7 @@ pub fn HomePage() -> impl IntoView {
         <main>
             // ── Hero ──────────────────────────────────────────────
             <section class=style::hero>
-                <div class="container container--prose">
+                <div class="container">
                     <p class="eyebrow">"Hello, again"</p>
                     <h1>
                         "I write " <em>"contracts"</em> " between systems for a living, in "

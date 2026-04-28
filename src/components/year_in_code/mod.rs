@@ -1,15 +1,17 @@
 //! GitHub contribution timeline component.
 
+use std::collections::HashSet;
+
 use chrono::DateTime;
 use chrono::Utc;
 use leptos::prelude::*;
 use stylance::import_style;
 
 use crate::components::Band;
+use crate::github::ActivityItem;
 use crate::github::ActivityKind;
 use crate::github::ActivityState;
 use crate::github::GitHubStats;
-use crate::github::fallback_stats;
 use crate::github::server_fn::get_github_stats;
 
 import_style!(style, "year_in_code.module.scss");
@@ -94,6 +96,109 @@ fn time_ago(dt: &DateTime<Utc>) -> String {
     }
 }
 
+/// Removes commits whose title matches any PR's title in the same list.
+///
+/// When a single-commit branch is merged as a PR, the commit message and PR
+/// title are identical. This function keeps the PR and discards the redundant
+/// commit so the UI doesn't show the same work twice.
+///
+/// # Arguments
+///
+/// * `activity` - The full list of recent activity items.
+///
+/// # Returns
+///
+/// A new `Vec` with duplicate commits removed; all non-commit items are kept.
+fn dedup_commits_against_prs(activity: Vec<ActivityItem>) -> Vec<ActivityItem> {
+    let pr_titles: HashSet<String> = activity
+        .iter()
+        .filter(|i| matches!(i.kind, ActivityKind::PullRequest))
+        .map(|i| i.title.clone())
+        .collect();
+
+    activity
+        .into_iter()
+        .filter(|i| !(matches!(i.kind, ActivityKind::Commit) && pr_titles.contains(&i.title)))
+        .collect()
+}
+
+fn year_in_code_skeleton() -> impl IntoView {
+    view! {
+        <Band test_id="year-in-code">
+            <div class=format!("container {}", style::band_inner)>
+                <div class=style::band_header>
+                    <div>
+                        <p class="eyebrow">"The year in code"</p>
+                        <p class=style::stats_headline>
+                            <span class=style::skeleton_line style="width:18ch" />
+                        </p>
+                    </div>
+                </div>
+                <div class=style::band_intro>
+                    <span
+                        class=style::skeleton_line
+                        style="width:55ch;display:block;margin-bottom:var(--space-2)"
+                    />
+                    <span class=style::skeleton_line style="width:38ch;display:block" />
+                </div>
+                <div class=style::commit_grid>
+                    {(0..53_usize)
+                        .map(|_| {
+                            view! {
+                                <div class=style::commit_col data-testid="commit-col">
+                                    {(0..7_usize)
+                                        .map(|_| {
+                                            view! {
+                                                <span class=style::commit_cell data-commit-level="0" />
+                                            }
+                                        })
+                                        .collect_view()}
+                                </div>
+                            }
+                        })
+                        .collect_view()}
+                </div>
+                <div class=style::band_latest>
+                    <div>
+                        <p class=format!("eyebrow {}", style::latest_label)>"Latest commits"</p>
+                        {(0..6_usize)
+                            .map(|_| {
+                                view! {
+                                    <div class=style::commit_row data-testid="commit-row">
+                                        <span class=style::skeleton_line style="width:80%" />
+                                        <span class=style::skeleton_line style="width:70%" />
+                                        <span class=style::skeleton_line style="width:28px" />
+                                    </div>
+                                }
+                            })
+                            .collect_view()}
+                    </div>
+                    <div>
+                        <p class=format!(
+                            "eyebrow {}",
+                            style::latest_label,
+                        )>"Latest issues & PRs"</p>
+                        {(0..4_usize)
+                            .map(|_| {
+                                view! {
+                                    <div class=style::activity_row data-testid="activity-row">
+                                        <div class=style::activity_repo_wrap>
+                                            <span class=style::skeleton_line style="width:90%" />
+                                            <span class=style::skeleton_line style="width:55%" />
+                                        </div>
+                                        <span class=style::skeleton_line style="width:75%" />
+                                        <span class=style::skeleton_line style="width:28px" />
+                                    </div>
+                                }
+                            })
+                            .collect_view()}
+                    </div>
+                </div>
+            </div>
+        </Band>
+    }
+}
+
 fn year_in_code_inner(stats: GitHubStats, grid: Vec<Vec<u8>>) -> impl IntoView {
     let commit_count = stats.total_contributions.to_string();
     let repo_count = stats.public_repos.to_string();
@@ -102,6 +207,12 @@ fn year_in_code_inner(stats: GitHubStats, grid: Vec<Vec<u8>>) -> impl IntoView {
         stats.period_from.format("%b %Y"),
         stats.period_to.format("%b %Y")
     );
+
+    let (mut commits, issues_prs): (Vec<ActivityItem>, Vec<ActivityItem>) =
+        dedup_commits_against_prs(stats.recent_activity)
+            .into_iter()
+            .partition(|i| matches!(i.kind, ActivityKind::Commit));
+    commits.truncate(6);
 
     view! {
         <Band test_id="year-in-code">
@@ -117,6 +228,12 @@ fn year_in_code_inner(stats: GitHubStats, grid: Vec<Vec<u8>>) -> impl IntoView {
                         </p>
                     </div>
                     <span class=style::date_range>{date_range}</span>
+                </div>
+
+                <div class=style::band_intro>
+                    "Most of what I make is open. The grid below is the truthful "
+                    "version of a résumé — public, dated, and dense in the parts "
+                    "where I was paying attention."
                 </div>
 
                 <div class=style::commit_grid>
@@ -142,39 +259,20 @@ fn year_in_code_inner(stats: GitHubStats, grid: Vec<Vec<u8>>) -> impl IntoView {
                         .collect_view()}
                 </div>
 
-                <div class=style::band_content>
+                <div class=style::band_latest>
                     <div>
-                        <p class=format!("eyebrow {}", style::latest_label)>"Latest"</p>
-                        {if stats.recent_activity.is_empty() {
-                            view! { <p>"No recent activity."</p> }.into_any()
+                        <p class=format!("eyebrow {}", style::latest_label)>"Latest commits"</p>
+                        {if commits.is_empty() {
+                            view! { <p class=style::no_activity>"No recent commits."</p> }
+                                .into_any()
                         } else {
-                            stats
-                                .recent_activity
+                            commits
                                 .iter()
                                 .map(|item| {
-                                    let kind_label = match item.kind {
-                                        ActivityKind::Commit => "commit",
-                                        ActivityKind::PullRequest => "PR",
-                                        ActivityKind::Issue => "issue",
-                                    };
-                                    let state_label = item
-                                        .state
-                                        .as_ref()
-                                        .map(|s| match s {
-                                            ActivityState::Open => " · open",
-                                            ActivityState::Closed => " · closed",
-                                            ActivityState::Merged => " · merged",
-                                        });
                                     let ago = time_ago(&item.created_at);
-                                    // TODO: wrap row in <a href={item.url.clone()}> once link styling is ready
                                     view! {
                                         <div class=style::commit_row data-testid="commit-row">
-                                            <span class=style::commit_repo>
-                                                {item.repo.clone()}
-                                                <span class=style::commit_kind>
-                                                    {format!(" [{kind_label}{}]", state_label.unwrap_or(""))}
-                                                </span>
-                                            </span>
+                                            <span class=style::commit_repo>{item.repo.clone()}</span>
                                             <span class=style::commit_msg>{item.title.clone()}</span>
                                             <span class=style::commit_age>{ago}</span>
                                         </div>
@@ -184,15 +282,51 @@ fn year_in_code_inner(stats: GitHubStats, grid: Vec<Vec<u8>>) -> impl IntoView {
                                 .into_any()
                         }}
                     </div>
-                    <div class=style::band_aside>
-                        <p class=style::band_quote>
-                            "\"If the code is the body of work, this is the index.\""
-                        </p>
-                        <p>
-                            "Most of what I make is open. The grid above is the truthful "
-                            "version of a résumé — public, dated, and dense in the parts "
-                            "where I was paying attention."
-                        </p>
+                    <div>
+                        <p class=format!(
+                            "eyebrow {}",
+                            style::latest_label,
+                        )>"Latest issues & PRs"</p>
+                        {if issues_prs.is_empty() {
+                            view! { <p class=style::no_activity>"No recent issues or PRs."</p> }
+                                .into_any()
+                        } else {
+                            issues_prs
+                                .iter()
+                                .map(|item| {
+                                    let state_label = item
+                                        .state
+                                        .as_ref()
+                                        .map(|s| match s {
+                                            ActivityState::Open => "open",
+                                            ActivityState::Closed => "closed",
+                                            ActivityState::Merged => "merged",
+                                        });
+                                    let kind_label = match item.kind {
+                                        ActivityKind::PullRequest => "PR",
+                                        ActivityKind::Issue => "issue",
+                                        ActivityKind::Commit => "commit",
+                                    };
+                                    let badge = if let Some(state) = state_label {
+                                        format!("[{kind_label} · {state}]")
+                                    } else {
+                                        format!("[{kind_label}]")
+                                    };
+                                    let ago = time_ago(&item.created_at);
+                                    view! {
+                                        <div class=style::activity_row data-testid="activity-row">
+                                            <div class=style::activity_repo_wrap>
+                                                <span class=style::commit_repo>{item.repo.clone()}</span>
+                                                <span class=style::activity_kind>{badge}</span>
+                                            </div>
+                                            <span class=style::commit_msg>{item.title.clone()}</span>
+                                            <span class=style::commit_age>{ago}</span>
+                                        </div>
+                                    }
+                                })
+                                .collect_view()
+                                .into_any()
+                        }}
                     </div>
                 </div>
             </div>
@@ -209,18 +343,16 @@ pub fn YearInCode() -> impl IntoView {
     let stats_res = LocalResource::new(get_github_stats);
 
     view! {
-        <Suspense fallback=move || {
-            let fb = fallback_stats();
-            let grid = build_grid_levels(&fb);
-            year_in_code_inner(fb, grid)
-        }>
+        <Suspense fallback=move || year_in_code_skeleton()>
             {move || {
                 stats_res
                     .get()
-                    .map(|result| {
-                        let stats = result.unwrap_or_else(|_| fallback_stats());
-                        let grid = build_grid_levels(&stats);
-                        year_in_code_inner(stats, grid)
+                    .map(|result| match result {
+                        Ok(stats) => {
+                            let grid = build_grid_levels(&stats);
+                            year_in_code_inner(stats, grid).into_any()
+                        }
+                        Err(_) => year_in_code_skeleton().into_any(),
                     })
             }}
         </Suspense>
@@ -295,5 +427,58 @@ mod tests {
         assert_eq!(time_ago(&(now - Duration::days(3))), "3d");
         // 2 weeks ago → "2w"
         assert_eq!(time_ago(&(now - Duration::weeks(2))), "2w");
+    }
+
+    fn make_item(kind: ActivityKind, title: &str) -> ActivityItem {
+        ActivityItem {
+            kind,
+            repo: "owner/repo".to_string(),
+            title: title.to_string(),
+            url: "https://example.com".to_string(),
+            state: None,
+            created_at: Utc::now(),
+        }
+    }
+
+    #[test]
+    fn dedup_removes_commit_when_pr_has_same_title() {
+        let activity = vec![
+            make_item(ActivityKind::Commit, "feat: add thing"),
+            make_item(ActivityKind::PullRequest, "feat: add thing"),
+            make_item(ActivityKind::Commit, "fix: unrelated"),
+        ];
+        let result = dedup_commits_against_prs(activity);
+        assert_eq!(result.len(), 2);
+        assert!(
+            result.iter().any(
+                |i| matches!(i.kind, ActivityKind::PullRequest) && i.title == "feat: add thing"
+            )
+        );
+        assert!(
+            result
+                .iter()
+                .any(|i| matches!(i.kind, ActivityKind::Commit) && i.title == "fix: unrelated")
+        );
+    }
+
+    #[test]
+    fn dedup_keeps_commit_when_no_matching_pr() {
+        let activity = vec![
+            make_item(ActivityKind::Commit, "feat: standalone commit"),
+            make_item(ActivityKind::PullRequest, "feat: different title"),
+        ];
+        let result = dedup_commits_against_prs(activity);
+        assert_eq!(result.len(), 2);
+    }
+
+    #[test]
+    fn dedup_keeps_issue_even_when_title_matches_commit() {
+        let activity = vec![
+            make_item(ActivityKind::Commit, "fix: bug"),
+            make_item(ActivityKind::Issue, "fix: bug"),
+        ];
+        let result = dedup_commits_against_prs(activity);
+        // Only PRs trigger deduplication; issues do not.
+        assert_eq!(result.len(), 2);
     }
 }

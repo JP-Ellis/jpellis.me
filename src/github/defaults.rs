@@ -1,6 +1,5 @@
 use chrono::Duration;
 use chrono::NaiveDate;
-use chrono::TimeZone;
 use chrono::Utc;
 
 use crate::github::model::ActivityItem;
@@ -10,11 +9,11 @@ use crate::github::model::ContributionDay;
 use crate::github::model::ContributionWeek;
 use crate::github::model::GitHubStats;
 
-/// Returns hardcoded [`GitHubStats`] for use when the GitHub API is unavailable.
+/// Returns placeholder [`GitHubStats`] for use when the GitHub API is unavailable.
 ///
 /// The contribution grid is generated deterministically via a linear congruential
-/// generator, so it always produces the same plausible-looking data. Counts are
-/// derived from the grid sum for internal consistency.
+/// generator, so it always produces the same plausible-looking pattern. Dates are
+/// relative to the current time so the placeholder remains timely.
 ///
 /// # Returns
 ///
@@ -28,7 +27,12 @@ use crate::github::model::GitHubStats;
 /// assert_eq!(stats.contribution_weeks.len(), 53);
 /// ```
 pub fn fallback_stats() -> GitHubStats {
-    let contribution_weeks = fallback_grid();
+    let now = Utc::now();
+    let today = now.date_naive();
+    let period_from = today - Duration::days(364);
+    let period_to = today;
+
+    let contribution_weeks = fallback_grid(period_from);
     let total_contributions: u32 = contribution_weeks
         .iter()
         .flat_map(|w| w.days.iter())
@@ -36,14 +40,11 @@ pub fn fallback_stats() -> GitHubStats {
         .sum();
 
     GitHubStats {
-        fetched_at: Utc
-            .with_ymd_and_hms(2025, 5, 1, 0, 0, 0)
-            .single()
-            .expect("valid hardcoded date"),
+        fetched_at: now,
         total_contributions,
         public_repos: 14,
-        period_from: NaiveDate::from_ymd_opt(2025, 5, 1).expect("valid hardcoded date"),
-        period_to: NaiveDate::from_ymd_opt(2026, 4, 30).expect("valid hardcoded date"),
+        period_from,
+        period_to,
         contribution_weeks,
         recent_activity: vec![
             ActivityItem {
@@ -52,21 +53,15 @@ pub fn fallback_stats() -> GitHubStats {
                 title: "feat(ffi): bind verifier results".to_string(),
                 url: "https://github.com/pact-foundation/pact-python".to_string(),
                 state: None,
-                created_at: Utc
-                    .with_ymd_and_hms(2026, 4, 24, 10, 0, 0)
-                    .single()
-                    .expect("valid hardcoded date"),
+                created_at: now - Duration::days(4),
             },
             ActivityItem {
                 kind: ActivityKind::Commit,
-                repo: "pact-foundation/pact-python".to_string(),
-                title: "fix: v4 matchers on dict roots".to_string(),
-                url: "https://github.com/pact-foundation/pact-python".to_string(),
+                repo: "JP-Ellis/jpellis.me".to_string(),
+                title: "fix: fetch recent prs and issues".to_string(),
+                url: "https://github.com/JP-Ellis/jpellis.me".to_string(),
                 state: None,
-                created_at: Utc
-                    .with_ymd_and_hms(2026, 4, 23, 8, 0, 0)
-                    .single()
-                    .expect("valid hardcoded date"),
+                created_at: now - Duration::days(5),
             },
             ActivityItem {
                 kind: ActivityKind::PullRequest,
@@ -74,16 +69,21 @@ pub fn fallback_stats() -> GitHubStats {
                 title: "feat(ffi): verifier FFI bindings".to_string(),
                 url: "https://github.com/pact-foundation/pact-python/pull/1".to_string(),
                 state: Some(ActivityState::Merged),
-                created_at: Utc
-                    .with_ymd_and_hms(2026, 4, 20, 14, 0, 0)
-                    .single()
-                    .expect("valid hardcoded date"),
+                created_at: now - Duration::days(8),
+            },
+            ActivityItem {
+                kind: ActivityKind::Issue,
+                repo: "pact-foundation/pact-python".to_string(),
+                title: "Support for Pact v4 plugins".to_string(),
+                url: "https://github.com/pact-foundation/pact-python/issues/1".to_string(),
+                state: Some(ActivityState::Open),
+                created_at: now - Duration::days(12),
             },
         ],
     }
 }
 
-fn fallback_grid() -> Vec<ContributionWeek> {
+fn fallback_grid(start: NaiveDate) -> Vec<ContributionWeek> {
     fn lcg(s: &mut u64) -> f64 {
         *s = s.wrapping_mul(9301).wrapping_add(49297) % 233280;
         *s as f64 / 233280.0
@@ -91,7 +91,6 @@ fn fallback_grid() -> Vec<ContributionWeek> {
 
     let mut s: u64 = 11;
     let mut weeks = Vec::with_capacity(53);
-    let start = NaiveDate::from_ymd_opt(2025, 5, 1).expect("valid hardcoded date");
 
     for w in 0..53_usize {
         let mut days = Vec::with_capacity(7);
