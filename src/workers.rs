@@ -1,35 +1,43 @@
 //! Cloudflare Workers entry point.
 //!
 //! Provides `fetch` and `scheduled` event handlers for the CF Workers runtime.
-//! This module compiles only for WASM32 targets.
+//! This module compiles only for WASM32 SSR targets.
 //!
 //! - **`fetch`**: Handles incoming HTTP requests by routing them through an
-//!   Axum router with Leptos SSR.  GitHub KV store, CF context, and GitHub
-//!   token are injected into Leptos context so server functions can access
-//!   them.
+//!   Axum router with Leptos SSR.  A [`StatsProvider`] is injected into Leptos
+//!   context so the `get_github_stats` server function can access KV.
 //!
 //! - **`scheduled`**: Runs on a cron trigger, fetches live GitHub statistics,
-//!   and writes the result to the `GITHUB_STATS` KV namespace so subsequent
-//!   requests are served from cache.
+//!   and writes the result to the `GITHUB_STATS` KV namespace.
 
 #![cfg(all(target_arch = "wasm32", feature = "ssr"))]
 
-use leptos::prelude::*;
+use axum::Router;
+use leptos::prelude::provide_context;
 use leptos_axum::LeptosRoutes;
 use leptos_axum::generate_route_list;
-use worker::*;
+use tower::util::ServiceExt;
+use worker::Context;
+use worker::Env;
+use worker::HttpRequest;
+use worker::Result;
+use worker::ScheduleContext;
+use worker::ScheduledEvent;
+use worker::console_error;
+use worker::console_log;
+use worker::event;
 
 use crate::App;
-use crate::github::GitHubToken;
+use crate::github::StatsProvider;
 use crate::github::fetch::fetch_from_github;
 use crate::shell;
 
 /// Handles incoming HTTP fetch events by routing requests through a Leptos +
 /// Axum application.
 ///
-/// Injects the `GITHUB_STATS` KV store, the CF [`Context`], and the
-/// `GITHUB_TOKEN` secret into Leptos context so server functions can retrieve
-/// them via [`use_context`].
+/// Injects a [`StatsProvider`] with the `GITHUB_STATS` KV store, the CF
+/// [`Context`], and the `GITHUB_TOKEN` secret into Leptos context so server
+/// functions can retrieve GitHub stats.
 ///
 /// # Arguments
 ///
@@ -49,30 +57,24 @@ pub async fn fetch_handler(
     ctx: Context,
 ) -> Result<axum::response::Response> {
     let kv = env.kv("GITHUB_STATS")?;
-    let token = GitHubToken(env.secret("GITHUB_TOKEN")?.to_string());
+    let token = env.secret("GITHUB_TOKEN")?.to_string();
+    let provider = StatsProvider::kv(kv, ctx, token);
 
-    let leptos_options = leptos::config::LeptosOptions::default();
+    let leptos_options = leptos::config::LeptosOptions::builder()
+        .output_name("jpellis-me")
+        .build();
     let routes = generate_route_list(App);
 
-    let kv_ctx = kv.clone();
-    let token_ctx = token.clone();
-    let ctx_ctx = ctx.clone();
-
-    let app = axum::Router::new()
+    let app = Router::new()
         .leptos_routes_with_context(
             &leptos_options,
             routes,
-            move || {
-                provide_context(kv_ctx.clone());
-                provide_context(ctx_ctx.clone());
-                provide_context(token_ctx.clone());
-            },
+            move || provide_context(provider.clone()),
             {
                 let opts = leptos_options.clone();
                 move || shell(opts.clone())
             },
         )
-        .fallback(leptos_axum::file_and_error_handler(shell))
         .with_state(leptos_options);
 
     Ok(app.oneshot(req).await?)

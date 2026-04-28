@@ -6,10 +6,10 @@ use leptos::prelude::*;
 use stylance::import_style;
 
 use crate::components::Band;
-use crate::github::defaults::fallback_stats;
-use crate::github::model::ActivityKind;
-use crate::github::model::ActivityState;
-use crate::github::model::GitHubStats;
+use crate::github::ActivityKind;
+use crate::github::ActivityState;
+use crate::github::GitHubStats;
+use crate::github::fallback_stats;
 use crate::github::server_fn::get_github_stats;
 
 import_style!(style, "year_in_code.module.scss");
@@ -206,7 +206,7 @@ fn year_in_code_inner(stats: GitHubStats, grid: Vec<Vec<u8>>) -> impl IntoView {
 /// loading or on error.
 #[component]
 pub fn YearInCode() -> impl IntoView {
-    let stats_res = Resource::new(|| (), |_| get_github_stats());
+    let stats_res = LocalResource::new(get_github_stats);
 
     view! {
         <Suspense fallback=move || {

@@ -1,9 +1,13 @@
-#[cfg(feature = "ssr")]
+// Native (Axum) SSR entry point.  Not compiled for WASM targets — CF Workers
+// uses `workers.rs` (`#[event(fetch)]`) as its entry point instead.
+#[cfg(all(feature = "ssr", not(target_arch = "wasm32")))]
 #[tokio::main]
 async fn main() {
     use axum::Router;
     use jpellis_me::App;
+    use jpellis_me::github::StatsProvider;
     use jpellis_me::shell;
+    use leptos::prelude::provide_context;
     use leptos_axum::LeptosRoutes;
     use leptos_axum::generate_route_list;
     use leptos_config::get_configuration;
@@ -13,11 +17,19 @@ async fn main() {
     let addr = leptos_options.site_addr;
     let routes = generate_route_list(App);
 
+    let token = std::env::var("GITHUB_TOKEN").unwrap_or_default();
+    let provider = StatsProvider::file(token);
+
     let app = Router::new()
-        .leptos_routes(&leptos_options, routes, {
-            let leptos_options = leptos_options.clone();
-            move || shell(leptos_options.clone())
-        })
+        .leptos_routes_with_context(
+            &leptos_options,
+            routes,
+            move || provide_context(provider.clone()),
+            {
+                let leptos_options = leptos_options.clone();
+                move || shell(leptos_options.clone())
+            },
+        )
         .fallback(leptos_axum::file_and_error_handler(shell))
         .with_state(leptos_options);
 
@@ -27,5 +39,5 @@ async fn main() {
         .unwrap();
 }
 
-#[cfg(not(feature = "ssr"))]
+#[cfg(not(all(feature = "ssr", not(target_arch = "wasm32"))))]
 fn main() {}

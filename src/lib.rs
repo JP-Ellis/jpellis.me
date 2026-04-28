@@ -10,7 +10,7 @@ use leptos_router::components::Routes;
 use leptos_router::path;
 
 mod components;
-mod github;
+pub mod github;
 mod pages;
 
 #[cfg(all(target_arch = "wasm32", feature = "ssr"))]

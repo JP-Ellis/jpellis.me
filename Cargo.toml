@@ -47,12 +47,15 @@ pretty_assertions = "1"
   tokio = { version = "1", features = ["macros", "net", "rt-multi-thread"] }
 
   [target.'cfg(target_arch = "wasm32")'.dependencies]
+  axum = { version = "0.8", default-features = false }
   chrono = { version = "0.4", features = ["serde", "wasmbind"] }
   getrandom = { version = "0.4", features = ["wasm_js"] }
   getrandom03 = { package = "getrandom", version = "0.3", features = ["wasm_js"] }
   leptos_axum = { version = "0.8", default-features = false, features = ["wasm"] }
   reqwest = { version = "0.12", default-features = false, features = ["json"] }
-  worker = { version = "0.5", features = ["axum"] }
+  send_wrapper = "0.6"
+  tower = { version = "0.5", default-features = false, features = ["util"] }
+  worker = { version = "0.5", features = ["axum", "http"] }
 
 [features]
 hydrate = ["dep:console_error_panic_hook", "leptos/hydrate"]
