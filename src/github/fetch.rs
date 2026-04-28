@@ -150,13 +150,13 @@ fn build_graphql_query(from: &str, to: &str) -> String {
       }}
     }}
     repositories(privacy: PUBLIC) {{ totalCount }}
-    pullRequests(last: 20, orderBy: {{ field: UPDATED_AT, direction: DESC }}) {{
+    pullRequests(first: 20, orderBy: {{ field: UPDATED_AT, direction: DESC }}) {{
       nodes {{
         title createdAt state url
         repository {{ nameWithOwner isPrivate }}
       }}
     }}
-    issues(last: 20, orderBy: {{ field: UPDATED_AT, direction: DESC }}) {{
+    issues(first: 20, orderBy: {{ field: UPDATED_AT, direction: DESC }}) {{
       nodes {{
         title createdAt state url
         repository {{ nameWithOwner isPrivate }}
