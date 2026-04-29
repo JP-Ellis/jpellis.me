@@ -89,9 +89,7 @@ pub fn ContactPage() -> impl IntoView {
                             <a href="mailto:website@jpellis.me" class=style::channel_handle>
                                 "website@jpellis.me"
                             </a>
-                            <p class=style::channel_desc>
-                                "preferred"
-                            </p>
+                            <p class=style::channel_desc>"preferred"</p>
                         </div>
                         <div class=style::channel_card>
                             <span class="eyebrow--muted">"GitHub"</span>
