@@ -41,28 +41,14 @@
     margin-top: var(--space-5);
 }
 
-.band-btn {
-    font-family: var(--font-mono);
-    font-size: var(--text-meta-size);
-    color: var(--color-band-ink);
-    border: 1px solid var(--color-band-rule);
-    background: transparent;
-    padding: var(--space-2) var(--space-4);
-    cursor: pointer;
-    text-decoration: none;
-    line-height: 1.4;
-
-    &:hover { background: var(--color-band-faint); }
-}
-
 .pgp {
     font-family: var(--font-mono);
     font-size: var(--text-meta-size);
-    color: var(--color-band-muted);
+    color: var(--color-muted);
     text-decoration: none;
     margin-left: var(--space-2);
 
-    &:hover { color: var(--color-band-ink); }
+    &:hover { color: var(--color-ink); }
 }
 
 // ── Elsewhere grid ─────────────────────────────────────────────────────

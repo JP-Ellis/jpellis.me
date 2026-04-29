@@ -74,14 +74,18 @@ Three source tokens drive everything: `--color-paper` (background), `--color-ink
 | `--color-accent`      | interactive elements, emphasis  |
 | `--color-accent-soft` | accent fills, tag borders       |
 
-Inside a `.band` element, swap to the `--color-band-*` equivalents — they are automatically inverted relative to the page (dark band in light mode, light band in dark mode):
+Inside a `.band`, the three source tokens (`--color-paper`, `--color-ink`, `--color-accent`) are locally reassigned to invert the contrast. All derived tokens update automatically. **Components rendered inside a band require no changes** — they continue to use `--color-ink`, `--color-muted`, `--color-faint`, `--color-rule`, etc. and the correct inverted values cascade in.
 
 ```scss
-.band .my-label { color: var(--color-band-muted); }
-.band .my-divider { border-top: 1px solid var(--color-band-faint); }
+// ✓ correct — works everywhere, including inside .band
+.my-label   { color: var(--color-muted); }
+.my-divider { border-top: 1px solid var(--color-faint); }
+
+// ✗ wrong — use semantic tokens, not hard-coded values
+.my-label { color: oklch(59.686% 0.156 29.234); }
 ```
 
-Never use a hardcoded colour. Never reference `--color-ink` / `--color-paper` directly inside a `.band` — the band tokens already handle the inversion.
+Never use a hardcoded colour.
 
 ### Spacing
 
@@ -111,18 +115,19 @@ Always use a `--z-*` token for `z-index` — never a raw integer.
 
 These classes are available everywhere. Do not re-implement them in a module.
 
-| Class               | Purpose                                                        |
-| ------------------- | -------------------------------------------------------------- |
-| `.container`        | Centred wrapper, responsive gutters, max-width `--width-index` |
-| `.container--prose` | Same but max-width `--width-prose`                             |
-| `.eyebrow-grid`     | Two-column label + content grid; stacks on mobile              |
-| `.eyebrow`          | Fira Code uppercase label in `--color-accent`                  |
-| `.eyebrow--muted`   | Same but `--color-muted` (dates, locations)                    |
-| `.rule-section`     | 1 px `--color-ink` hairline between major sections             |
-| `.rule-list`        | 1 px `--color-faint` hairline between list items               |
-| `.tag`              | Base pill/chip; combine with `--pill`, `--hash`, `--accent`    |
-| `.band`             | Full-bleed contrast section; use `--color-band-*` inside       |
-| `.sr-only`          | Visually hidden, accessible to screen readers                  |
+| Class               | Purpose                                                                                              |
+| ------------------- | ---------------------------------------------------------------------------------------------------- |
+| `.container`        | Centred wrapper, responsive gutters, max-width `--width-index`                                       |
+| `.container--prose` | Same but max-width `--width-prose`                                                                   |
+| `.eyebrow-grid`     | Two-column label + content grid; stacks on mobile                                                    |
+| `.eyebrow`          | Fira Code uppercase label in `--color-accent`                                                        |
+| `.eyebrow--muted`   | Same but `--color-muted` (dates, locations)                                                          |
+| `.rule-section`     | 1 px `--color-ink` hairline between major sections                                                   |
+| `.rule-list`        | 1 px `--color-faint` hairline between list items                                                     |
+| `.tag`              | Base pill/chip; combine with `--pill`, `--hash`, `--accent`                                          |
+| `.band`             | Full-bleed contrast section; locally inverts colour tokens so children need no band-specific changes |
+| `.btn`              | Monospace bordered button or link; inherits inverted tokens automatically inside `.band`             |
+| `.sr-only`          | Visually hidden, accessible to screen readers                                                        |
 
 ## 5. Writing a Component Module
 
@@ -179,9 +184,20 @@ Global component files (`style/components/`) use BEM-lite (block + modifier, no 
 - Import from another component's module — extract to `style/components/`
 - Repeat typography rules already set by `base/_typography.scss`
 
+### Red Flags in a Module File
+
+Stop and check if a global component already exists, or if you should create one:
+
+- Writing `cursor: pointer` + `border` + `font-family: var(--font-mono)` — use `.btn`
+- Use the standard token (`--color-ink`, `--color-muted`, `--color-faint`, `--color-rule`) and let `.band`'s cascade handle the inversion
+- Defining the same single-property pattern in more than one module — promote to `style/components/`
+- Any button, badge, or card pattern is almost certainly reusable — start it in the global layer
+
 ### Promoting to a Global Component
 
 Start in a module. If a second component needs the same pattern, extract it to `style/components/` and wrap it in `@layer components { … }`.
+
+Patterns that are almost certainly reusable and should start global rather than being scoped first: buttons, badges/chips, cards with bordered containers, and any pattern already listed in the global components table in section 4.
 
 ## 6. Focus Styles
 
@@ -250,12 +266,12 @@ Dark mode, focus styles, transitions, and reduced-motion are all CSS-only. Never
 @media (prefers-color-scheme: dark) { … }
 
 // ✗ broken without JS
-.js-loaded .band { background: var(--color-band-bg); }
+.js-loaded .band { background: var(--color-paper); }
 ```
 
 ## 9. Dark Mode
 
-Dark mode reassigns only the three source tokens (`--color-paper`, `--color-ink`, `--color-accent`). All derived tokens update automatically — no extra work needed in components.
+Dark mode reassigns only the three private raw tokens (`--_color-paper`, `--_color-ink`, `--_color-accent`). The semantic tokens (`--color-paper`, `--color-ink`, `--color-accent`) reference the privates, so all derived tokens update automatically — no extra work needed in components.
 
 Two mechanisms operate independently:
 

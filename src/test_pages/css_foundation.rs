@@ -91,12 +91,10 @@ pub fn CssFoundationPage() -> impl IntoView {
                         <Swatch token="--color-rule" />
                         <Swatch token="--color-accent-soft" />
                     </div>
-                    <div style="display: flex; flex-wrap: wrap; gap: var(--space-3);">
-                        <Swatch token="--color-band-bg" />
-                        <Swatch token="--color-band-text" />
-                        <Swatch token="--color-band-muted" />
-                        <Swatch token="--color-band-faint" />
-                    </div>
+                    <p style="font-family: var(--font-mono); font-size: var(--text-meta-size); \
+                    color: var(--color-muted); margin-block-start: var(--space-3);">
+                        "Inside a .band the same tokens auto-invert."
+                    </p>
                 </div>
             </div>
 
@@ -189,7 +187,7 @@ pub fn CssFoundationPage() -> impl IntoView {
                 </div>
                 <hr class="rule-list" />
                 <p style="margin-block-start: var(--space-5);">
-                    "Light mode → dark band. Dark mode → light band. Uses --color-band-* tokens derived from --color-ink / --color-paper."
+                    "Light mode → dark band. Dark mode → light band. .band locally swaps --color-paper ↔ --color-ink; all derived tokens invert automatically."
                 </p>
             </div>
         </Band>

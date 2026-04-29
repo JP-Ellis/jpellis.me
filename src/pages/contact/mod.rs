@@ -56,16 +56,13 @@ pub fn ContactPage() -> impl IntoView {
                         <span class="eyebrow">"Write to"</span>
                         <p class=style::email_display>{EMAIL.display_view()}</p>
                         <div class=style::band_actions>
-                            <a href=format!("mailto:{EMAIL}") class=style::band_btn>
+                            <a href=format!("mailto:{EMAIL}") class="btn">
                                 "↗ open in mail client"
                             </a>
                             <noscript>
                                 <style>".copy-btn { display: none; }"</style>
                             </noscript>
-                            <button
-                                class=format!("{} copy-btn", style::band_btn)
-                                on:click=copy_email
-                            >
+                            <button class="btn copy-btn" on:click=copy_email>
                                 {move || if copied.get() { "✓ copied" } else { "copy address" }}
                             </button>
                             <a

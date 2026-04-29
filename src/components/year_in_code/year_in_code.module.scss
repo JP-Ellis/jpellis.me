@@ -27,7 +27,7 @@
 .date-range {
     font-family: var(--font-mono);
     font-size: var(--text-eyebrow-size);
-    color: var(--color-band-muted);
+    color: var(--color-muted);
 }
 
 .band-intro {
@@ -35,7 +35,7 @@
     max-width: 65ch;
     font-size: var(--text-body-size);
     line-height: var(--text-body-leading);
-    color: color-mix(in oklch, var(--color-band-text) 85%, transparent);
+    color: color-mix(in oklch, var(--color-ink) 85%, transparent);
 }
 
 .commit-grid {
@@ -58,7 +58,7 @@
     border-radius: 2.5px;
     flex-shrink: 0;
 
-    &[data-commit-level="0"] { background: var(--color-band-faint); }
+    &[data-commit-level="0"] { background: var(--color-faint); }
     &[data-commit-level="1"] { background: color-mix(in oklch, var(--color-accent-soft) 28%, transparent); }
     &[data-commit-level="2"] { background: color-mix(in oklch, var(--color-accent-soft) 55%, transparent); }
     &[data-commit-level="3"] { background: color-mix(in oklch, var(--color-accent-soft) 80%, transparent); }
@@ -85,7 +85,7 @@
     grid-template-columns: minmax(0, 160px) 1fr 40px;
     gap: var(--space-3);
     padding-block: var(--space-3);
-    border-top: 1px solid var(--color-band-faint);
+    border-top: 1px solid var(--color-faint);
     align-items: baseline;
 
     @media (max-width: $bp-md) {
@@ -99,7 +99,7 @@
     grid-template-columns: minmax(0, 160px) 1fr 40px;
     gap: var(--space-3);
     padding-block: var(--space-3);
-    border-top: 1px solid var(--color-band-faint);
+    border-top: 1px solid var(--color-faint);
     align-items: start;
 
     @media (max-width: $bp-md) {
@@ -142,15 +142,15 @@
 .commit-age {
     font-family: var(--font-mono);
     font-size: 11px;
-    color: var(--color-band-muted);
+    color: var(--color-muted);
     text-align: right;
 }
 
 .no-activity {
     padding-block: var(--space-3);
-    border-top: 1px solid var(--color-band-faint);
+    border-top: 1px solid var(--color-faint);
     font-size: var(--text-body-size);
-    color: var(--color-band-muted);
+    color: var(--color-muted);
 }
 
 @keyframes skeleton-shimmer {
@@ -165,9 +165,9 @@
     vertical-align: middle;
     background: linear-gradient(
         90deg,
-        var(--color-band-faint) 25%,
-        color-mix(in oklch, var(--color-band-faint) 50%, var(--color-band-muted)) 50%,
-        var(--color-band-faint) 75%
+        var(--color-faint) 25%,
+        color-mix(in oklch, var(--color-faint) 50%, var(--color-muted)) 50%,
+        var(--color-faint) 75%
     );
     background-size: 200% 100%;
     animation: skeleton-shimmer 1.8s ease-in-out infinite;

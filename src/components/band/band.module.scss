@@ -1,24 +1,12 @@
 .band {
-    background-color: var(--color-band-bg);
-    color: var(--color-band-text);
-
-    :global(a) {
-        color: var(--color-band-text);
-
-        &:hover {
-            color: var(--color-accent);
-        }
-    }
-
-    :global(.eyebrow) {
-        color: var(--color-band-muted);
-    }
-
-    :global(.rule-section) {
-        border-top-color: var(--color-band-text);
-    }
-
-    :global(.rule-list) {
-        border-top-color: var(--color-band-faint);
-    }
+    // Swap the two source tokens. CSS relative color syntax (oklch(from var(...)))
+    // may not re-evaluate through inherited custom property chains in all browsers,
+    // so the opacity-based derived tokens are re-derived explicitly here.
+    --color-paper: var(--_color-ink);
+    --color-ink:   var(--_color-paper);
+    --color-muted: oklch(from var(--color-ink) l c h / 55%);
+    --color-faint: oklch(from var(--color-ink) l c h / 10%);
+    --color-rule:  oklch(from var(--color-ink) l c h / 18%);
+    background-color: var(--color-paper);
+    color: var(--color-ink);
 }

@@ -185,13 +185,11 @@ test.describe("/__test/css-foundation sections 1-6", () => {
     expect(fg).toBe(expectedFg);
   });
 
-  test("section-colors shows paper and band-bg swatches", async ({ page }) => {
+  test("section-colors shows paper and ink swatches", async ({ page }) => {
     const s = page.locator('[data-testid="section-colors"]');
     await expect(s).toBeVisible();
     await expect(s.locator('[data-testid="swatch-color-paper"]')).toBeVisible();
-    await expect(
-      s.locator('[data-testid="swatch-color-band-bg"]'),
-    ).toBeVisible();
+    await expect(s.locator('[data-testid="swatch-color-ink"]')).toBeVisible();
   });
 
   test("section-spacing has 8 token bars", async ({ page }) => {
