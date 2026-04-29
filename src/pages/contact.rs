@@ -1,3 +1,5 @@
+use core::fmt;
+
 use leptos::prelude::*;
 use stylance::import_style;
 
@@ -6,6 +8,38 @@ use crate::components::Footer;
 use crate::components::Masthead;
 
 import_style!(style, "contact.module.scss");
+
+const PGP_KEY: PgpKey = PgpKey("AA152D8F537EE25D3AC2FADCF162288C8BA20FCE");
+
+/// A newtype for the PGP key fingerprint, which provides formatting and a URL.
+struct PgpKey(&'static str);
+
+impl PgpKey {
+    /// Returns the URL to the key on keys.openpgp.org.
+    fn url(&self) -> String {
+        format!("https://keys.openpgp.org/vks/v1/by-fingerprint/{}", self.0)
+    }
+}
+
+/// Formats the PGP key fingerprint with spaces every 4 characters for
+/// readability.
+impl fmt::Display for PgpKey {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let spaced = self
+            .0
+            .chars()
+            .enumerate()
+            .map(|(i, c)| {
+                if i % 4 == 0 && i != 0 {
+                    format!(" {}", c)
+                } else {
+                    c.to_string()
+                }
+            })
+            .collect::<String>();
+        write!(f, "{}", spaced)
+    }
+}
 
 /// Contact page.
 #[component]
@@ -72,13 +106,13 @@ pub fn ContactPage() -> impl IntoView {
                                 {move || if copied.get() { "✓ copied" } else { "copy address" }}
                             </button>
                             <a
-                                href="https://keys.openpgp.org/vks/v1/by-fingerprint/AA152D8F537EE25D3AC2FADCF162288C8BA20FCE"
+                                href=PGP_KEY.url()
                                 class=style::pgp
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
                                 // spellchecker:ignore-next-line
-                                "pgp · AA15 2D8F 537E E25D 3AC2  FADC F162 288C 8BA2 0FCE"
+                                {move || format!("pgp · {PGP_KEY}")}
                             </a>
                         </div>
                     </div>
