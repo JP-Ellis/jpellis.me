@@ -1,0 +1,89 @@
+@use '../../style/tokens/breakpoints' as *;
+
+// ── Featured role (inside Band) ────────────────────────────────────────────
+
+.featured-inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    margin-top: var(--space-5);
+
+    @media (min-width: $bp-md) {
+        grid-template-columns: 3fr 2fr;
+    }
+}
+
+.featured-body {
+    font-size: var(--text-lead-size);
+    line-height: var(--text-lead-leading);
+    margin: 0;
+}
+
+.featured-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-content: flex-start;
+}
+
+// ── Timeline row ────────────────────────────────────────────────────────────
+
+.timeline-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    padding-block: var(--space-5);
+    align-items: baseline;
+
+    @media (min-width: $bp-md) {
+        grid-template-columns: 160px 1.2fr 1.6fr;
+        gap: var(--space-6);
+    }
+}
+
+.date-col {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    line-height: 1.6;
+}
+
+.date-from,
+.date-to {
+    color: var(--color-ink);
+}
+
+.date-arrow,
+.date-loc {
+    color: var(--color-muted);
+}
+
+.date-loc {
+    margin-top: var(--space-3);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: var(--text-eyebrow-size);
+}
+
+.role-org {
+    margin-bottom: var(--space-2);
+}
+
+.role-sub {
+    font-style: italic;
+    color: var(--color-muted);
+    margin: var(--space-1) 0 0;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-leading);
+}
+
+.role-body {
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-leading);
+    margin: 0 0 var(--space-3);
+}
+
+.role-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
