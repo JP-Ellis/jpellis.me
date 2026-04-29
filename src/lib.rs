@@ -56,6 +56,7 @@ pub fn App() -> impl IntoView {
             <Routes fallback=|| "Page not found.".into_view()>
                 <Route path=path!("") view=pages::HomePage />
                 <Route path=path!("contact") view=pages::ContactPage />
+                <Route path=path!("resume") view=pages::ResumePage />
             </Routes>
         </Router>
     }
@@ -75,6 +76,7 @@ pub fn App() -> impl IntoView {
             <Routes fallback=|| "Page not found.".into_view()>
                 <Route path=path!("") view=pages::HomePage />
                 <Route path=path!("contact") view=pages::ContactPage />
+                <Route path=path!("resume") view=pages::ResumePage />
                 <ParentRoute path=path!("__test") view=test_pages::TestLayout>
                     <Route path=path!("") view=test_pages::TestIndex />
                     <Route path=path!("masthead") view=test_pages::MastheadPage />
