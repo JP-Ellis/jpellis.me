@@ -1,0 +1,182 @@
+# ── Roles ─────────────────────────────────────────────────────────────────────
+# Ordered by end date descending. The role with featured = true goes into the
+# dark Band; all others appear in the "Earlier" timeline.
+
+[[roles]]
+from = "Sep 2023"
+to = "Present"
+org = "PactFlow / SmartBear"
+loc = "Melbourne"
+title = "Senior Software Engineer"
+sub = "Python · Rust · Open Source"
+featured = true
+tags = ["rust", "python", "open-source", "pact", "ffi", "aws", "ai"]
+body = """
+Led the rewrite of pact-python over a Rust FFI core, bringing the library to \
+feature-parity with the latest Pact specification for the first time in years. \
+Pioneered SmartBear's first AI-powered product — AI-generated Pacts — built \
+with LangChain on AWS. Active in the OSS Pact Foundation across code review, \
+RFCs, contributor support, and 300+ merged pull requests across 30+ repositories.\
+"""
+
+[[roles]]
+from = "Jul 2022"
+to = "Sep 2023"
+org = "KPMG Australia"
+loc = "Melbourne"
+title = "Senior Consultant"
+sub = "Data & Cloud Engineering"
+tags = ["azure", "snowflake", "iac", "python", "data-engineering", "devops"]
+body = """
+Delivered regulated-environment data and cloud projects across financial \
+services: ML infrastructure on Azure ML Studio (a KPMG-global first), an \
+end-to-end Azure + Snowflake analytics platform with CI/CD over Bicep, and a \
+modular Azure Data Platform accelerator. Served as Tech Lead and Scrum Master.\
+"""
+
+[[roles]]
+from = "Jan 2017"
+to = "Jul 2022"
+org = "University of Melbourne"
+loc = "Melbourne"
+title = "PhD, Theoretical Particle Physics"
+sub = "E₆-inspired seesaw · leptogenesis"
+tags = ["rust", "numerics", "physics", "leptogenesis"]
+body = """
+Investigated an E₆-inspired seesaw model under Prof. Volkas, exploring \
+parameter space to constrain the matter–antimatter asymmetry produced in the \
+early universe. Built a Rust-based solver for highly-coupled Boltzmann \
+equations with rates spanning many orders of magnitude, incorporating novel \
+integration quadratures for efficient numerical evaluation.\
+"""
+
+[[roles]]
+from = "Mar 2013"
+to = "Nov 2021"
+org = "University of Melbourne"
+loc = "Melbourne"
+title = "University Tutor & Laboratory Demonstrator"
+sub = "Physics · Mathematics · Computing"
+tags = ["python", "latex", "teaching"]
+body = """
+Tutored and demonstrated labs across physics, mathematics, and computational \
+science. Rewrote all third-year computational labs with a language-agnostic \
+approach and Python skeleton code introducing object-oriented concepts. Served \
+as Head Tutor for second-year electromagnetism (2017–2018).\
+"""
+
+[[roles]]
+from = "Jun 2014"
+to = "Aug 2021"
+org = "Indigo North Health"
+loc = "Rutherglen"
+title = "Database Administrator"
+sub = "Django · SQL Server"
+tags = ["python", "django", "sql"]
+body = """
+Upgraded a single-user Access database to a multi-user Django system backed \
+by Microsoft SQL Server, including a training and staff development module, \
+for a regional community health service.\
+"""
+
+[[roles]]
+from = "Feb 2015"
+to = "Dec 2016"
+org = "University of Melbourne"
+loc = "Melbourne"
+title = "MSc, Theoretical Particle Physics"
+sub = "Phenomenology of an E₆-inspired neutrino mass model"
+tags = ["python", "latex", "physics"]
+body = """
+Investigated phenomenology of an E₆-inspired seesaw neutrino mass model under \
+Prof. Volkas, exploring parameter space via large-scale data generation and \
+constraining it against LHC and cosmological data. First-class honours average. \
+Concurrently created TikZ-Feynman — a LaTeX package for Feynman diagrams, now \
+cited 400+ times and distributed via CTAN.\
+"""
+
+[[roles]]
+from = "Feb 2011"
+to = "Nov 2014"
+org = "University of Melbourne"
+loc = "Melbourne"
+title = "BSc Physics + Diploma in Mathematical Sciences"
+sub = "Dean's List · First-class honours"
+tags = ["mathematics", "physics"]
+body = """
+Completed a physics major and concurrent diploma in pure mathematics, achieving \
+first-class honours average in both. Developed foundations in theoretical \
+physics, quantum mechanics, electromagnetism, and mathematical analysis.\
+"""
+
+[[roles]]
+from = "Jul 2013"
+to = "Aug 2013"
+org = "CERN"
+loc = "Geneva"
+title = "Summer Student"
+sub = "LHC Level-1 Trigger"
+tags = ["c++", "root", "experimental-physics"]
+body = """
+Designed a level-1 trigger for the multiband instability monitor at the LHC, \
+enabling early detection of proton beam instabilities. The work contributed to \
+a peer-reviewed publication in Physical Review Accelerator Beams (2019).\
+"""
+
+[[roles]]
+from = "Jun 2010"
+to = "Dec 2010"
+org = "Pentecost Island Primary School"
+loc = "Vanuatu"
+title = "Volunteer Teacher"
+sub = "English · Music · Sciences"
+tags = []
+body = """
+Taught English, music, and general sciences in a remote village on Pentecost \
+Island — no electricity, running water, or vehicle access. A formative \
+experience in problem-solving under constraint and communicating across \
+language and cultural barriers.\
+"""
+
+# ── Publications ──────────────────────────────────────────────────────────────
+# Ordered newest first.
+
+[[publications]]
+authors = "T. E. Levens, K. Łasocha, T. Lefevre, M. Gąsior, R. Jones, T. Włostowski, J. P. Ellis, and R. J. Steinhagen"
+title = "Automatic detection of transverse beam instabilities in the Large Hadron Collider"
+journal = "Physical Review Accelerator Beams"
+year = 2019
+doi = "10.1103/PhysRevAccelBeams.22.112803"
+
+[[publications]]
+authors = "Joshua P. Ellis and Raymond R. Volkas"
+title = "Phenomenological Analysis of an E₆-inspired Seesaw Model"
+journal = "Physical Review D"
+year = 2017
+doi = "10.1103/PhysRevD.96.095016"
+arxiv = "1709.01203"
+
+[[publications]]
+authors = "Joshua P. Ellis"
+title = "TikZ-Feynman: Feynman Diagrams with TikZ"
+journal = "Computer Physics Communications"
+year = 2016
+doi = "10.1016/j.cpc.2016.08.019"
+arxiv = "1601.05437"
+
+# ── Honours & Awards ──────────────────────────────────────────────────────────
+
+[[honours]]
+year = 2024
+award = "Champion of Curiosity Award"
+org = "SmartBear"
+
+[[honours]]
+year = 2018
+award = "Science Abroad Traveling Scholarship"
+org = "University of Melbourne"
+
+[[honours]]
+year = 2015
+award = "N. D. Goldsworthy Scholarship for Physics"
+org = "University of Melbourne"
