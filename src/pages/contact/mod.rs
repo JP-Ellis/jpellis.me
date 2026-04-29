@@ -1,5 +1,3 @@
-use core::fmt;
-
 use leptos::prelude::*;
 use stylance::import_style;
 
@@ -7,39 +5,12 @@ use crate::components::Band;
 use crate::components::Footer;
 use crate::components::Masthead;
 
+mod email;
+mod pgp;
 import_style!(style, "contact.module.scss");
 
-const PGP_KEY: PgpKey = PgpKey("AA152D8F537EE25D3AC2FADCF162288C8BA20FCE");
-
-/// A newtype for the PGP key fingerprint, which provides formatting and a URL.
-struct PgpKey(&'static str);
-
-impl PgpKey {
-    /// Returns the URL to the key on keys.openpgp.org.
-    fn url(&self) -> String {
-        format!("https://keys.openpgp.org/vks/v1/by-fingerprint/{}", self.0)
-    }
-}
-
-/// Formats the PGP key fingerprint with spaces every 4 characters for
-/// readability.
-impl fmt::Display for PgpKey {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let spaced = self
-            .0
-            .chars()
-            .enumerate()
-            .map(|(i, c)| {
-                if i % 4 == 0 && i != 0 {
-                    format!(" {}", c)
-                } else {
-                    c.to_string()
-                }
-            })
-            .collect::<String>();
-        write!(f, "{}", spaced)
-    }
-}
+const PGP_KEY: pgp::PgpKey = pgp::PgpKey("AA152D8F537EE25D3AC2FADCF162288C8BA20FCE");
+const EMAIL: email::EmailAddress = email::EmailAddress("website@jpellis.me");
 
 /// Contact page.
 #[component]
@@ -50,10 +21,7 @@ pub fn ContactPage() -> impl IntoView {
         #[cfg(feature = "hydrate")]
         {
             if let Some(window) = leptos::web_sys::window() {
-                let _ = window
-                    .navigator()
-                    .clipboard()
-                    .write_text("website@jpellis.me");
+                let _ = window.navigator().clipboard().write_text(EMAIL.as_ref());
             }
             copied.set(true);
             leptos::leptos_dom::helpers::set_timeout(
@@ -86,14 +54,9 @@ pub fn ContactPage() -> impl IntoView {
                 <div class="container">
                     <div class=style::band_inner>
                         <span class="eyebrow">"Write to"</span>
-                        <p class=style::email_display>
-                            <span class=style::email_part>"website"</span>
-                            <span class=style::email_part_muted>"@"</span>
-                            <span class=style::email_part>"jpellis"</span>
-                            <span class=style::email_part_muted>".me"</span>
-                        </p>
+                        <p class=style::email_display>{EMAIL.display_view()}</p>
                         <div class=style::band_actions>
-                            <a href="mailto:website@jpellis.me" class=style::band_btn>
+                            <a href=format!("mailto:{EMAIL}") class=style::band_btn>
                                 "↗ open in mail client"
                             </a>
                             <noscript>
@@ -130,7 +93,7 @@ pub fn ContactPage() -> impl IntoView {
                                 "website@jpellis.me"
                             </a>
                             <p class=style::channel_desc>
-                                "preferred · usually replies within a day"
+                                "preferred"
                             </p>
                         </div>
                         <div class=style::channel_card>
