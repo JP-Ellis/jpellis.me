@@ -22,7 +22,7 @@ use role::TimelineRow;
 
 import_style!(style, "resume.module.scss");
 
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 struct ResumeData {
     roles: Vec<Role>,
     publications: Vec<Publication>,
@@ -35,10 +35,12 @@ static RESUME: LazyLock<ResumeData> = LazyLock::new(|| {
     let data: ResumeData = toml::from_str(include_str!("../../../content/resume.toml"))
         .expect("content/resume.toml is invalid TOML");
     let featured_count = data.roles.iter().filter(|r| r.featured).count();
-    assert_eq!(
-        featured_count, 1,
-        "content/resume.toml must have exactly one role with featured = true"
-    );
+    if featured_count != 1 {
+        panic!(
+            "content/resume.toml must have exactly one role with \
+             featured = true (found {featured_count})"
+        );
+    }
     data
 });
 
@@ -157,6 +159,8 @@ pub fn ResumePage() -> impl IntoView {
 
 #[cfg(test)]
 mod tests {
+    use pretty_assertions::assert_eq;
+
     use super::*;
 
     fn parse_resume() -> ResumeData {
