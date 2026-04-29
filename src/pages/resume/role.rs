@@ -69,7 +69,9 @@ pub fn TimelineRow(role: Role, index: usize) -> impl IntoView {
         <div class=format!("{} {}", style::timeline_row, border)>
             <div class=style::date_col>
                 <div class=style::date_from>{role.from}</div>
-                <div class=style::date_arrow>"↓"</div>
+                <div class=style::date_arrow aria-hidden="true">
+                    "↓"
+                </div>
                 <div class=style::date_to>{role.to}</div>
                 <div class=style::date_loc>{role.loc}</div>
             </div>
