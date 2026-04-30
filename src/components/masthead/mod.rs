@@ -4,6 +4,8 @@ use stylance::import_style;
 
 import_style!(style, "masthead.module.scss");
 
+pub mod clock;
+
 const NAV: &[(&str, &str)] = &[
     ("Index", "/"),
     ("Work", "/work"),
