@@ -4,26 +4,10 @@ use stylance::import_style;
 use crate::components::Footer;
 use crate::components::Masthead;
 use crate::components::YearInCode;
+use crate::pages::work::PROJECTS;
+use crate::pages::work::ProjectLink;
 
 import_style!(style, "home.module.scss");
-
-const SELECTED_WORK: [(&str, &str, &str); 3] = [
-    (
-        "pact-python",
-        "OSS · library",
-        "Python ↔ Rust contract testing",
-    ),
-    (
-        "tikz-feynman",
-        "OSS · LaTeX",
-        "Feynman diagrams in TikZ; 400+ citations",
-    ),
-    (
-        "boltzmann-solver",
-        "OSS · numerics",
-        "Coupled rate equations, custom quadrature",
-    ),
-];
 
 const CROSS_POSTS: [(&str, &str, &str); 2] = [
     (
@@ -76,22 +60,54 @@ pub fn HomePage() -> impl IntoView {
                     <div class="eyebrow-grid">
                         <span class="eyebrow">"Selected work"</span>
                         <div>
-                            {SELECTED_WORK
+                            {PROJECTS
                                 .iter()
+                                .take(3)
                                 .enumerate()
-                                .map(|(i, &(name, kind, summary))| {
+                                .map(|(i, entry)| {
                                     let border = if i == 0 { "rule-section" } else { "rule-list" };
+                                    let link_view = match entry.link {
+                                        Some(ProjectLink::GitHub(slug)) => {
+                                            Some(
+                                                view! {
+                                                    <a
+                                                        href=format!("https://github.com/{slug}")
+                                                        class=style::work_link
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        "↗ github"
+                                                    </a>
+                                                }
+                                                    .into_any(),
+                                            )
+                                        }
+                                        Some(ProjectLink::External(url)) => {
+                                            Some(
+                                                view! {
+                                                    <a
+                                                        href=url
+                                                        class=style::work_link
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        "↗ site"
+                                                    </a>
+                                                }
+                                                    .into_any(),
+                                            )
+                                        }
+                                        None => None,
+                                    };
                                     view! {
                                         <div
                                             class=format!("{} {}", style::work_row, border)
                                             data-testid="work-row"
                                         >
-                                            <span class=style::work_name>{name}</span>
-                                            <span class=style::work_kind>{kind}</span>
-                                            <span class=style::work_summary>{summary}</span>
-                                            <a href="#" class=style::work_link>
-                                                "↗ case study"
-                                            </a>
+                                            <span class=style::work_name>{entry.name}</span>
+                                            <span class=style::work_kind>{entry.kind}</span>
+                                            <span class=style::work_summary>{entry.summary}</span>
+                                            {link_view}
                                         </div>
                                     }
                                 })
