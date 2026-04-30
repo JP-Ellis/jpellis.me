@@ -6,18 +6,6 @@ use futures::future;
 use crate::integration::github::work::model::RepoStats;
 use crate::integration::github::work::model::WorkStats;
 
-/// GitHub repository slugs whose stars and forks are tracked.
-pub const REPO_SLUGS: &[&str] = &[
-    "pact-foundation/pact-python",
-    "JP-Ellis/tikz-feynman",
-    "JP-Ellis/rust-skiplist",
-    "JP-Ellis/mathematica-notebook-filter",
-    "JP-Ellis/simpler-wick",
-    "hep-rs/boltzmann-solver",
-    "JP-Ellis/dotfiles",
-    "JP-Ellis/jpellis.me",
-];
-
 /// Errors that can occur while fetching work statistics.
 #[derive(Debug)]
 pub enum FetchError {
@@ -88,7 +76,7 @@ async fn fetch_single_repo(
     })
 }
 
-/// Fetches stars and forks for all [`REPO_SLUGS`] concurrently.
+/// Fetches stars and forks for the given repository slugs concurrently.
 ///
 /// Repos that fail to fetch are logged and skipped — a single repo being
 /// renamed, archived, or rate-limited does not fail the entire fetch.
@@ -96,15 +84,16 @@ async fn fetch_single_repo(
 /// # Arguments
 ///
 /// * `token` - A GitHub personal access token with at least `public_repo` read scope.
+/// * `slugs` - Repository slugs to fetch, sourced from [`crate::config::work::work_config`].
 ///
 /// # Returns
 ///
 /// A [`WorkStats`] with one [`RepoStats`] per successfully fetched repo.
-pub async fn fetch_work_stats(token: &str) -> WorkStats {
+pub async fn fetch_work_stats(token: &str, slugs: &[String]) -> WorkStats {
     let client = reqwest::Client::new();
-    let futs: Vec<_> = REPO_SLUGS
+    let futs: Vec<_> = slugs
         .iter()
-        .map(|&slug| fetch_single_repo(&client, slug, token))
+        .map(|slug| fetch_single_repo(&client, slug.as_str(), token))
         .collect();
 
     let repos: Vec<RepoStats> = future::join_all(futs)
@@ -187,13 +176,5 @@ mod tests {
         let result = parse_repo_response("owner/repo", &body);
         assert!(result.is_err());
         assert!(result.unwrap_err().to_string().contains("forks_count"));
-    }
-
-    #[test]
-    fn repo_slugs_are_non_empty_and_contain_slash() {
-        for slug in REPO_SLUGS {
-            assert!(!slug.is_empty(), "slug must not be empty");
-            assert!(slug.contains('/'), "slug must be owner/repo format: {slug}");
-        }
     }
 }

@@ -84,7 +84,10 @@ impl FileWorkStatsProvider {
     async fn get(&self) -> WorkStats {
         use chrono::Utc;
 
+        use crate::config::work::work_config;
         use crate::integration::github::work::fetch::fetch_work_stats;
+
+        let slugs = &work_config().tracked_slugs;
 
         if let Ok(data) = tokio::fs::read_to_string(Self::CACHE_PATH).await
             && let Ok(stats) = serde_json::from_str::<WorkStats>(&data)
@@ -93,8 +96,9 @@ impl FileWorkStatsProvider {
             if age < Self::HARD_TTL_SECS {
                 if age >= Self::SWR_SECS && !self.token.is_empty() {
                     let token = self.token.clone();
+                    let slugs = slugs.clone();
                     tokio::task::spawn(async move {
-                        let fresh = fetch_work_stats(&token).await;
+                        let fresh = fetch_work_stats(&token, &slugs).await;
                         let _ = Self::write_cache(&fresh).await;
                     });
                 }
@@ -106,7 +110,7 @@ impl FileWorkStatsProvider {
             leptos::logging::warn!("GITHUB_TOKEN not set; serving empty work stats");
             return empty_stats();
         }
-        let fresh = fetch_work_stats(&self.token).await;
+        let fresh = fetch_work_stats(&self.token, slugs).await;
         let _ = Self::write_cache(&fresh).await;
         fresh
     }
@@ -141,7 +145,10 @@ impl KvWorkStatsProvider {
     pub(crate) async fn get(&self) -> WorkStats {
         use chrono::Utc;
 
+        use crate::config::work::work_config;
         use crate::integration::github::work::fetch::fetch_work_stats;
+
+        let slugs = work_config().tracked_slugs.clone();
 
         match self.kv.get("work-stats").json::<WorkStats>().await {
             Ok(Some(stats)) => {
@@ -150,7 +157,7 @@ impl KvWorkStatsProvider {
                     let kv2 = self.kv.clone();
                     let token2 = self.token.clone();
                     self.ctx.wait_until(async move {
-                        let fresh = fetch_work_stats(&token2).await;
+                        let fresh = fetch_work_stats(&token2, &slugs).await;
                         Self::write_kv_cache(&kv2, &fresh).await;
                     });
                 } else if age >= Self::HARD_TTL_SECS {
@@ -167,9 +174,9 @@ impl KvWorkStatsProvider {
     }
 
     async fn cold_fetch(&self) -> WorkStats {
-        use crate::integration::github::work::fetch::fetch_work_stats;
+        use crate::config::work::work_config;
 
-        let fresh = fetch_work_stats(&self.token).await;
+        let fresh = fetch_work_stats(&self.token, &work_config().tracked_slugs).await;
         Self::write_kv_cache(&self.kv, &fresh).await;
         fresh
     }

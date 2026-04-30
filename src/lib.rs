@@ -10,6 +10,7 @@ use leptos_router::components::Routes;
 use leptos_router::path;
 
 mod components;
+pub(crate) mod config;
 pub mod integration;
 mod pages;
 

@@ -1,0 +1,207 @@
+# GitHub slugs to fetch star/fork counts for.
+# Must cover all projects in pages/work/mod.rs that use ProjectLink::GitHub.
+tracked_slugs = [
+  "pact-foundation/pact-python",
+  "JP-Ellis/tikz-feynman",
+  "JP-Ellis/rust-skiplist",
+  "JP-Ellis/mathematica-notebook-filter",
+  "JP-Ellis/simpler-wick",
+  "hep-rs/boltzmann-solver",
+  "JP-Ellis/dotfiles",
+  "JP-Ellis/jpellis.me",
+  "JP-Ellis/borrow-checker",
+  "JP-Ellis/amber-api",
+  "JP-Ellis/enphase-api",
+  "JP-Ellis/repo-manage",
+]
+
+# Misc OSS contributions - updated by: cargo scripts/update-oss-contribs.rs
+[[oss_contribs]]
+slug = "fastapi/fastapi"
+name = "fastapi"
+stars = 97776
+
+[[oss_contribs]]
+slug = "home-assistant/core"
+name = "home-assistant"
+stars = 86870
+
+[[oss_contribs]]
+slug = "jdx/mise"
+name = "mise"
+stars = 27468
+
+[[oss_contribs]]
+slug = "home-assistant/home-assistant.io"
+name = "home-assistant.io"
+stars = 9174
+
+[[oss_contribs]]
+slug = "j178/prek"
+name = "prek"
+stars = 7467
+
+[[oss_contribs]]
+slug = "pypa/hatch"
+name = "hatch"
+stars = 7153
+
+[[oss_contribs]]
+slug = "traceloop/openllmetry"
+name = "openllmetry"
+stars = 7052
+
+[[oss_contribs]]
+slug = "pyinfra-dev/pyinfra"
+name = "pyinfra"
+stars = 4970
+
+[[oss_contribs]]
+slug = "microsoft/vscode-python"
+name = "vscode-python"
+stars = 4613
+
+[[oss_contribs]]
+slug = "SchemaStore/schemastore"
+name = "schemastore"
+stars = 3736
+
+[[oss_contribs]]
+slug = "tamasfe/taplo"
+name = "taplo"
+stars = 2242
+
+[[oss_contribs]]
+slug = "pact-foundation/pact-ruby"
+name = "pact-ruby"
+stars = 2194
+
+[[oss_contribs]]
+slug = "SuperCuber/dotter"
+name = "dotter"
+stars = 1942
+
+[[oss_contribs]]
+slug = "pact-foundation/pact-js"
+name = "pact-js"
+stars = 1763
+
+[[oss_contribs]]
+slug = "pact-foundation/pact-go"
+name = "pact-go"
+stars = 938
+
+[[oss_contribs]]
+slug = "pact-foundation/pact-net"
+name = "pact-net"
+stars = 920
+
+[[oss_contribs]]
+slug = "pact-foundation/pact_broker"
+name = "pact_broker"
+stars = 742
+
+[[oss_contribs]]
+slug = "pypa/packaging"
+name = "packaging"
+stars = 725
+
+[[oss_contribs]]
+slug = "pact-foundation/pact-js-core"
+name = "pact-js-core"
+stars = 153
+
+[[oss_contribs]]
+slug = "pact-foundation/pact-reference"
+name = "pact-reference"
+stars = 101
+
+[[oss_contribs]]
+slug = "pact-foundation/pact-mock_service"
+name = "pact-mock_service"
+stars = 75
+
+[[oss_contribs]]
+slug = "nienbo/cache-buildkite-plugin"
+name = "cache-buildkite-plugin"
+stars = 69
+
+[[oss_contribs]]
+slug = "pact-foundation/pact_broker-client"
+name = "pact_broker-client"
+stars = 69
+
+[[oss_contribs]]
+slug = "surpher/PactSwift"
+name = "PactSwift"
+stars = 54
+
+[[oss_contribs]]
+slug = "pact-foundation/pact-provider-verifier"
+name = "pact-provider-verifier"
+stars = 33
+
+[[oss_contribs]]
+slug = "afadesigns/zshellcheck"
+name = "zshellcheck"
+stars = 18
+
+[[oss_contribs]]
+slug = "aio-libs/aioloop-proxy"
+name = "aioloop-proxy"
+stars = 18
+
+[[oss_contribs]]
+slug = "pact-foundation/pact-5-minute-getting-started-guide"
+name = "pact-5-minute-getting-started-guide"
+stars = 18
+
+[[oss_contribs]]
+slug = "olix0r/cargo-action-fmt"
+name = "cargo-action-fmt"
+stars = 14
+
+[[oss_contribs]]
+slug = "pact-foundation/pact-docker-cli"
+name = "pact-docker-cli"
+stars = 13
+
+[[oss_contribs]]
+slug = "pact-foundation/pact-core-mock-server"
+name = "pact-core-mock-server"
+stars = 10
+
+[[oss_contribs]]
+slug = "pact-foundation/pact-message-ruby"
+name = "pact-message-ruby"
+stars = 10
+
+[[oss_contribs]]
+slug = "pact-foundation/pact-support"
+name = "pact-support"
+stars = 7
+
+[[oss_contribs]]
+slug = "pact-foundation/pact-ruby-e2e-example"
+name = "pact-ruby-e2e-example"
+stars = 5
+
+[[oss_contribs]]
+slug = "pact-foundation/pact-consumer-minitest"
+name = "pact-consumer-minitest"
+stars = 4
+
+[[oss_contribs]]
+slug = "pact-foundation/pact-js-cli"
+name = "pact-js-cli"
+stars = 3
+
+[[oss_contribs]]
+slug = "i-m-mll/griffe-inherited-method-crossrefs"
+name = "griffe-crossrefs"
+stars = 1
+
+[[oss_contribs]]
+slug = "pact-foundation/rspec-pact-matchers"
+name = "rspec-pact-matchers"
+stars = 0

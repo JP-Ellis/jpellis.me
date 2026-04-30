@@ -4,6 +4,7 @@ use stylance::import_style;
 use crate::components::Band;
 use crate::components::Footer;
 use crate::components::Masthead;
+use crate::config::work::work_config;
 use crate::integration::WorkStats;
 use crate::integration::get_work_stats;
 use crate::integration::github::work::model::RepoStats;
@@ -118,6 +119,38 @@ pub const PROJECTS: &[ProjectEntry] = &[
         summary: "This site, rewritten in Rust and Leptos.",
         status: Status::Wip,
         link: Some(ProjectLink::GitHub("JP-Ellis/jpellis.me")),
+    },
+    ProjectEntry {
+        name: "borrow-checker",
+        kind: "personal · app",
+        stack: "rust",
+        summary: "Personal finance app for tracking accounts, spending, and cashflow — named for the compiler feature that stops you spending twice.",
+        status: Status::Wip,
+        link: Some(ProjectLink::GitHub("JP-Ellis/borrow-checker")),
+    },
+    ProjectEntry {
+        name: "amber-api",
+        kind: "personal · library",
+        stack: "rust",
+        summary: "Rust client for Amber Electric's real-time energy pricing API.",
+        status: Status::Maintained,
+        link: Some(ProjectLink::GitHub("JP-Ellis/amber-api")),
+    },
+    ProjectEntry {
+        name: "enphase-api",
+        kind: "personal · library",
+        stack: "rust",
+        summary: "Rust client for the Enphase solar monitoring API.",
+        status: Status::Maintained,
+        link: Some(ProjectLink::GitHub("JP-Ellis/enphase-api")),
+    },
+    ProjectEntry {
+        name: "repo-manage",
+        kind: "personal · tool",
+        stack: "python",
+        summary: "Convenience CLI for applying consistent settings and CI workflows across a fleet of personal repositories.",
+        status: Status::Maintained,
+        link: Some(ProjectLink::GitHub("JP-Ellis/repo-manage")),
     },
     ProjectEntry {
         name: "azure data accelerator",
@@ -344,6 +377,52 @@ fn WorkIndex(stats: Option<WorkStats>) -> impl IntoView {
     }
 }
 
+// ─── OpenContributions ───────────────────────────────────────────────────────
+
+#[component]
+fn OpenContributions() -> impl IntoView {
+    let links = work_config()
+        .oss_contribs
+        .iter()
+        .take(20)
+        .enumerate()
+        .map(|(i, c)| {
+            let href = format!("https://github.com/{}", c.slug);
+            let name = c.name.clone();
+            let stars_label = format!("{}★", format_stars(c.stars as u32));
+            let sep: Option<&'static str> = if i > 0 { Some(" · ") } else { None };
+            view! {
+                {sep}
+                <a href=href target="_blank" rel="noopener noreferrer">
+                    {name}
+                </a>
+                " "
+                <span class=style::contrib_stars aria-label=format!("{} stars", c.stars)>
+                    {stars_label}
+                </span>
+            }
+        })
+        .collect_view();
+
+    view! {
+        <section class=style::contrib_section>
+            <div class="container">
+                <div class="eyebrow-grid">
+                    <span class="eyebrow">"Open source"</span>
+                    <div class=style::contrib_body>
+                        <p class=style::contrib_prose>
+                            "Beyond named projects, I make regular contributions across
+                            the open-source ecosystem — bug fixes, small features, and
+                            documentation wherever I use the tools."
+                        </p>
+                        <p class=style::contrib_links>{links} " · and others"</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+
 // ─── WorkPage ────────────────────────────────────────────────────────────────
 
 #[component]
@@ -379,6 +458,7 @@ pub fn WorkPage() -> impl IntoView {
                         .into_any()
                 }}
             </Suspense>
+            <OpenContributions />
         </main>
         <Footer />
     }
@@ -445,7 +525,26 @@ mod tests {
 
     #[test]
     fn projects_list_has_expected_length() {
-        assert_eq!(PROJECTS.len(), 10);
+        assert_eq!(PROJECTS.len(), 14);
+    }
+
+    #[test]
+    fn all_github_project_slugs_are_tracked_in_config() {
+        let tracked: std::collections::HashSet<&str> = crate::config::work::work_config()
+            .tracked_slugs
+            .iter()
+            .map(|s| s.as_str())
+            .collect();
+        for p in PROJECTS {
+            if let Some(ProjectLink::GitHub(slug)) = p.link {
+                assert!(
+                    tracked.contains(slug),
+                    "project '{}' slug '{}' is missing from tracked_slugs in src/config/work.toml",
+                    p.name,
+                    slug,
+                );
+            }
+        }
     }
 
     #[test]

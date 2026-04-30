@@ -200,3 +200,46 @@
 .row-status-archived  { color: var(--color-muted); }
 .row-status-shipped   { color: var(--color-ink); }
 .row-status-wip       { color: var(--color-warning); }
+
+// ── Open contributions ────────────────────────────────────────────────────────
+
+.contrib-section {
+    padding: var(--space-6) 0 var(--space-8);
+}
+
+.contrib-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.contrib-prose {
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-leading);
+    color: var(--color-muted);
+    max-width: 60ch;
+    margin: 0 auto;
+}
+
+.contrib-links {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    color: var(--color-muted);
+    margin: 0;
+    max-width: none;
+    line-height: var(--text-body-leading);
+
+    a {
+        color: var(--color-accent);
+        text-decoration: none;
+
+        &:hover { text-decoration: underline; }
+
+        &:focus-visible { @include focus-ring; }
+    }
+}
+
+.contrib-stars {
+    font-size: 0.85em;
+    opacity: 0.6;
+}
