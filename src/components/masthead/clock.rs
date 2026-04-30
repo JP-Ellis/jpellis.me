@@ -57,11 +57,16 @@ fn to_roman(n: u32) -> String {
 }
 
 fn format_time(now: chrono::DateTime<chrono::Local>) -> String {
+    let seconds = to_roman(now.second());
+    // Pad seconds to max width (38 = "xxxviii" = 7 chars) with non-breaking spaces
+    // to prevent layout shifts as the value changes every tick.
+    let padding = 7usize.saturating_sub(seconds.chars().count());
     format!(
-        "{} · {} · {}",
+        "{} · {} · {}{}",
         to_roman(now.hour()),
         to_roman(now.minute()),
-        to_roman(now.second()),
+        seconds,
+        "\u{00A0}".repeat(padding),
     )
 }
 
@@ -107,7 +112,7 @@ pub fn Clock() -> impl IntoView {
         on_cleanup(move || handle.clear());
     });
 
-    view! { {move || text.get()} }
+    view! { {move || text.get()} }.into_any()
 }
 
 #[cfg(test)]
