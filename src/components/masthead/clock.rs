@@ -1,3 +1,4 @@
+#[cfg(feature = "ssr")]
 use chrono::Datelike as _;
 use chrono::Timelike as _;
 use leptos::prelude::*;
@@ -49,7 +50,7 @@ fn server_date() -> String {
         "{} · {} · {}",
         to_roman(now.day()),
         to_roman(now.month()),
-        to_roman(now.year() as u32),
+        to_roman(u32::try_from(now.year()).unwrap_or(0)),
     )
 }
 
@@ -73,14 +74,14 @@ pub fn Clock() -> impl IntoView {
 
     let text = RwSignal::new(initial);
 
+    #[cfg(feature = "hydrate")]
     Effect::new(move |_| {
-        #[cfg(feature = "hydrate")]
-        {
-            text.set(format_time(chrono::Local::now()));
-            leptos::leptos_dom::helpers::set_interval(
-                move || text.set(format_time(chrono::Local::now())),
-                std::time::Duration::from_secs(1),
-            );
+        text.set(format_time(chrono::Local::now()));
+        if let Ok(handle) = leptos::leptos_dom::helpers::set_interval_with_handle(
+            move || text.set(format_time(chrono::Local::now())),
+            std::time::Duration::from_secs(1),
+        ) {
+            on_cleanup(move || handle.clear());
         }
     });
 
