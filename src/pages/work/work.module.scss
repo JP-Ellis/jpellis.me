@@ -75,7 +75,7 @@
 
 .index-header {
     display: grid;
-    grid-template-columns: minmax(140px, auto) 140px 1fr 60px 100px;
+    grid-template-columns: minmax(0, 20ch) 140px 1fr 60px 100px;
     gap: var(--space-5);
     padding: var(--space-3) 0;
     font-family: var(--font-mono);
@@ -88,7 +88,7 @@
 
 .index-row {
     display: grid;
-    grid-template-columns: minmax(140px, auto) 140px 1fr 60px 100px;
+    grid-template-columns: minmax(0, 20ch) 140px 1fr 60px 100px;
     gap: var(--space-5);
     padding: var(--space-5) 0;
     align-items: baseline;
@@ -107,6 +107,7 @@
     font-family: var(--font-mono);
     font-size: var(--text-body-size);
     color: var(--color-accent);
+    overflow-wrap: break-word;
 
     @media (max-width: $bp-sm) {
         grid-area: name;
