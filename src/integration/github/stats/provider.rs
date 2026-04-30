@@ -10,13 +10,13 @@
 //!   `GITHUB_STATS` KV namespace with the same stale-while-revalidate logic,
 //!   using `ctx.wait_until()` for the background refresh.
 
-use crate::github::model::GitHubStats;
+use crate::integration::github::stats::model::GitHubStats;
 
 /// Abstracts over native-file and CF-Workers-KV stats sources.
 ///
 /// Inject into Leptos context so that [`get_github_stats`] is cfg-free.
 ///
-/// [`get_github_stats`]: crate::github::server_fn::get_github_stats
+/// [`get_github_stats`]: crate::integration::github::stats::server_fn::get_github_stats
 #[derive(Clone)]
 pub enum StatsProvider {
     /// Local development: caches stats to `./target/cache/github-stats.json`.
@@ -92,8 +92,8 @@ impl FileStatsProvider {
     async fn get(&self) -> GitHubStats {
         use chrono::Utc;
 
-        use crate::github::defaults::fallback_stats;
-        use crate::github::fetch::fetch_from_github;
+        use crate::integration::github::stats::defaults::fallback_stats;
+        use crate::integration::github::stats::fetch::fetch_from_github;
 
         if let Ok(data) = tokio::fs::read_to_string(Self::CACHE_PATH).await
             && let Ok(stats) = serde_json::from_str::<GitHubStats>(&data)
@@ -160,7 +160,7 @@ impl KvStatsProvider {
     pub(crate) async fn get(&self) -> GitHubStats {
         use chrono::Utc;
 
-        use crate::github::fetch::fetch_from_github;
+        use crate::integration::github::stats::fetch::fetch_from_github;
 
         match self.kv.get("stats").json::<GitHubStats>().await {
             Ok(Some(stats)) => {
@@ -185,8 +185,8 @@ impl KvStatsProvider {
     }
 
     async fn cold_fetch(&self) -> GitHubStats {
-        use crate::github::defaults::fallback_stats;
-        use crate::github::fetch::fetch_from_github;
+        use crate::integration::github::stats::defaults::fallback_stats;
+        use crate::integration::github::stats::fetch::fetch_from_github;
 
         match fetch_from_github(&self.token).await {
             Ok(fresh) => {

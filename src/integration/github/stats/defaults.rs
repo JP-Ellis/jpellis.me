@@ -2,12 +2,12 @@ use chrono::Duration;
 use chrono::NaiveDate;
 use chrono::Utc;
 
-use crate::github::model::ActivityItem;
-use crate::github::model::ActivityKind;
-use crate::github::model::ActivityState;
-use crate::github::model::ContributionDay;
-use crate::github::model::ContributionWeek;
-use crate::github::model::GitHubStats;
+use crate::integration::github::stats::model::ActivityItem;
+use crate::integration::github::stats::model::ActivityKind;
+use crate::integration::github::stats::model::ActivityState;
+use crate::integration::github::stats::model::ContributionDay;
+use crate::integration::github::stats::model::ContributionWeek;
+use crate::integration::github::stats::model::GitHubStats;
 
 /// Returns placeholder [`GitHubStats`] for use when the GitHub API is unavailable.
 ///

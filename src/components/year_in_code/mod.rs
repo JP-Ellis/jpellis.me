@@ -8,11 +8,11 @@ use leptos::prelude::*;
 use stylance::import_style;
 
 use crate::components::Band;
-use crate::github::ActivityItem;
-use crate::github::ActivityKind;
-use crate::github::ActivityState;
-use crate::github::GitHubStats;
-use crate::github::server_fn::get_github_stats;
+use crate::integration::ActivityItem;
+use crate::integration::ActivityKind;
+use crate::integration::ActivityState;
+use crate::integration::GitHubStats;
+use crate::integration::get_github_stats;
 
 import_style!(style, "year_in_code.module.scss");
 
@@ -388,9 +388,9 @@ mod tests {
         use chrono::NaiveDate;
         use chrono::Utc;
 
-        use crate::github::model::ContributionDay;
-        use crate::github::model::ContributionWeek;
-        use crate::github::model::GitHubStats;
+        use crate::integration::github::stats::model::ContributionDay;
+        use crate::integration::github::stats::model::ContributionWeek;
+        use crate::integration::github::stats::model::GitHubStats;
 
         let stats = GitHubStats {
             fetched_at: Utc::now(),

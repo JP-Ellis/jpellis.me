@@ -28,8 +28,8 @@ use worker::console_log;
 use worker::event;
 
 use crate::App;
-use crate::github::StatsProvider;
-use crate::github::fetch::fetch_from_github;
+use crate::integration::StatsProvider;
+use crate::integration::github::stats::fetch::fetch_from_github;
 use crate::shell;
 
 /// Handles incoming HTTP fetch events by routing requests through a Leptos +

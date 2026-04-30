@@ -9,9 +9,9 @@
 
 use leptos::prelude::*;
 
-use crate::github::model::GitHubStats;
+use crate::integration::github::stats::model::GitHubStats;
 #[cfg(any(not(target_arch = "wasm32"), feature = "ssr"))]
-use crate::github::provider::StatsProvider;
+use crate::integration::github::stats::provider::StatsProvider;
 
 /// Fetches GitHub stats using the [`StatsProvider`] from Leptos context.
 ///
@@ -19,7 +19,7 @@ use crate::github::provider::StatsProvider;
 ///
 /// Returns `Err` only when the `StatsProvider` is absent from Leptos context.
 /// All other failure modes (missing token, API errors, KV errors) are handled
-/// inside the provider and fall back to [`crate::github::defaults::fallback_stats`].
+/// inside the provider and fall back to [`crate::integration::github::stats::defaults::fallback_stats`].
 #[server]
 pub async fn get_github_stats() -> Result<GitHubStats, ServerFnError> {
     let provider = use_context::<StatsProvider>()

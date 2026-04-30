@@ -5,7 +5,7 @@
 async fn main() {
     use axum::Router;
     use jpellis_me::App;
-    use jpellis_me::github::StatsProvider;
+    use jpellis_me::integration::StatsProvider;
     use jpellis_me::shell;
     use leptos::prelude::provide_context;
     use leptos_axum::LeptosRoutes;
