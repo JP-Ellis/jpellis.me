@@ -42,9 +42,8 @@ pub fn ContactPage() -> impl IntoView {
                         "The best way to reach me is " <em class=style::hero_accent>"email"</em>
                     </h1>
                     <p class=style::hero_lead>
-                        "I read everything that lands in my inbox; I don't always reply quickly, \
-                         but I do reply. Be specific about what you'd like — it shortens the loop \
-                         for both of us."
+                        "I read everything that lands in my inbox; \
+                         I don't always reply quickly, but I do usually reply."
                     </p>
                 </div>
             </section>
@@ -145,7 +144,7 @@ pub fn ContactPage() -> impl IntoView {
                                  to track, discuss, and keep visible there."
                             </p>
                             <p class=style::note_muted>
-                                "I'm not currently looking for new roles, but I'm always happy to \
+                                "I'm open to exploring new opportunities, and I'm always happy to \
                                  chat about Pact and contract testing, Rust ↔ Python interop, or \
                                  particle-physics numerics."
                             </p>
