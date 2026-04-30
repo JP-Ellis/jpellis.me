@@ -178,11 +178,210 @@ pub fn find_repo_stats<'a>(entry: &ProjectEntry, stats: &'a WorkStats) -> Option
     stats.repos.iter().find(|r| r.slug == slug)
 }
 
-// ─── Components ───────────────────────────────────────────────────────────────
+// ─── WorkBand ────────────────────────────────────────────────────────────────
+
+fn total_stars(stats: &WorkStats) -> u32 {
+    stats.repos.iter().map(|r| r.stars).sum()
+}
+
+fn total_forks(stats: &WorkStats) -> u32 {
+    stats.repos.iter().map(|r| r.forks).sum()
+}
+
+#[component]
+fn WorkBand(stats: Option<WorkStats>) -> impl IntoView {
+    let stars: AnyView = match &stats {
+        Some(s) => format_stars(total_stars(s)).into_any(),
+        None => view! { <span class=style::row_stars_skeleton aria-hidden="true" /> }.into_any(),
+    };
+    let forks: AnyView = match &stats {
+        Some(s) => total_forks(s).to_string().into_any(),
+        None => view! { <span class=style::row_stars_skeleton aria-hidden="true" /> }.into_any(),
+    };
+
+    view! {
+        <Band test_id="work-band">
+            <div class=format!("container {}", style::band_inner)>
+
+                <div class=style::stats_row>
+                    <dl class=style::stat_item>
+                        <dt class=style::stat_value>{stars}</dt>
+                        <dd class=style::stat_label>
+                            <span class="sr-only">"Total "</span>
+                            "stars"
+                        </dd>
+                    </dl>
+                    <dl class=style::stat_item>
+                        <dt class=style::stat_value>{forks}</dt>
+                        <dd class=style::stat_label>"forks"</dd>
+                    </dl>
+                    <dl class=style::stat_item>
+                        <dt class=style::stat_value>"400+"</dt>
+                        <dd class=style::stat_label>"citations"</dd>
+                    </dl>
+                    <dl class=style::stat_item>
+                        <dt class=style::stat_value>"2015"</dt>
+                        <dd class=style::stat_label>"open source since"</dd>
+                    </dl>
+                </div>
+
+                <div class=format!("eyebrow-grid {}", style::fingerprint_row)>
+                    <span class="eyebrow eyebrow--muted">"The stack"</span>
+                    <div class=style::fingerprint_tags>
+                        <span class="tag tag--pill">"rust"</span>
+                        <span class="tag tag--pill">"python"</span>
+                        <span class="tag tag--pill">"latex"</span>
+                        <span class="tag tag--pill">"tikz"</span>
+                        <span class="tag tag--pill">"nix"</span>
+                        <span class="tag tag--pill">"shell"</span>
+                    </div>
+                </div>
+
+            </div>
+        </Band>
+    }
+}
+
+// ─── WorkRow ─────────────────────────────────────────────────────────────────
+
+#[component]
+fn WorkRow(entry: &'static ProjectEntry, repo: Option<RepoStats>) -> impl IntoView {
+    let status_class = match entry.status {
+        Status::Active => style::row_status_active,
+        Status::Maintained => style::row_status_maintained,
+        Status::Archived => style::row_status_archived,
+        Status::Shipped => style::row_status_shipped,
+        Status::Wip => style::row_status_wip,
+    };
+
+    let stars_cell = match &repo {
+        Some(r) => format_stars(r.stars).into_any(),
+        None => match entry.link {
+            Some(ProjectLink::GitHub(_)) => {
+                view! { <span class=style::row_stars_skeleton aria-hidden="true" /> }.into_any()
+            }
+            _ => "—".into_any(),
+        },
+    };
+
+    let name_cell = match entry.link {
+        Some(ProjectLink::GitHub(slug)) => view! {
+            <a
+                href=format!("https://github.com/{slug}")
+                class=format!("{} {}", style::row_name, style::row_name_link)
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                {entry.name}
+            </a>
+        }
+        .into_any(),
+        Some(ProjectLink::External(url)) => view! {
+            <a
+                href=url
+                class=format!("{} {}", style::row_name, style::row_name_link)
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                {entry.name}
+            </a>
+        }
+        .into_any(),
+        None => view! { <span class=style::row_name>{entry.name}</span> }.into_any(),
+    };
+
+    view! {
+        <div class=format!("{} rule-list", style::index_row) data-testid="work-row">
+            {name_cell}
+            <span class=style::row_kind>{entry.kind}</span>
+            <div>
+                <span class=style::row_summary>{entry.summary}</span>
+                <span class=style::row_stack>{entry.stack}</span>
+            </div>
+            <span class=style::row_stars>{stars_cell}</span>
+            <span class=format!(
+                "{} {}",
+                style::row_status,
+                status_class,
+            )>"● " {entry.status.label()}</span>
+        </div>
+    }
+}
+
+// ─── WorkIndex ───────────────────────────────────────────────────────────────
+
+#[component]
+fn WorkIndex(stats: Option<WorkStats>) -> impl IntoView {
+    let rows = PROJECTS
+        .iter()
+        .map(|entry| {
+            let repo = stats
+                .as_ref()
+                .and_then(|s| find_repo_stats(entry, s))
+                .cloned();
+            view! { <WorkRow entry=entry repo=repo /> }
+        })
+        .collect_view();
+
+    view! {
+        <section class=style::index_section>
+            <div class="container">
+                <div class="eyebrow-grid">
+                    <span class="eyebrow">"Index"</span>
+                    <div>
+                        <div class=format!("{} rule-section", style::index_header)>
+                            <span>"repo"</span>
+                            <span>"kind"</span>
+                            <span>"summary"</span>
+                            <span class=style::row_stars>"★"</span>
+                            <span>"status"</span>
+                        </div>
+                        {rows}
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+
+// ─── WorkPage ────────────────────────────────────────────────────────────────
 
 #[component]
 pub fn WorkPage() -> impl IntoView {
-    view! { <div>"Work page coming soon"</div> }
+    let work_res = LocalResource::new(get_work_stats);
+
+    view! {
+        <Masthead />
+        <main>
+            <section class=style::hero>
+                <div class="container">
+                    <p class="eyebrow">"Work"</p>
+                    <h1>"Things I've " <em>"built"</em> ", still standing."</h1>
+                    <p class=style::lead>
+                        "A small index. Each item links to a write-up, the README, "
+                        "or — for the academic ones — the paper."
+                    </p>
+                </div>
+            </section>
+
+            <Suspense fallback=move || {
+                view! {
+                    <WorkBand stats=None />
+                    <WorkIndex stats=None />
+                }
+            }>
+                {move || {
+                    let stats: Option<WorkStats> = work_res.get().and_then(|r| r.ok());
+                    view! {
+                        <WorkBand stats=stats.clone() />
+                        <WorkIndex stats=stats />
+                    }
+                        .into_any()
+                }}
+            </Suspense>
+        </main>
+        <Footer />
+    }
 }
 
 #[cfg(test)]
