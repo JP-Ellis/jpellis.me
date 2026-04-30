@@ -77,12 +77,12 @@ pub fn Clock() -> impl IntoView {
     #[cfg(feature = "hydrate")]
     Effect::new(move |_| {
         text.set(format_time(chrono::Local::now()));
-        if let Ok(handle) = leptos::leptos_dom::helpers::set_interval_with_handle(
+        let handle = leptos::leptos_dom::helpers::set_interval_with_handle(
             move || text.set(format_time(chrono::Local::now())),
             std::time::Duration::from_secs(1),
-        ) {
-            on_cleanup(move || handle.clear());
-        }
+        )
+        .expect("set_interval_with_handle should always succeed in a browser context");
+        on_cleanup(move || handle.clear());
     });
 
     view! { {move || text.get()} }
