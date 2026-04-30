@@ -3,12 +3,12 @@
 //! Provides `fetch` and `scheduled` event handlers for the CF Workers runtime.
 //! This module compiles only for WASM32 SSR targets.
 //!
-//! - **`fetch`**: Handles incoming HTTP requests by routing them through an
-//!   Axum router with Leptos SSR.  A [`StatsProvider`] is injected into Leptos
-//!   context so the `get_github_stats` server function can access KV.
+//! - **`fetch`**: Routes HTTP requests through Leptos SSR. Injects both
+//!   [`StatsProvider`] and [`WorkStatsProvider`] into Leptos context.
 //!
-//! - **`scheduled`**: Runs on a cron trigger, fetches live GitHub statistics,
-//!   and writes the result to the `GITHUB_STATS` KV namespace.
+//! - **`scheduled`**: Dispatches on `event.cron()`:
+//!   - Daily (`0 13 * * *`) → refreshes `github/stats`.
+//!   - Weekly (`0 13 * * 1`) → refreshes `github/work`.
 
 #![cfg(all(target_arch = "wasm32", feature = "ssr"))]
 
@@ -29,36 +29,33 @@ use worker::event;
 
 use crate::App;
 use crate::integration::StatsProvider;
+use crate::integration::WorkStatsProvider;
 use crate::integration::github::stats::fetch::fetch_from_github;
+use crate::integration::github::work::fetch::fetch_work_stats;
 use crate::shell;
 
-/// Handles incoming HTTP fetch events by routing requests through a Leptos +
-/// Axum application.
+/// Handles incoming HTTP fetch events.
 ///
-/// Injects a [`StatsProvider`] with the `GITHUB_STATS` KV store, the CF
-/// [`Context`], and the `GITHUB_TOKEN` secret into Leptos context so server
-/// functions can retrieve GitHub stats.
-///
-/// # Arguments
-///
-/// * `req` - The incoming HTTP request forwarded from the Workers runtime.
-/// * `env` - The CF Workers environment, used to access KV namespaces and
-///   secrets.
-/// * `ctx` - The CF Workers context, used for `wait_until` background tasks.
+/// Injects [`StatsProvider`] and [`WorkStatsProvider`] into Leptos context so
+/// server functions can access GitHub stats and work stats respectively.
 ///
 /// # Errors
 ///
-/// Returns a [`worker::Error`] if a required binding (`GITHUB_STATS` KV or
-/// `GITHUB_TOKEN` secret) is missing, or if Axum fails to produce a response.
+/// Returns a [`worker::Error`] if a required binding (`GITHUB_STATS` or
+/// `WORK_STATS` KV, or `GITHUB_TOKEN` secret) is missing, or if Axum fails
+/// to produce a response.
 #[event(fetch)]
 pub async fn fetch_handler(
     req: HttpRequest,
     env: Env,
     ctx: Context,
 ) -> Result<axum::response::Response> {
-    let kv = env.kv("GITHUB_STATS")?;
+    let stats_kv = env.kv("GITHUB_STATS")?;
+    let work_kv = env.kv("WORK_STATS")?;
     let token = env.secret("GITHUB_TOKEN")?.to_string();
-    let provider = StatsProvider::kv(kv, ctx, token);
+
+    let stats_provider = StatsProvider::kv(stats_kv, ctx.clone(), token.clone());
+    let work_provider = WorkStatsProvider::kv(work_kv, ctx, token);
 
     let leptos_options = leptos::config::LeptosOptions::builder()
         .output_name("jpellis-me")
@@ -69,7 +66,10 @@ pub async fn fetch_handler(
         .leptos_routes_with_context(
             &leptos_options,
             routes,
-            move || provide_context(provider.clone()),
+            move || {
+                provide_context(stats_provider.clone());
+                provide_context(work_provider.clone());
+            },
             {
                 let opts = leptos_options.clone();
                 move || shell(opts.clone())
@@ -80,28 +80,12 @@ pub async fn fetch_handler(
     Ok(app.oneshot(req).await?)
 }
 
-/// Handles scheduled cron events by refreshing the GitHub statistics cache.
+/// Handles scheduled cron events.
 ///
-/// Fetches live GitHub statistics via the GitHub API and writes the serialised
-/// result to the `GITHUB_STATS` KV namespace under the key `"stats"`.  All
-/// error conditions are logged to the Workers console rather than propagated,
-/// so a single refresh failure does not affect live request handling.
-///
-/// # Arguments
-///
-/// * `_event` - The scheduled event metadata (unused).
-/// * `env` - The CF Workers environment, used to access KV namespaces and
-///   secrets.
-/// * `_ctx` - The CF Workers schedule context (unused).
+/// - `"0 13 * * *"` (daily) — refreshes GitHub contribution stats.
+/// - `"0 13 * * 1"` (weekly, Monday) — refreshes per-repo work stats.
 #[event(scheduled)]
-pub async fn scheduled_handler(_event: ScheduledEvent, env: Env, _ctx: ScheduleContext) {
-    let kv = match env.kv("GITHUB_STATS") {
-        Ok(k) => k,
-        Err(e) => {
-            console_error!("KV binding error: {e}");
-            return;
-        }
-    };
+pub async fn scheduled_handler(event: ScheduledEvent, env: Env, _ctx: ScheduleContext) {
     let token = match env.secret("GITHUB_TOKEN") {
         Ok(s) => s.to_string(),
         Err(e) => {
@@ -110,7 +94,21 @@ pub async fn scheduled_handler(_event: ScheduledEvent, env: Env, _ctx: ScheduleC
         }
     };
 
-    match fetch_from_github(&token).await {
+    match event.cron().as_str() {
+        "0 13 * * 1" => refresh_work_stats(env, &token).await,
+        _ => refresh_github_stats(env, &token).await,
+    }
+}
+
+async fn refresh_github_stats(env: Env, token: &str) {
+    let kv = match env.kv("GITHUB_STATS") {
+        Ok(k) => k,
+        Err(e) => {
+            console_error!("GITHUB_STATS KV binding error: {e}");
+            return;
+        }
+    };
+    match fetch_from_github(token).await {
         Ok(fresh) => match serde_json::to_string(&fresh) {
             Ok(json) => match kv.put("stats", json) {
                 Ok(builder) => {
@@ -125,5 +123,32 @@ pub async fn scheduled_handler(_event: ScheduledEvent, env: Env, _ctx: ScheduleC
             Err(e) => console_error!("Serialisation error: {e}"),
         },
         Err(e) => console_error!("GitHub fetch error: {e}"),
+    }
+}
+
+async fn refresh_work_stats(env: Env, token: &str) {
+    let kv = match env.kv("WORK_STATS") {
+        Ok(k) => k,
+        Err(e) => {
+            console_error!("WORK_STATS KV binding error: {e}");
+            return;
+        }
+    };
+    let fresh = fetch_work_stats(token).await;
+    match serde_json::to_string(&fresh) {
+        Ok(json) => match kv.put("work-stats", json) {
+            Ok(builder) => {
+                if let Err(e) = builder.execute().await {
+                    console_error!("KV work-stats write error: {e}");
+                } else {
+                    console_log!(
+                        "Work stats refreshed successfully ({} repos)",
+                        fresh.repos.len()
+                    );
+                }
+            }
+            Err(e) => console_error!("KV work-stats put setup error: {e}"),
+        },
+        Err(e) => console_error!("Work stats serialisation error: {e}"),
     }
 }

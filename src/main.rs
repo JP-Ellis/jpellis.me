@@ -6,6 +6,7 @@ async fn main() {
     use axum::Router;
     use jpellis_me::App;
     use jpellis_me::integration::StatsProvider;
+    use jpellis_me::integration::WorkStatsProvider;
     use jpellis_me::shell;
     use leptos::prelude::provide_context;
     use leptos_axum::LeptosRoutes;
@@ -18,13 +19,17 @@ async fn main() {
     let routes = generate_route_list(App);
 
     let token = std::env::var("GITHUB_TOKEN").unwrap_or_default();
-    let provider = StatsProvider::file(token);
+    let stats_provider = StatsProvider::file(token.clone());
+    let work_provider = WorkStatsProvider::file(token);
 
     let app = Router::new()
         .leptos_routes_with_context(
             &leptos_options,
             routes,
-            move || provide_context(provider.clone()),
+            move || {
+                provide_context(stats_provider.clone());
+                provide_context(work_provider.clone());
+            },
             {
                 let leptos_options = leptos_options.clone();
                 move || shell(leptos_options.clone())

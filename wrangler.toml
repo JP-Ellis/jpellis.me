@@ -12,7 +12,7 @@ command = "cargo leptos build --release && worker-build --release --features ssr
 directory = "./target/site"
 
 [triggers]
-crons = ["0 13 * * *"]
+crons = ["0 13 * * *", "0 13 * * 1"]
 
 # KV namespace for caching GitHub stats
 # TODO: Replace placeholder IDs with actual namespace IDs
@@ -23,6 +23,13 @@ binding = "GITHUB_STATS"
 # Run: wrangler kv namespace create GITHUB_STATS
 id = ""
 # Run: wrangler kv namespace create GITHUB_STATS --preview
+preview_id = ""
+
+[[kv_namespaces]]
+binding = "WORK_STATS"
+# Run: wrangler kv namespace create WORK_STATS
+id = ""
+# Run: wrangler kv namespace create WORK_STATS --preview
 preview_id = ""
 
 # Secret: run `wrangler secret put GITHUB_TOKEN` to set the GitHub PAT
