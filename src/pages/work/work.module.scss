@@ -1,24 +1,197 @@
-// Work page styles — filled in Task 11.
-.hero {}
-.lead {}
-.band-inner {}
-.stats-row {}
-.stat-item {}
-.stat-value {}
-.stat-label {}
-.fingerprint-row {}
-.fingerprint-tags {}
-.index-section {}
-.index-header {}
-.index-row {}
-.row-name {}
-.row-name-link {}
-.row-kind {}
-.row-summary {}
-.row-stack {}
-.row-stars {}
-.row-stars-skeleton {}
-.row-status {}
+@use '../../style/tokens/breakpoints' as *;
+@use '../../style/mixins/focus' as *;
+
+// ── Hero ─────────────────────────────────────────────────────────────────────
+
+.hero {
+    padding: var(--space-7) 0 var(--space-6);
+}
+
+.lead {
+    font-size: var(--text-lead-size);
+    line-height: var(--text-lead-leading);
+    color: var(--color-muted);
+    max-width: 52ch;
+    margin-top: var(--space-4);
+}
+
+// ── Band ─────────────────────────────────────────────────────────────────────
+
+.band-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+.stats-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-7);
+}
+
+.stat-item {
+    margin: 0;
+}
+
+.stat-value {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-style: italic;
+    font-size: var(--text-section-size);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    margin: 0;
+}
+
+.stat-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin: var(--space-1) 0 0;
+}
+
+.fingerprint-row {
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-rule);
+}
+
+.fingerprint-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+// ── Index ─────────────────────────────────────────────────────────────────────
+
+.index-section {
+    padding: var(--space-6) 0 var(--space-8);
+}
+
+.index-header {
+    display: grid;
+    grid-template-columns: minmax(140px, auto) 140px 1fr 60px 100px;
+    gap: var(--space-5);
+    padding: var(--space-3) 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    align-items: baseline;
+}
+
+.index-row {
+    display: grid;
+    grid-template-columns: minmax(140px, auto) 140px 1fr 60px 100px;
+    gap: var(--space-5);
+    padding: var(--space-5) 0;
+    align-items: baseline;
+
+    @media (max-width: $bp-sm) {
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "name   status"
+            "kind   stars"
+            "summary summary"
+            "stack  stack";
+    }
+}
+
+.row-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-body-size);
+    color: var(--color-accent);
+
+    @media (max-width: $bp-sm) {
+        grid-area: name;
+    }
+}
+
+.row-name-link {
+    text-decoration: none;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    &:focus-visible {
+        @include focus-ring;
+    }
+}
+
+.row-kind {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    color: var(--color-muted);
+
+    @media (max-width: $bp-sm) {
+        grid-area: kind;
+    }
+}
+
+.row-summary {
+    font-family: var(--font-body);
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-leading);
+    display: block;
+
+    @media (max-width: $bp-sm) {
+        grid-area: summary;
+    }
+}
+
+.row-stack {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    color: var(--color-muted);
+    margin-top: var(--space-1);
+    display: block;
+
+    @media (max-width: $bp-sm) {
+        grid-area: stack;
+    }
+}
+
+.row-stars {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    text-align: right;
+
+    @media (max-width: $bp-sm) {
+        grid-area: stars;
+        text-align: left;
+    }
+}
+
+.row-stars-skeleton {
+    display: inline-block;
+    width: 3ch;
+    height: 1em;
+    background: var(--color-faint);
+    border-radius: 2px;
+    vertical-align: middle;
+}
+
+.row-status {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    letter-spacing: 0.04em;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+
+    @media (max-width: $bp-sm) {
+        grid-area: status;
+        min-height: unset;
+    }
+}
+
 .row-status-active    { color: var(--color-accent); }
 .row-status-maintained { color: var(--color-muted); }
 .row-status-archived  { color: var(--color-muted); }
