@@ -16,9 +16,10 @@
     // components; use the semantic tokens below. Dark mode and [data-theme]
     // only change these three values.
     :root {
-        --_color-paper:  oklch(0.9593 0.0103 81.8);  // #f5f1ea
-        --_color-ink:    oklch(0.2035 0.0101 67.21); // #1a1612
-        --_color-accent: oklch(0.5497 0.1497 34.55); // #b8492f
+        --_color-paper:   oklch(0.9593 0.0103 81.8);  // #f5f1ea
+        --_color-ink:     oklch(0.2035 0.0101 67.21); // #1a1612
+        --_color-accent:  oklch(0.5497 0.1497 34.55); // #b8492f
+        --_color-warning: oklch(0.57 0.14 75);        // #a16207 dark amber — WIP status
     }
 
     // ── Semantic source tokens ─────────────────────────────────────────
@@ -26,9 +27,10 @@
     // paper ↔ ink, inverting the context without needing band-specific
     // token variants.
     :root {
-        --color-paper:  var(--_color-paper);
-        --color-ink:    var(--_color-ink);
-        --color-accent: var(--_color-accent);
+        --color-paper:   var(--_color-paper);
+        --color-ink:     var(--_color-ink);
+        --color-accent:  var(--_color-accent);
+        --color-warning: var(--_color-warning);
     }
 
     // ── Derived tokens ────────────────────────────────────────────────
@@ -53,9 +55,10 @@
     // ── Dark mode: system preference ─────────────────────────────────
     @media (prefers-color-scheme: dark) {
         :root {
-            --_color-paper:  oklch(0.2035 0.0101 67.21); // #1a1612
-            --_color-ink:    oklch(0.9593 0.0103 81.8);  // #f5f1ea
-            --_color-accent: oklch(0.6205 0.1486 33.49); // #d05f47
+            --_color-paper:   oklch(0.2035 0.0101 67.21); // #1a1612
+            --_color-ink:     oklch(0.9593 0.0103 81.8);  // #f5f1ea
+            --_color-accent:  oklch(0.6205 0.1486 33.49); // #d05f47
+            --_color-warning: oklch(0.78 0.14 75);        // lighter amber on dark bg
         }
     }
 
@@ -65,14 +68,16 @@
     // [data-theme="light"] hard-overrides back to light even if the OS
     // is in dark mode.
     [data-theme="light"] {
-        --_color-paper:  oklch(0.9593 0.0103 81.8);  // #f5f1ea
-        --_color-ink:    oklch(0.2035 0.0101 67.21); // #1a1612
-        --_color-accent: oklch(0.5497 0.1497 34.55); // #b8492f
+        --_color-paper:   oklch(0.9593 0.0103 81.8);  // #f5f1ea
+        --_color-ink:     oklch(0.2035 0.0101 67.21); // #1a1612
+        --_color-accent:  oklch(0.5497 0.1497 34.55); // #b8492f
+        --_color-warning: oklch(0.57 0.14 75);
     }
 
     [data-theme="dark"] {
-        --_color-paper:  oklch(0.2035 0.0101 67.21); // #1a1612
-        --_color-ink:    oklch(0.9593 0.0103 81.8);  // #f5f1ea
-        --_color-accent: oklch(0.6205 0.1486 33.49); // #d05f47
+        --_color-paper:   oklch(0.2035 0.0101 67.21); // #1a1612
+        --_color-ink:     oklch(0.9593 0.0103 81.8);  // #f5f1ea
+        --_color-accent:  oklch(0.6205 0.1486 33.49); // #d05f47
+        --_color-warning: oklch(0.78 0.14 75);
     }
 }
