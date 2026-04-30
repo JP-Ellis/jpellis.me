@@ -1,3 +1,7 @@
+use chrono::Datelike as _;
+use chrono::Timelike as _;
+use leptos::prelude::*;
+
 fn to_roman(n: u32) -> String {
     if n == 0 {
         return "○".to_string();
@@ -27,6 +31,60 @@ fn to_roman(n: u32) -> String {
         }
     }
     result
+}
+
+fn format_time(now: chrono::DateTime<chrono::Local>) -> String {
+    format!(
+        "{} · {} · {}",
+        to_roman(now.hour()),
+        to_roman(now.minute()),
+        to_roman(now.second()),
+    )
+}
+
+#[cfg(feature = "ssr")]
+fn server_date() -> String {
+    let now = chrono::Local::now();
+    format!(
+        "{} · {} · {}",
+        to_roman(now.day()),
+        to_roman(now.month()),
+        to_roman(now.year() as u32),
+    )
+}
+
+/// Live Roman-numeral clock, progressively enhanced.
+///
+/// Server-renders the current date as `day · month · year`.
+/// After hydration, switches to the local time as `hour · minute · second`,
+/// ticking every second.
+#[component]
+pub fn Clock() -> impl IntoView {
+    let initial = {
+        #[cfg(feature = "ssr")]
+        {
+            server_date()
+        }
+        #[cfg(not(feature = "ssr"))]
+        {
+            String::new()
+        }
+    };
+
+    let text = RwSignal::new(initial);
+
+    Effect::new(move |_| {
+        #[cfg(feature = "hydrate")]
+        {
+            text.set(format_time(chrono::Local::now()));
+            leptos::leptos_dom::helpers::set_interval(
+                move || text.set(format_time(chrono::Local::now())),
+                std::time::Duration::from_secs(1),
+            );
+        }
+    });
+
+    view! { {move || text.get()} }
 }
 
 #[cfg(test)]
