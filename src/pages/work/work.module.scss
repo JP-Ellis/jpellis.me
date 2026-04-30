@@ -1,0 +1,26 @@
+// Work page styles — filled in Task 11.
+.hero {}
+.lead {}
+.band-inner {}
+.stats-row {}
+.stat-item {}
+.stat-value {}
+.stat-label {}
+.fingerprint-row {}
+.fingerprint-tags {}
+.index-section {}
+.index-header {}
+.index-row {}
+.row-name {}
+.row-name-link {}
+.row-kind {}
+.row-summary {}
+.row-stack {}
+.row-stars {}
+.row-stars-skeleton {}
+.row-status {}
+.row-status-active    { color: var(--color-accent); }
+.row-status-maintained { color: var(--color-muted); }
+.row-status-archived  { color: var(--color-muted); }
+.row-status-shipped   { color: var(--color-ink); }
+.row-status-wip       { color: var(--color-warning); }

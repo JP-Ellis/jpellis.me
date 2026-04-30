@@ -57,6 +57,7 @@ pub fn App() -> impl IntoView {
                 <Route path=path!("") view=pages::HomePage />
                 <Route path=path!("contact") view=pages::ContactPage />
                 <Route path=path!("resume") view=pages::ResumePage />
+                <Route path=path!("work") view=pages::WorkPage />
             </Routes>
         </Router>
     }
@@ -77,6 +78,7 @@ pub fn App() -> impl IntoView {
                 <Route path=path!("") view=pages::HomePage />
                 <Route path=path!("contact") view=pages::ContactPage />
                 <Route path=path!("resume") view=pages::ResumePage />
+                <Route path=path!("work") view=pages::WorkPage />
                 <ParentRoute path=path!("__test") view=test_pages::TestLayout>
                     <Route path=path!("") view=test_pages::TestIndex />
                     <Route path=path!("masthead") view=test_pages::MastheadPage />
