@@ -17,6 +17,14 @@ use leptos::prelude::*;
 /// # Panics
 ///
 /// Panics if `n >= 4000`.
+///
+/// # Example
+///
+/// ```rust
+/// assert_eq!(to_roman(0), "○");
+/// assert_eq!(to_roman(4), "iv");
+/// assert_eq!(to_roman(2026), "mmxxvi");
+/// ```
 fn to_roman(n: u32) -> String {
     if n == 0 {
         return "○".to_string();
