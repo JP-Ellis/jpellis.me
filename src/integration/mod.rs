@@ -7,3 +7,6 @@ pub use github::stats::model::ActivityState;
 pub use github::stats::model::GitHubStats;
 pub use github::stats::provider::StatsProvider;
 pub use github::stats::server_fn::get_github_stats;
+pub use github::work::model::WorkStats;
+pub use github::work::provider::WorkStatsProvider;
+pub use github::work::server_fn::get_work_stats;
