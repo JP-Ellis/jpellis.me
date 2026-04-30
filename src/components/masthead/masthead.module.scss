@@ -6,6 +6,8 @@
     top: 0;
     z-index: var(--z-top);
     display: flex;
+    flex-wrap: wrap;
+    row-gap: var(--space-3);
     justify-content: space-between;
     align-items: baseline;
     padding-block: var(--space-5) var(--space-4);
@@ -35,7 +37,13 @@
 
 .nav {
     display: flex;
-    gap: var(--space-6);
+    gap: var(--space-3);
+    flex-wrap: wrap;
+
+    @media (min-width: $bp-md) {
+        gap: var(--space-6);
+        flex-wrap: nowrap;
+    }
 }
 
 .nav-link {

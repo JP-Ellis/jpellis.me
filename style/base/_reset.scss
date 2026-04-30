@@ -19,6 +19,9 @@
         text-size-adjust: none;
         // Smooth scrolling — disabled if reduced motion is preferred
         scroll-behavior: smooth;
+        // Clip horizontal overflow without creating a scroll container
+        // (overflow: hidden would break position: sticky; clip does not)
+        overflow-x: clip;
     }
 
     body {
