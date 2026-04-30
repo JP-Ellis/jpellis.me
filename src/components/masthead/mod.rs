@@ -2,9 +2,10 @@ use leptos::prelude::*;
 use leptos_router::hooks::use_location;
 use stylance::import_style;
 
-import_style!(style, "masthead.module.scss");
+mod clock;
+use clock::Clock;
 
-pub mod clock;
+import_style!(style, "masthead.module.scss");
 
 const NAV: &[(&str, &str)] = &[
     ("Index", "/"),
@@ -50,7 +51,9 @@ pub fn Masthead() -> impl IntoView {
                     })
                     .collect_view()}
             </nav>
-            <span class=style::volume>"vol. iii · mmxxvi"</span>
+            <span class=style::volume>
+                <Clock />
+            </span>
         </header>
     }
 }

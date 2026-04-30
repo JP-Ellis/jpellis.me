@@ -3,6 +3,20 @@ use chrono::Datelike as _;
 use chrono::Timelike as _;
 use leptos::prelude::*;
 
+/// Convert an integer to a lowercase Roman numeral string.
+///
+/// # Arguments
+///
+/// * `n` - A value in the range `0..=3999`.
+///
+/// # Returns
+///
+/// * `"○"` (U+25CB WHITE CIRCLE) when `n` is `0`.
+/// * A lowercase Roman numeral string for `1..=3999`.
+///
+/// # Panics
+///
+/// Panics if `n >= 4000`.
 fn to_roman(n: u32) -> String {
     if n == 0 {
         return "○".to_string();
