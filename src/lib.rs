@@ -9,6 +9,7 @@ use leptos_router::components::Router;
 use leptos_router::components::Routes;
 use leptos_router::path;
 
+pub mod blog;
 mod components;
 pub(crate) mod config;
 pub mod integration;
