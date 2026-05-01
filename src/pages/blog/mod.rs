@@ -47,8 +47,6 @@ pub fn BlogListPage() -> impl IntoView {
                                             {all_tags
                                                 .iter()
                                                 .map(|&tag| {
-                                                    let tag_s = tag.to_string();
-                                                    let tag_s2 = tag_s.clone();
                                                     view! {
                                                         <button
                                                             class=style::tag
@@ -56,15 +54,15 @@ pub fn BlogListPage() -> impl IntoView {
                                                             on:click=move |_| {
                                                                 set_active_tag
                                                                     .update(|t| {
-                                                                        if t.as_deref() == Some(&tag_s) {
+                                                                        if t.as_deref() == Some(tag) {
                                                                             *t = None;
                                                                         } else {
-                                                                            *t = Some(tag_s.clone());
+                                                                            *t = Some(tag.to_string());
                                                                         }
                                                                     });
                                                             }
                                                         >
-                                                            {tag_s2}
+                                                            {tag}
                                                         </button>
                                                     }
                                                 })
@@ -88,7 +86,10 @@ pub fn BlogListPage() -> impl IntoView {
                                         let source_domain = post
                                             .source
                                             .and_then(|s| {
-                                                s.splitn(3, '/').nth(2).map(|d| (d.to_string(), s))
+                                                s.splitn(3, '/')
+                                                    .nth(2)
+                                                    .map(|rest| rest.split('/').next().unwrap_or(rest))
+                                                    .map(|d| (d.to_string(), s))
                                             });
                                         view! {
                                             <div
