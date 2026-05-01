@@ -16,9 +16,15 @@ pub fn find_post(slug: &str) -> Option<&'static BlogPost> {
     POSTS.iter().find(|p| p.slug == slug)
 }
 
+pub fn source_domain(url: &str) -> Option<&str> {
+    url.splitn(3, '/')
+        .nth(2)
+        .and_then(|rest| rest.split('/').next())
+}
+
 pub fn format_date(date: &str) -> String {
     let parts: Vec<&str> = date.split('-').collect();
-    if parts.len() < 2 {
+    if parts.len() < 3 {
         return date.to_string();
     }
     let month = match parts[1] {
@@ -36,7 +42,13 @@ pub fn format_date(date: &str) -> String {
         "12" => "Dec",
         _ => parts[1],
     };
-    format!("{} {}", month, parts[0])
+    let day = parts[2].trim_start_matches('0');
+    format!(
+        "{} {} {}",
+        if day.is_empty() { "1" } else { day },
+        month,
+        parts[0]
+    )
 }
 
 #[cfg(test)]

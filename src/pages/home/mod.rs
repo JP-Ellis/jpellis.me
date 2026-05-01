@@ -2,6 +2,7 @@ use leptos::prelude::*;
 use stylance::import_style;
 
 use crate::blog::format_date;
+use crate::blog::source_domain;
 use crate::components::Footer;
 use crate::components::Masthead;
 use crate::components::YearInCode;
@@ -123,10 +124,7 @@ pub fn HomePage() -> impl IntoView {
                                     let source_domain = post
                                         .source
                                         .and_then(|s| {
-                                            s.splitn(3, '/')
-                                                .nth(2)
-                                                .map(|rest| rest.split('/').next().unwrap_or(rest))
-                                                .map(|d| (d.to_string(), s))
+                                            source_domain(s).map(|d| (d.to_string(), s))
                                         });
                                     view! {
                                         <div

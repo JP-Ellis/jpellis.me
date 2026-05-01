@@ -10,14 +10,14 @@ use toml::value::Datetime;
 fn main() {
     println!("cargo:rerun-if-changed=content/blog");
 
-    let out_dir = env::var("OUT_DIR").unwrap();
+    let out_dir = env::var("OUT_DIR").expect("OUT_DIR not set");
     let out_path = PathBuf::from(&out_dir).join("blog_posts.rs");
 
     let mut posts: Vec<Post> = collect_posts(Path::new("content/blog"));
     posts.sort_by(|a, b| b.date.cmp(&a.date));
 
     let code = generate_code(&posts);
-    fs::write(&out_path, code).unwrap();
+    fs::write(&out_path, code).expect("failed to write blog_posts.rs");
 }
 
 // ── Frontmatter ───────────────────────────────────────────────────────────
@@ -108,16 +108,46 @@ fn render_markdown(content: &str) -> String {
 
 // ── Excerpt splitting ─────────────────────────────────────────────────────
 
+fn strip_headings(html: &str) -> String {
+    let mut result = html.to_string();
+    for n in 1u8..=6 {
+        let open = format!("<h{n}");
+        let close = format!("</h{n}>");
+        while let Some(start) = result.find(&open) {
+            let after = &result[start + open.len()..];
+            if !after.starts_with(|c: char| c == '>' || c == ' ') {
+                break;
+            }
+            match result[start..].find(&close) {
+                Some(rel_end) => {
+                    let end = start + rel_end + close.len();
+                    let prefix = result[..start].trim_end().to_string();
+                    let suffix = result[end..].trim_start().to_string();
+                    result = match (prefix.is_empty(), suffix.is_empty()) {
+                        (true, _) => suffix,
+                        (_, true) => prefix,
+                        _ => format!("{prefix}\n{suffix}"),
+                    };
+                }
+                None => break,
+            }
+        }
+    }
+    result.trim().to_string()
+}
+
 fn split_excerpt(body_html: &str, description: Option<&str>) -> String {
     if let Some(pos) = body_html.find("<!-- more -->") {
-        return body_html[..pos].trim().to_string();
+        return strip_headings(body_html[..pos].trim());
     }
     if let Some(desc) = description {
         return format!("<p>{desc}</p>");
     }
     // Fall back to first <p>...</p>
-    if let Some(end) = body_html.find("</p>") {
-        return body_html[..end + 4].to_string();
+    if let Some(start) = body_html.find("<p>") {
+        if let Some(rel_end) = body_html[start..].find("</p>") {
+            return body_html[start..start + rel_end + 4].to_string();
+        }
     }
     body_html.to_string()
 }

@@ -5,8 +5,6 @@ tags = ["rust", "leptos", "web"]
 title = "Rewriting jpellis.me in Leptos"
 +++
 
-# Rewriting Jpellis.me in Leptos
-
 A placeholder for a post about this very website.
 
 <!-- more -->
