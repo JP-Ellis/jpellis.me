@@ -1,6 +1,7 @@
 use leptos::prelude::*;
 use stylance::import_style;
 
+use crate::blog::format_date;
 use crate::components::Footer;
 use crate::components::Masthead;
 use crate::components::YearInCode;
@@ -8,19 +9,6 @@ use crate::pages::work::PROJECTS;
 use crate::pages::work::ProjectLink;
 
 import_style!(style, "home.module.scss");
-
-const CROSS_POSTS: [(&str, &str, &str); 2] = [
-    (
-        "A small love letter to consumer-driven contracts",
-        "pactflow.io",
-        "Mar 2026",
-    ),
-    (
-        "Why pact-python is moving to a Rust core",
-        "pactflow.io",
-        "Nov 2025",
-    ),
-];
 
 /// Almanac home page.
 #[component]
@@ -125,31 +113,54 @@ pub fn HomePage() -> impl IntoView {
                     <div class="eyebrow-grid">
                         <span class="eyebrow">"Elsewhere"</span>
                         <div>
-                            <p class=style::elsewhere_intro>
-                                "I don't keep a blog here. The few pieces I do write live on the "
-                                <a href="https://pactflow.io/blog">"Pact"</a>
-                                " blog — they're cross-posted below."
-                            </p>
-                            {CROSS_POSTS
+                            {crate::blog::POSTS
                                 .iter()
-                                .map(|&(title, source, date)| {
+                                .take(3)
+                                .enumerate()
+                                .map(|(i, post)| {
+                                    let border = if i == 0 { "rule-section" } else { "rule-list" };
+                                    let href = format!("/blog/{}", post.slug);
+                                    let source_domain = post
+                                        .source
+                                        .and_then(|s| {
+                                            s.splitn(3, '/')
+                                                .nth(2)
+                                                .map(|rest| rest.split('/').next().unwrap_or(rest))
+                                                .map(|d| (d.to_string(), s))
+                                        });
                                     view! {
                                         <div
-                                            class=format!("{} rule-list", style::cross_post_row)
+                                            class=format!("{} {border}", style::cross_post_row)
                                             data-testid="cross-post-row"
                                         >
                                             <div>
-                                                <span class=style::cross_post_title>{title}</span>
-                                                <a href="#" class=style::cross_post_source>
-                                                    "↗ "
-                                                    {source}
+                                                <a href=href class=style::cross_post_title>
+                                                    {post.title}
                                                 </a>
+                                                {source_domain
+                                                    .map(|(domain, src)| {
+                                                        view! {
+                                                            <a
+                                                                href=src
+                                                                class=style::cross_post_source
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                            >
+                                                                "↗ "
+                                                                {domain}
+                                                            </a>
+                                                        }
+                                                    })}
                                             </div>
-                                            <span class=style::cross_post_date>{date}</span>
+                                            <span class=style::cross_post_date>
+                                                {format_date(post.date)}
+                                            </span>
                                         </div>
                                     }
                                 })
-                                .collect_view()}
+                                .collect_view()} <a href="/blog" class=style::work_all_link>
+                                "↗ All posts"
+                            </a>
                         </div>
                     </div>
                 </div>
