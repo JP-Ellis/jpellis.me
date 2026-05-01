@@ -97,11 +97,11 @@ mod tests {
 
     #[test]
     fn find_post_returns_correct_post() {
-        if let Some(first) = POSTS.first() {
-            let found = find_post(first.slug);
-            assert!(found.is_some(), "find_post failed for '{}'", first.slug);
-            assert_eq!(found.unwrap().slug, first.slug);
-        }
+        assert!(!POSTS.is_empty(), "POSTS must contain at least one post");
+        let first = POSTS.first().unwrap();
+        let found = find_post(first.slug);
+        assert!(found.is_some(), "find_post failed for '{}'", first.slug);
+        assert_eq!(found.unwrap().slug, first.slug);
     }
 
     #[test]
