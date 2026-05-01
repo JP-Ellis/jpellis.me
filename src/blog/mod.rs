@@ -38,3 +38,74 @@ pub fn format_date(date: &str) -> String {
     };
     format!("{} {}", month, parts[0])
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn posts_sorted_by_date_descending() {
+        for window in POSTS.windows(2) {
+            assert!(
+                window[0].date >= window[1].date,
+                "posts out of order: '{}' ({}) should come after '{}' ({})",
+                window[0].slug,
+                window[0].date,
+                window[1].slug,
+                window[1].date,
+            );
+        }
+    }
+
+    #[test]
+    fn all_required_fields_non_empty() {
+        for post in POSTS {
+            assert!(!post.slug.is_empty(), "empty slug");
+            assert!(!post.title.is_empty(), "empty title in '{}'", post.slug);
+            assert!(!post.date.is_empty(), "empty date in '{}'", post.slug);
+            assert!(!post.body_html.is_empty(), "empty body in '{}'", post.slug);
+            assert!(
+                !post.excerpt_html.is_empty(),
+                "empty excerpt in '{}'",
+                post.slug
+            );
+        }
+    }
+
+    #[test]
+    fn slugs_are_unique() {
+        let mut slugs: Vec<&str> = POSTS.iter().map(|p| p.slug).collect();
+        slugs.sort_unstable();
+        let before = slugs.len();
+        slugs.dedup();
+        assert_eq!(slugs.len(), before, "duplicate slugs in POSTS");
+    }
+
+    #[test]
+    fn dates_are_iso_format() {
+        for post in POSTS {
+            assert!(
+                post.date.len() == 10
+                    && post.date.chars().nth(4) == Some('-')
+                    && post.date.chars().nth(7) == Some('-'),
+                "date '{}' in '{}' is not YYYY-MM-DD",
+                post.date,
+                post.slug,
+            );
+        }
+    }
+
+    #[test]
+    fn find_post_returns_correct_post() {
+        if let Some(first) = POSTS.first() {
+            let found = find_post(first.slug);
+            assert!(found.is_some(), "find_post failed for '{}'", first.slug);
+            assert_eq!(found.unwrap().slug, first.slug);
+        }
+    }
+
+    #[test]
+    fn find_post_returns_none_for_missing_slug() {
+        assert!(find_post("this-slug-does-not-exist-xyz").is_none());
+    }
+}
