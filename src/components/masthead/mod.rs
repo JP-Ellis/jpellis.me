@@ -11,7 +11,7 @@ const NAV: &[(&str, &str)] = &[
     ("Index", "/"),
     ("Work", "/work"),
     ("Résumé", "/resume"),
-    ("Elsewhere", "/elsewhere"),
+    ("Blog", "/blog"),
     ("Contact", "/contact"),
 ];
 

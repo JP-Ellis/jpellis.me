@@ -1,8 +1,11 @@
+pub mod blog;
 pub mod contact;
 pub mod home;
 pub mod resume;
 pub mod work;
 
+pub use blog::BlogListPage;
+pub use blog::post::BlogPostPage;
 pub use contact::ContactPage;
 pub use home::HomePage;
 pub use resume::ResumePage;

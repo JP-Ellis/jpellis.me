@@ -3,7 +3,8 @@ pub mod post;
 use leptos::prelude::*;
 use stylance::import_style;
 
-use crate::blog::{format_date, POSTS};
+use crate::blog::POSTS;
+use crate::blog::format_date;
 use crate::components::Footer;
 use crate::components::Masthead;
 

@@ -15,7 +15,7 @@ import_style!(style, "blog.module.scss");
 #[component]
 pub fn BlogPostPage() -> impl IntoView {
     let params = use_params_map();
-    let post = move || params.with(|p| p.get("slug").and_then(|s| find_post(s)));
+    let post = move || params.with(|p| p.get("slug").as_deref().and_then(find_post));
 
     view! {
         {move || match post() {
