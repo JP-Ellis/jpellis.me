@@ -1,0 +1,39 @@
+// Prose container — applied to rendered Markdown injected via inner_html.
+// Contains only deviations from base/_typography.scss needed for long-form content.
+// Must be a global (non-scoped) class because Stylance scoping cannot reach
+// inner_html-injected nodes.
+@layer components {
+    .prose {
+        a {
+            color: var(--color-accent);
+        }
+
+        blockquote {
+            border-left: 3px solid var(--color-rule);
+            padding-left: var(--space-4);
+            color: var(--color-muted);
+            margin-inline: 0;
+        }
+
+        ul, ol {
+            padding-left: var(--space-6);
+            margin-bottom: var(--space-4);
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: var(--space-4);
+
+            th, td {
+                border: 1px solid var(--color-rule);
+                padding: var(--space-2) var(--space-3);
+                text-align: left;
+            }
+
+            th {
+                background: var(--color-panel);
+            }
+        }
+    }
+}

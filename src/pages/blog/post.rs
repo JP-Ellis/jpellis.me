@@ -1,12 +1,15 @@
 use leptos::prelude::*;
 use leptos_meta::Link;
 use leptos_meta::Meta;
+use leptos_meta::Script;
+use leptos_meta::Stylesheet;
 use leptos_meta::Title;
 use leptos_router::hooks::use_params_map;
 use stylance::import_style;
 
 use crate::blog::find_post;
 use crate::blog::format_date;
+use crate::blog::source_domain;
 use crate::components::Footer;
 use crate::components::Masthead;
 
@@ -54,21 +57,41 @@ pub fn BlogPostPage() -> impl IntoView {
                 let desc = p.description.unwrap_or("");
 
                 view! {
+                    <Stylesheet href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+                    <Script
+                        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"
+                        defer=""
+                    />
+                    <Script
+                        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-rust.min.js"
+                        defer=""
+                    />
+                    <Script
+                        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"
+                        defer=""
+                    />
+                    <Script
+                        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"
+                        defer=""
+                    />
+                    <Script
+                        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-toml.min.js"
+                        defer=""
+                    />
                     <Title text=p.title />
                     <Meta name="description" content=desc />
                     {p.source.map(|src| view! { <Link rel="canonical" href=src /> })}
                     <Masthead />
                     <main>
                         <article class=style::article>
-                            <div class="container">
+                            <div class="container container--prose">
+                                <a href="/blog" class=style::back_link>
+                                    "← All posts"
+                                </a>
                                 {p
                                     .source
                                     .map(|src| {
-                                        let domain = src
-                                            .splitn(3, '/')
-                                            .nth(2)
-                                            .map(|rest| rest.split('/').next().unwrap_or(rest))
-                                            .unwrap_or(src);
+                                        let domain = source_domain(src).unwrap_or(src);
                                         view! {
                                             <p class=style::crosspost_banner>
                                                 "Originally published on "
@@ -77,7 +100,8 @@ pub fn BlogPostPage() -> impl IntoView {
                                                 </a>
                                             </p>
                                         }
-                                    })} <header class=style::post_header>
+                                    })}
+                                <header class=style::post_header>
                                     <h1 class=style::post_heading>{p.title}</h1>
                                     <div class=style::post_meta>
                                         <time datetime=p.date>{format_date(p.date)}</time>
@@ -89,13 +113,14 @@ pub fn BlogPostPage() -> impl IntoView {
                                                         .tags
                                                         .iter()
                                                         .map(|&t| {
-                                                            view! { <span class=style::tag>{t}</span> }
+                                                            view! { <span class="tag tag--hash">{t}</span> }
                                                         })
                                                         .collect_view()}
                                                 }
                                             })}
                                     </div>
-                                </header> <div class=style::prose inner_html=p.body_html />
+                                </header>
+                                <div class="prose" inner_html=p.body_html />
                             </div>
                         </article>
                     </main>

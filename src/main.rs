@@ -1,3 +1,4 @@
+#![recursion_limit = "256"]
 // Native (Axum) SSR entry point.  Not compiled for WASM targets — CF Workers
 // uses `workers.rs` (`#[event(fetch)]`) as its entry point instead.
 #[cfg(all(feature = "ssr", not(target_arch = "wasm32")))]

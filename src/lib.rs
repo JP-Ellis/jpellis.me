@@ -1,3 +1,4 @@
+#![recursion_limit = "256"]
 use leptos::prelude::*;
 #[cfg(feature = "ssr")]
 use leptos_meta::MetaTags;
@@ -34,30 +35,6 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                 <link
                     href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..700;1,9..144,100..600&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&family=Fira+Code:wght@300;400;500;600&display=swap"
                     rel="stylesheet"
-                />
-                <link
-                    rel="stylesheet"
-                    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
-                />
-                <script
-                    src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"
-                    defer=true
-                />
-                <script
-                    src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-rust.min.js"
-                    defer=true
-                />
-                <script
-                    src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"
-                    defer=true
-                />
-                <script
-                    src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"
-                    defer=true
-                />
-                <script
-                    src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-toml.min.js"
-                    defer=true
                 />
                 <AutoReload options=options.clone() />
                 <HydrationScripts options />

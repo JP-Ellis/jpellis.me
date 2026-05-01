@@ -37,9 +37,28 @@
         border-color: var(--color-accent-soft);
     }
 
+    // Reset browser-default button chrome so <button class="tag …"> renders
+    // identically to <span class="tag …">.
+    button.tag {
+        appearance: none;
+        background: transparent;
+        cursor: pointer;
+    }
+
+    // Prevent the browser's :visited colour from overriding tag text colour
+    // (applies when filter links like /blog?tag=rust have been visited before).
+    a.tag:visited {
+        color: var(--color-ink);
+    }
+
+    a.tag.tag--accent:visited {
+        color: var(--color-accent);
+    }
+
     // Hover: background shift only — no colour or border change (spec §8 motion)
     .tag:hover,
-    a.tag:hover {
+    a.tag:hover,
+    button.tag:hover {
         background-color: var(--color-faint);
     }
 }

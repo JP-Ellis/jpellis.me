@@ -1,5 +1,32 @@
-.blog_section {
-  padding-block: var(--space-16) var(--space-32);
+@use '../../style/mixins/focus' as *;
+
+// ── Hero ──────────────────────────────────────────────────────────────────────
+
+.hero {
+  padding: var(--space-7) 0 var(--space-6);
+}
+
+// ── Band: filters ─────────────────────────────────────────────────────────────
+
+.filter_band {
+  padding-block: var(--space-3);
+}
+
+.filter_row {
+  padding-block: var(--space-4);
+}
+
+.filter_tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+// ── Posts section ─────────────────────────────────────────────────────────────
+
+.posts_section {
+  padding-block: var(--space-7) var(--space-8);
 }
 
 .post_row {
@@ -10,29 +37,33 @@
 }
 
 .post_title {
-  font-family: var(--font-serif);
-  font-size: var(--text-lg);
-  color: var(--color-text-primary);
+  font-size: var(--text-lead-size);
+  color: var(--color-ink);
   text-decoration: none;
 
   &:hover {
     text-decoration: underline;
+    color: var(--color-accent);
+  }
+
+  &:focus-visible {
+    @include focus-ring(2px);
   }
 }
 
 .post_date {
-  font-size: var(--text-sm);
-  color: var(--color-text-secondary);
+  font-size: var(--text-meta-size);
+  color: var(--color-muted);
   white-space: nowrap;
   align-self: start;
 }
 
 .post_excerpt {
   grid-column: 1 / -1;
-  font-size: var(--text-sm);
-  color: var(--color-text-secondary);
+  color: var(--color-muted);
 
   p { margin: 0; }
+  h1, h2, h3, h4, h5, h6 { display: none; }
 }
 
 .post_tags {
@@ -42,113 +73,60 @@
   gap: var(--space-2);
 }
 
-.tag {
-  font-size: var(--text-xs);
-  padding: var(--space-1) var(--space-2);
-  border: 1px solid var(--color-border);
-  border-radius: 2px;
-  cursor: pointer;
-  background: transparent;
-  color: var(--color-text-secondary);
-
-  &:hover,
-  &[data-active="true"] {
-    background: var(--color-accent);
-    color: var(--color-bg);
-    border-color: var(--color-accent);
-  }
-}
-
 .crosspost_source {
-  font-size: var(--text-sm);
-  color: var(--color-text-secondary);
+  grid-column: 1 / -1;
+  font-size: var(--text-meta-size);
+  color: var(--color-muted);
   text-decoration: none;
 
-  &:hover { text-decoration: underline; }
+  &:hover {
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    @include focus-ring(2px);
+  }
 }
 
 // ── Post page ──────────────────────────────────────────────────────────────
 
 .article {
-  padding-block: var(--space-16) var(--space-32);
+  padding-block: var(--space-7) var(--space-8);
+}
+
+.back_link {
+  display: inline-block;
+  margin-bottom: var(--space-5);
+  font-size: var(--text-meta-size);
+
+  &:focus-visible {
+    @include focus-ring(2px);
+  }
 }
 
 .crosspost_banner {
-  font-size: var(--text-sm);
-  color: var(--color-text-secondary);
-  margin-bottom: var(--space-8);
+  font-size: var(--text-meta-size);
+  color: var(--color-muted);
+  margin-bottom: var(--space-5);
   padding: var(--space-3) var(--space-4);
   border-left: 3px solid var(--color-accent);
 }
 
 .post_header {
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-6);
 }
 
 .post_heading {
-  font-family: var(--font-serif);
-  font-size: var(--text-4xl);
+  font-size: var(--text-section-size);
   margin-bottom: var(--space-2);
 }
 
 .post_meta {
-  font-size: var(--text-sm);
-  color: var(--color-text-secondary);
+  font-size: var(--text-meta-size);
+  color: var(--color-muted);
   display: flex;
   gap: var(--space-4);
   align-items: center;
   flex-wrap: wrap;
-}
-
-.prose {
-  max-width: 72ch;
-
-  h1, h2, h3, h4 {
-    font-family: var(--font-serif);
-    margin-top: var(--space-8);
-    margin-bottom: var(--space-3);
-  }
-
-  p { margin-bottom: var(--space-4); }
-
-  pre {
-    background: var(--color-surface);
-    padding: var(--space-4);
-    border-radius: 4px;
-    overflow-x: auto;
-    margin-bottom: var(--space-4);
-  }
-
-  code {
-    font-family: var(--font-mono);
-    font-size: 0.875em;
-  }
-
-  a {
-    color: var(--color-accent);
-    text-decoration: underline;
-  }
-
-  blockquote {
-    border-left: 3px solid var(--color-border);
-    padding-left: var(--space-4);
-    color: var(--color-text-secondary);
-    margin-inline: 0;
-  }
-
-  ul, ol { padding-left: var(--space-6); margin-bottom: var(--space-4); }
-
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom: var(--space-4);
-
-    th, td {
-      border: 1px solid var(--color-border);
-      padding: var(--space-2) var(--space-3);
-      text-align: left;
-    }
-
-    th { background: var(--color-surface); }
-  }
 }

@@ -115,7 +115,7 @@ fn strip_headings(html: &str) -> String {
         let close = format!("</h{n}>");
         while let Some(start) = result.find(&open) {
             let after = &result[start + open.len()..];
-            if !after.starts_with(|c: char| c == '>' || c == ' ') {
+            if !after.starts_with(['>', ' ']) {
                 break;
             }
             match result[start..].find(&close) {
@@ -144,10 +144,10 @@ fn split_excerpt(body_html: &str, description: Option<&str>) -> String {
         return format!("<p>{desc}</p>");
     }
     // Fall back to first <p>...</p>
-    if let Some(start) = body_html.find("<p>") {
-        if let Some(rel_end) = body_html[start..].find("</p>") {
-            return body_html[start..start + rel_end + 4].to_string();
-        }
+    if let Some(start) = body_html.find("<p>")
+        && let Some(rel_end) = body_html[start..].find("</p>")
+    {
+        return body_html[start..start + rel_end + 4].to_string();
     }
     body_html.to_string()
 }
