@@ -2,7 +2,6 @@ use leptos::prelude::*;
 use leptos_meta::Link;
 use leptos_meta::Meta;
 use leptos_meta::Script;
-use leptos_meta::Stylesheet;
 use leptos_meta::Title;
 use leptos_router::hooks::use_params_map;
 use stylance::import_style;
@@ -57,7 +56,6 @@ pub fn BlogPostPage() -> impl IntoView {
                 let desc = p.description.unwrap_or("");
 
                 view! {
-                    <Stylesheet href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
                     <Script
                         src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"
                         defer=""

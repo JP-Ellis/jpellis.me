@@ -1,0 +1,237 @@
+// Prism syntax highlighting — prism-almanac theme adapted for jpellis.me.
+//
+// Dark mode follows the project's two mechanisms:
+//   @media (prefers-color-scheme: dark)   — system preference
+//   [data-theme="dark"]                   — manual JS toggle
+//
+// Semantic --color-* tokens auto-adapt through the token cascade; only
+// the values with no project-level equivalent (string vs keyword distinction,
+// warm-ochre numbers, dusty-sage builtins) need explicit dark overrides.
+@layer components {
+    :root {
+        // H≈82  golden-amber  — clearly separates strings from rust keywords (H≈34)
+        --prism-string:    oklch(0.46 0.14 82);
+        --prism-subtle:    oklch(from var(--color-ink) l c h / 65%);
+        // H≈62  ochre         — adjacent to golden strings but distinct
+        --prism-number:    oklch(0.50 0.15 62);
+        --prism-builtin:   oklch(0.44 0.12 148);   // H≈148 sage-green
+        --prism-function:  oklch(0.50 0.13 255);   // H≈255 indigo-blue, lighter for visibility on paper
+        --prism-selection: oklch(from var(--color-accent) l c h / 18%);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --prism-string:    oklch(0.82 0.16 82);  // vivid golden on dark bg
+            --prism-number:    oklch(0.84 0.16 62);  // vivid ochre, distinct from golden strings
+            --prism-builtin:   oklch(0.78 0.13 148); // vivid mint-sage
+            --prism-function:  oklch(0.78 0.11 255); // soft cornflower
+            --prism-selection: oklch(0.82 0.16 82 / 22%);
+        }
+    }
+
+    [data-theme="dark"] {
+        --prism-string:    oklch(0.82 0.16 82);
+        --prism-number:    oklch(0.84 0.16 62);
+        --prism-builtin:   oklch(0.78 0.13 148);
+        --prism-function:  oklch(0.78 0.11 255);
+        --prism-selection: oklch(0.82 0.16 82 / 22%);
+    }
+
+    // ── Block and inline containers ───────────────────────────────────────
+
+    code[class*="language-"],
+    pre[class*="language-"] {
+        font-family: var(--font-mono);
+        font-size: 0.9em;
+        font-feature-settings: "calt" 1, "liga" 1;
+        font-variant-ligatures: contextual;
+        font-weight: 400;
+        line-height: 1.65;
+        color: var(--color-ink);
+        background: none;
+        text-align: left;
+        text-shadow: none;
+        white-space: pre;
+        word-spacing: normal;
+        word-break: normal;
+        word-wrap: normal;
+        tab-size: 4;
+        hyphens: none;
+        direction: ltr;
+    }
+
+    pre[class*="language-"] {
+        margin: 1.6em 0;
+        padding: 1.25em 1.4em;
+        overflow: auto;
+        background: var(--color-paper-deep);
+        border: 1px solid var(--color-rule);
+        border-radius: 2px;
+        box-shadow: none;
+    }
+
+    :not(pre) > code[class*="language-"],
+    :not(pre) > code {
+        padding: 0.12em 0.4em;
+        background: var(--color-faint);
+        border: 1px solid var(--color-rule);
+        border-radius: 2px;
+        font-size: 0.92em;
+        color: var(--color-ink);
+        white-space: nowrap;
+    }
+
+    pre[class*="language-"] ::selection,
+    code[class*="language-"] ::selection,
+    pre[class*="language-"]::selection,
+    code[class*="language-"]::selection {
+        background: var(--prism-selection);
+        text-shadow: none;
+    }
+
+    // ── Token colours ─────────────────────────────────────────────────────
+
+    .token.comment,
+    .token.prolog,
+    .token.cdata,
+    .token.block-comment {
+        color: var(--color-muted);
+        font-style: italic;
+    }
+
+    .token.doctype,
+    .token.punctuation,
+    .token.operator,
+    .token.entity {
+        color: var(--prism-subtle);
+    }
+
+    .token.namespace { opacity: 0.7; }
+
+    .token.property,
+    .token.tag,
+    .token.boolean,
+    .token.symbol,
+    .token.constant,
+    .token.deleted {
+        color: var(--color-accent);
+    }
+
+    .token.number {
+        color: var(--prism-number);
+    }
+
+    .token.selector,
+    .token.attr-name,
+    .token.char,
+    .token.builtin,
+    .token.class-name,
+    .token.maybe-class-name,
+    .token.inserted {
+        color: var(--prism-builtin);
+    }
+
+    .token.string,
+    .token.url,
+    .token.attr-value,
+    .token.regex {
+        color: var(--prism-string);
+    }
+
+    .token.atrule,
+    .token.keyword,
+    .token.important {
+        color: var(--color-accent);
+        font-weight: 500;
+    }
+
+    .token.function,
+    .token.function-name {
+        color: var(--prism-function);
+        font-weight: 500;
+    }
+
+    .token.variable,
+    .token.parameter {
+        color: var(--color-ink);
+    }
+
+    // CSS strings are .token.string inside a .language-css context; ensure they
+    // don't pick up any theme bleed from Prism's own base styles.
+    .language-css .token.string,
+    .style .token.string {
+        color: var(--prism-string);
+    }
+
+    .token.bold      { font-weight: 600; }
+    .token.italic    { font-style: italic; }
+    .token.entity    { cursor: help; }
+
+    // ── line-numbers plugin ───────────────────────────────────────────────
+
+    pre[class*="language-"].line-numbers {
+        position: relative;
+        padding-left: 3.6em;
+        counter-reset: linenumber;
+    }
+
+    pre[class*="language-"].line-numbers > code {
+        position: relative;
+        white-space: inherit;
+    }
+
+    .line-numbers .line-numbers-rows {
+        position: absolute;
+        pointer-events: none;
+        top: 1.25em;
+        left: 0;
+        width: 2.8em;
+        letter-spacing: 0;
+        border-right: 1px solid var(--color-rule);
+        user-select: none;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .line-numbers-rows > span {
+        display: block;
+        counter-increment: linenumber;
+        pointer-events: none;
+    }
+
+    .line-numbers-rows > span::before {
+        content: counter(linenumber);
+        color: var(--color-muted);
+        display: block;
+        padding-right: 0.9em;
+        text-align: right;
+    }
+
+    // ── line-highlight plugin ─────────────────────────────────────────────
+
+    pre[class*="language-"][data-line] {
+        padding-top: 0;
+        padding-bottom: 0;
+        padding-left: 0;
+    }
+
+    pre[data-line] code {
+        position: relative;
+        padding-left: 4em;
+    }
+
+    .line-highlight {
+        background: oklch(from var(--color-accent) l c h / 8%);
+        border-left: 2px solid var(--color-accent);
+        margin-top: 0;
+    }
+
+    // ── diff-highlight plugin ─────────────────────────────────────────────
+
+    pre.diff-highlight > code .token.deleted:not(.prefix) {
+        background-color: oklch(from var(--color-accent) l c h / 10%);
+    }
+
+    pre.diff-highlight > code .token.inserted:not(.prefix) {
+        background-color: oklch(0.42 0.09 152 / 10%);
+    }
+}
