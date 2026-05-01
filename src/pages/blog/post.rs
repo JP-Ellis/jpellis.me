@@ -12,10 +12,26 @@ use crate::components::Masthead;
 
 import_style!(style, "blog.module.scss");
 
+#[cfg(target_arch = "wasm32")]
+mod prism {
+    use wasm_bindgen::prelude::wasm_bindgen;
+    #[wasm_bindgen(
+        inline_js = "export function highlight_all() { if (typeof Prism !== 'undefined') { Prism.highlightAll(); } }"
+    )]
+    extern "C" {
+        pub fn highlight_all();
+    }
+}
+
 #[component]
 pub fn BlogPostPage() -> impl IntoView {
     let params = use_params_map();
     let post = move || params.with(|p| p.get("slug").as_deref().and_then(find_post));
+
+    #[cfg(target_arch = "wasm32")]
+    Effect::new(|_| {
+        prism::highlight_all();
+    });
 
     view! {
         {move || match post() {

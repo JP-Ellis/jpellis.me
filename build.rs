@@ -154,7 +154,7 @@ fn visit_dir(dir: &Path, posts: &mut Vec<Post>) {
             if let Some(post) = process_file(&path) {
                 posts.push(post);
             } else {
-                eprintln!("cargo:warning=Skipped (parse error): {}", path.display());
+                println!("cargo:warning=Skipped (parse error): {}", path.display());
             }
         }
     }

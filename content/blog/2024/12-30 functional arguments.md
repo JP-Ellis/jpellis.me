@@ -133,7 +133,7 @@ This snippet showcases a way to set up the provider state with a function that i
 
 - If teardowns are never required, then one should specify `teardown=False` in which case the `action` parameter can be omitted from the signature of the callback function. This is useful when the provider state does not require any cleanup after the test has run.
 
-    /// details | Example
+  /// details | Example
 
     ```python
     from pact import Verifier
@@ -149,11 +149,11 @@ This snippet showcases a way to set up the provider state with a function that i
         verifier.state_handler(provider_state_callback, teardown=False)
     ```
 
-    ///
+  ///
 
 - A mapping can be provided to the `state_handler` method with keys as the provider state names and values as the function to call. This can help to keep the code organized and to avoid a large number of `if` statements in the callback function.
 
-    /// details | Example
+  /// details | Example
 
     ```python
     from pact import Verifier
@@ -180,11 +180,11 @@ This snippet showcases a way to set up the provider state with a function that i
         )
     ```
 
-    ///
+  ///
 
 - Both scenarios can be combined, in which a mapping of provide state names to functions is provided, and the `teardown=False` option is specified. In this case, the function should expect only one argument: the `parameters` dictionary (which itself may be `None`).
 
-    /// details | Example
+  /// details | Example
 
     ```python
     from pact import Verifier
@@ -210,7 +210,7 @@ This snippet showcases a way to set up the provider state with a function that i
         )
     ```
 
-    ///
+  ///
 
 ## Functional Message Producer
 

@@ -40,7 +40,7 @@ test.describe("Home page", () => {
     await expect(work).toContainText("boltzmann-solver");
   });
 
-  test("Elsewhere shows 2 cross-post rows", async ({ page }) => {
-    await expect(page.locator("[data-testid='cross-post-row']")).toHaveCount(2);
+  test("Elsewhere shows 3 cross-post rows", async ({ page }) => {
+    await expect(page.locator("[data-testid='cross-post-row']")).toHaveCount(3);
   });
 });
