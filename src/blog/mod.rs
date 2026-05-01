@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub struct BlogPost {
     pub slug: &'static str,
     pub title: &'static str,
