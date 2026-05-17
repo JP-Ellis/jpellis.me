@@ -102,8 +102,8 @@ importers:
         specifier: 3.17.1
         version: 3.17.1(eslint@10.3.0(jiti@1.21.7))(svelte@5.55.7(@typescript-eslint/types@8.59.2))(ts-node@10.9.2(@types/node@24.12.2)(typescript@6.0.3))
       flowbite:
-        specifier: 4.0.1
-        version: 4.0.1(rollup@4.60.3)
+        specifier: 4.0.2
+        version: 4.0.2(rollup@4.60.3)
       flowbite-svelte:
         specifier: 1.33.1
         version: 1.33.1(rollup@4.60.3)(svelte@5.55.7(@typescript-eslint/types@8.59.2))(tailwindcss@3.4.19)
@@ -2075,8 +2075,8 @@ packages:
   flowbite@3.1.2:
     resolution: {integrity: sha512-MkwSgbbybCYgMC+go6Da5idEKUFfMqc/AmSjm/2ZbdmvoKf5frLPq/eIhXc9P+rC8t9boZtUXzHDgt5whZ6A/Q==}
 
-  flowbite@4.0.1:
-    resolution: {integrity: sha512-UwUjvnqrQTiFm3uMJ0WWnzKXKoDyNyfyEzoNnxmZo6KyDzCedjqZw1UW0Oqdn+E0iYVdPu0fizydJN6e4pP9Rw==}
+  flowbite@4.0.2:
+    resolution: {integrity: sha512-TxBdfZpd3HktHH4ashiYjirrSZeVPtG1OCRZMKTeXUa9FOlMxSF98zgjMB/AxE49KZ+rlfgWynAlaNpWxrqZmA==}
 
   foreground-child@3.3.1:
     resolution: {integrity: sha512-gIXjKqtFuWEgzFRJA9WCQeSJLZDjgJUOMCMzxtvFq/37KojM1BFGufqsCy0r4qSQmYLsZYMeyRqzIWOMup03sw==}
@@ -4888,7 +4888,7 @@ snapshots:
     transitivePeerDependencies:
       - rollup
 
-  flowbite@4.0.1(rollup@4.60.3):
+  flowbite@4.0.2(rollup@4.60.3):
     dependencies:
       '@popperjs/core': 2.11.8
       flowbite-datepicker: 2.0.0(rollup@4.60.3)
