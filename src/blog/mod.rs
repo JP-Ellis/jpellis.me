@@ -120,4 +120,31 @@ mod tests {
     fn find_post_returns_none_for_missing_slug() {
         assert!(find_post("this-slug-does-not-exist-xyz").is_none());
     }
+
+    #[test]
+    fn pymdownx_tabs_render_correctly() {
+        let post = find_post("functional-arguments").expect("functional-arguments post not found");
+        assert!(
+            post.body_html.contains(r#"<div class="tabs">"#),
+            "Expected tab groups in body_html — first 300 chars: {}",
+            &post.body_html[..300.min(post.body_html.len())]
+        );
+        assert!(
+            !post.body_html.contains("<p>/// tab"),
+            "Raw /// tab markers must not appear in rendered body_html"
+        );
+    }
+
+    #[test]
+    fn pymdownx_details_render_correctly() {
+        let post = find_post("functional-arguments").expect("functional-arguments post not found");
+        assert!(
+            post.body_html.contains("<details>"),
+            "Expected <details> elements in body_html"
+        );
+        assert!(
+            !post.body_html.contains("<p>/// details"),
+            "Raw /// details markers must not appear in rendered body_html"
+        );
+    }
 }
