@@ -48,13 +48,13 @@ src/components/<name>/
 
 Lowest → highest priority: `reset, tokens, base, components, utilities`
 
-| Belongs in          | When                                                |
+| Belongs in | When |
 | ------------------- | --------------------------------------------------- |
-| `tokens`            | Defining a CSS custom property; nothing else        |
-| `base`              | Styling a bare HTML element (no class needed)       |
-| `components`        | A reusable named pattern used across multiple pages |
-| `utilities`         | A single-purpose helper class (`.sr-only`)          |
-| `style.module.scss` | Visual rules specific to one Leptos component       |
+| `tokens` | Defining a CSS custom property; nothing else |
+| `base` | Styling a bare HTML element (no class needed) |
+| `components` | A reusable named pattern used across multiple pages |
+| `utilities` | A single-purpose helper class (`.sr-only`) |
+| `style.module.scss` | Visual rules specific to one Leptos component |
 
 ## 3. Using Tokens in Components
 
@@ -62,17 +62,17 @@ Lowest → highest priority: `reset, tokens, base, components, utilities`
 
 Three source tokens drive everything: `--color-paper` (background), `--color-ink` (foreground), `--color-accent` (brand). Use the derived tokens for softer treatments:
 
-| Token                 | Use for                         |
+| Token | Use for |
 | --------------------- | ------------------------------- |
-| `--color-paper`       | page / card background          |
-| `--color-paper-deep`  | slightly sunken surface         |
-| `--color-panel`       | slightly raised surface         |
-| `--color-ink`         | primary text, borders, icons    |
-| `--color-muted`       | secondary text, placeholders    |
-| `--color-faint`       | hover backgrounds, subtle fills |
-| `--color-rule`        | hairline borders                |
-| `--color-accent`      | interactive elements, emphasis  |
-| `--color-accent-soft` | accent fills, tag borders       |
+| `--color-paper` | page / card background |
+| `--color-paper-deep` | slightly sunken surface |
+| `--color-panel` | slightly raised surface |
+| `--color-ink` | primary text, borders, icons |
+| `--color-muted` | secondary text, placeholders |
+| `--color-faint` | hover backgrounds, subtle fills |
+| `--color-rule` | hairline borders |
+| `--color-accent` | interactive elements, emphasis |
+| `--color-accent-soft` | accent fills, tag borders |
 
 Inside a `.band`, the three source tokens (`--color-paper`, `--color-ink`, `--color-accent`) are locally reassigned to invert the contrast. All derived tokens update automatically. **Components rendered inside a band require no changes** — they continue to use `--color-ink`, `--color-muted`, `--color-faint`, `--color-rule`, etc. and the correct inverted values cascade in.
 
@@ -95,15 +95,15 @@ All `padding`, `margin`, and `gap` values must use a `--space-*` token (4 px bas
 
 The type ramp maps font roles to HTML elements. Components do not re-specify font families or sizes for standard elements — base handles those. Only set what deviates:
 
-| Token group        | Maps to              | Font                |
+| Token group | Maps to | Font |
 | ------------------ | -------------------- | ------------------- |
-| `--text-display-*` | h1                   | Fraunces 300        |
-| `--text-section-*` | h2                   | Fraunces 400        |
-| `--text-title-*`   | h3                   | Newsreader 500      |
-| `--text-lead-*`    | intro prose          | Newsreader          |
-| `--text-body-*`    | body                 | Newsreader          |
-| `--text-meta-*`    | timestamps, captions | Fira Code           |
-| `--text-eyebrow-*` | labels, tags         | Fira Code uppercase |
+| `--text-display-*` | h1 | Fraunces 300 |
+| `--text-section-*` | h2 | Fraunces 400 |
+| `--text-title-*` | h3 | Newsreader 500 |
+| `--text-lead-*` | intro prose | Newsreader |
+| `--text-body-*` | body | Newsreader |
+| `--text-meta-*` | timestamps, captions | Fira Code |
+| `--text-eyebrow-*` | labels, tags | Fira Code uppercase |
 
 ### Layout and Z-Index
 
@@ -115,19 +115,19 @@ Always use a `--z-*` token for `z-index` — never a raw integer.
 
 These classes are available everywhere. Do not re-implement them in a module.
 
-| Class               | Purpose                                                                                              |
+| Class | Purpose |
 | ------------------- | ---------------------------------------------------------------------------------------------------- |
-| `.container`        | Centred wrapper, responsive gutters, max-width `--width-index`                                       |
-| `.container--prose` | Same but max-width `--width-prose`                                                                   |
-| `.eyebrow-grid`     | Two-column label + content grid; stacks on mobile                                                    |
-| `.eyebrow`          | Fira Code uppercase label in `--color-accent`                                                        |
-| `.eyebrow--muted`   | Same but `--color-muted` (dates, locations)                                                          |
-| `.rule-section`     | 1 px `--color-ink` hairline between major sections                                                   |
-| `.rule-list`        | 1 px `--color-faint` hairline between list items                                                     |
-| `.tag`              | Base pill/chip; combine with `--pill`, `--hash`, `--accent`                                          |
-| `.band`             | Full-bleed contrast section; locally inverts colour tokens so children need no band-specific changes |
-| `.btn`              | Monospace bordered button or link; inherits inverted tokens automatically inside `.band`             |
-| `.sr-only`          | Visually hidden, accessible to screen readers                                                        |
+| `.container` | Centred wrapper, responsive gutters, max-width `--width-index` |
+| `.container--prose` | Same but max-width `--width-prose` |
+| `.eyebrow-grid` | Two-column label + content grid; stacks on mobile |
+| `.eyebrow` | Fira Code uppercase label in `--color-accent` |
+| `.eyebrow--muted` | Same but `--color-muted` (dates, locations) |
+| `.rule-section` | 1 px `--color-ink` hairline between major sections |
+| `.rule-list` | 1 px `--color-faint` hairline between list items |
+| `.tag` | Base pill/chip; combine with `--pill`, `--hash`, `--accent` |
+| `.band` | Full-bleed contrast section; locally inverts colour tokens so children need no band-specific changes |
+| `.btn` | Monospace bordered button or link; inherits inverted tokens automatically inside `.band` |
+| `.sr-only` | Visually hidden, accessible to screen readers |
 
 ## 5. Writing a Component Module
 
@@ -240,12 +240,12 @@ Every page must be fully usable with JavaScript disabled. Leptos SSR guarantees 
 
 **Test:** disable JS. Every page must show all content, have working `<a>`-based navigation, and render correctly styled.
 
-| Behaviour            | Without JS                     | With JS                                |
+| Behaviour | Without JS | With JS |
 | -------------------- | ------------------------------ | -------------------------------------- |
-| Dark mode            | `prefers-color-scheme` applies | Manual toggle sets `data-theme` cookie |
-| Tag filtering        | All posts shown                | Client-side reactive filtering         |
-| Page transitions     | Normal browser navigation      | View Transitions API crossfade         |
-| Masthead italic word | Server picks a random word     | — (server-side only)                   |
+| Dark mode | `prefers-color-scheme` applies | Manual toggle sets `data-theme` cookie |
+| Tag filtering | All posts shown | Client-side reactive filtering |
+| Page transitions | Normal browser navigation | View Transitions API crossfade |
+| Masthead italic word | Server picks a random word | — (server-side only) |
 
 ### Leptos Rules
 
