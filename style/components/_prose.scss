@@ -4,10 +4,6 @@
 // inner_html-injected nodes.
 @layer components {
     .prose {
-        a {
-            color: var(--color-accent);
-        }
-
         blockquote {
             border-left: 3px solid var(--color-rule);
             padding-left: var(--space-4);

@@ -166,16 +166,16 @@ fn render_tab_group(tabs: &[(String, String)], counter: &mut usize) -> String {
     out.push_str("<div class=\"tabs\">\n");
     for (i, _) in tabs.iter().enumerate() {
         let checked = if i == 0 { " checked" } else { "" };
-        write!(
+        writeln!(
             out,
             "<input class=\"tab-radio\" type=\"radio\" \
-             name=\"tabs-{g}\" id=\"tab-{g}-{i}\"{checked}>\n"
+             name=\"tabs-{g}\" id=\"tab-{g}-{i}\"{checked}>"
         )
         .expect("writing to String is infallible");
     }
     out.push_str("<div class=\"tab-bar\">\n");
     for (i, (title, _)) in tabs.iter().enumerate() {
-        write!(out, "<label for=\"tab-{g}-{i}\">{title}</label>\n")
+        writeln!(out, "<label for=\"tab-{g}-{i}\">{title}</label>")
             .expect("writing to String is infallible");
     }
     out.push_str("</div>\n");
