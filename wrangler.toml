@@ -1,4 +1,4 @@
-#:schema https://json.schemastore.org/wranglerv3.json
+#:schema https://www.unpkg.com/wrangler/config-schema.json
 
 name = "jpellis-me"
 main = "build/index.js"
