@@ -45,12 +45,12 @@ impl StatsProvider {
 
     /// Creates a KV-backed provider for CF Workers production.
     #[cfg(all(target_arch = "wasm32", feature = "ssr"))]
-    pub fn kv(kv: worker::kv::KvStore, ctx: worker::Context, token: String) -> Self {
-        Self::Kv(KvStatsProvider {
-            kv,
-            ctx: std::sync::Arc::new(ctx),
-            token,
-        })
+    pub fn kv(
+        kv: worker::kv::KvStore,
+        ctx: std::sync::Arc<worker::Context>,
+        token: String,
+    ) -> Self {
+        Self::Kv(KvStatsProvider { kv, ctx, token })
     }
 
     /// Returns GitHub stats using the appropriate backing store.

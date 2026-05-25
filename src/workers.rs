@@ -53,6 +53,7 @@ pub async fn fetch_handler(
     let stats_kv = env.kv("GITHUB_STATS")?;
     let work_kv = env.kv("WORK_STATS")?;
     let token = env.secret("GITHUB_TOKEN")?.to_string();
+    let ctx = std::sync::Arc::new(ctx);
 
     let stats_provider = StatsProvider::kv(stats_kv, ctx.clone(), token.clone());
     let work_provider = WorkStatsProvider::kv(work_kv, ctx, token);
@@ -134,7 +135,7 @@ async fn refresh_work_stats(env: Env, token: &str) {
             return;
         }
     };
-    let fresh = fetch_work_stats(token).await;
+    let fresh = fetch_work_stats(token, &crate::config::work::work_config().tracked_slugs).await;
     match serde_json::to_string(&fresh) {
         Ok(json) => match kv.put("work-stats", json) {
             Ok(builder) => {

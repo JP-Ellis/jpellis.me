@@ -67,7 +67,7 @@ toml = { version = "0.8", default-features = false, features = ["parse"] }
   # SSR-only: not needed for hydrate/browser builds (prevents wasm-streams duplicate
   # symbol errors — reqwest and worker each bring a different version).
   web-sys = { version = "0.3", features = ["Clipboard", "Navigator", "Window"] }
-  worker = { version = "0.5", features = ["axum", "http"], optional = true }
+  worker = { version = "0.8", features = ["axum", "http"], optional = true }
 
 [features]
 hydrate = ["dep:console_error_panic_hook", "leptos/hydrate"]
