@@ -97,7 +97,10 @@ run = "wrangler dev"
 
 [tasks.build]
 description = "Build release artifacts for Cloudflare Workers deployment"
-run = "cargo leptos build --release && worker-build --release --features ssr"
+run = """
+cargo leptos build --release && worker-build --release --features ssr
+cp target/site/pkg/jpellis-me.wasm target/site/pkg/jpellis-me_bg.wasm
+"""
 sources = [
   "Cargo.toml",
   "Cargo.lock",
