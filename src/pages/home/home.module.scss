@@ -96,14 +96,6 @@
     padding-block: var(--space-7);
 }
 
-.elsewhere-intro {
-    font-size: var(--text-body-size);
-    line-height: var(--text-body-leading);
-    color: var(--color-muted);
-    margin: 0 0 var(--space-5);
-    max-width: 720px;
-}
-
 .cross-post-row {
     display: grid;
     grid-template-columns: 1fr 140px;

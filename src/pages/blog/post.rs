@@ -4,15 +4,13 @@ use leptos_meta::Meta;
 use leptos_meta::Script;
 use leptos_meta::Title;
 use leptos_router::hooks::use_params_map;
-use stylance::import_style;
 
+use super::style;
 use crate::blog::find_post;
 use crate::blog::format_date;
 use crate::blog::source_domain;
 use crate::components::Footer;
 use crate::components::Masthead;
-
-import_style!(style, "blog.module.scss");
 
 #[cfg(target_arch = "wasm32")]
 mod prism {

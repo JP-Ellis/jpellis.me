@@ -1,5 +1,6 @@
 #[cfg(feature = "ssr")]
 use chrono::Datelike as _;
+#[cfg(feature = "hydrate")]
 use chrono::Timelike as _;
 use leptos::prelude::*;
 
@@ -25,6 +26,7 @@ use leptos::prelude::*;
 /// assert_eq!(to_roman(4), "iv");
 /// assert_eq!(to_roman(2026), "mmxxvi");
 /// ```
+#[cfg(any(feature = "ssr", feature = "hydrate", test))]
 fn to_roman(n: u32) -> String {
     if n == 0 {
         return "○".to_string();
@@ -56,6 +58,7 @@ fn to_roman(n: u32) -> String {
     result
 }
 
+#[cfg(feature = "hydrate")]
 fn format_time(now: chrono::DateTime<chrono::Local>) -> String {
     let seconds = to_roman(now.second());
     // Pad seconds to max width (38 = "xxxviii" = 7 chars) with non-breaking spaces

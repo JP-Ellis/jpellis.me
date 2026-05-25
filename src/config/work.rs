@@ -9,6 +9,7 @@ static CACHE: OnceLock<WorkConfig> = OnceLock::new();
 pub struct WorkConfig {
     /// GitHub slugs to track for star/fork counts.
     /// Must cover every `ProjectLink::GitHub` entry in `pages::work::PROJECTS`.
+    #[allow(dead_code)]
     pub tracked_slugs: Vec<String>,
     /// Misc OSS contributions shown at the bottom of the work page.
     #[serde(default)]

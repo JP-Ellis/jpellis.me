@@ -196,6 +196,7 @@ impl KvWorkStatsProvider {
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn empty_stats() -> WorkStats {
     WorkStats {
         fetched_at: chrono::Utc::now(),
