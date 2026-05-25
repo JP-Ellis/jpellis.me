@@ -92,10 +92,23 @@ wait
 '''
 
 [tasks."watch:wrangler"]
+depends = ["build"]
 run = "wrangler dev"
 
 [tasks.build]
-run = "cargo leptos build --release"
+description = "Build release artifacts for Cloudflare Workers deployment"
+run = "cargo leptos build --release && worker-build --release --features ssr"
+sources = [
+  "Cargo.toml",
+  "Cargo.lock",
+  "build.rs",
+  "src/**/*.rs",
+  "style/**/*.scss",
+  "public/**/*",
+  "content/**/*",
+  "wrangler.toml",
+]
+outputs = ["target/site/**/*", "build/index.js"]
 
 [tasks."e2e:install"]
 dir = "e2e"
@@ -105,3 +118,8 @@ run = "aube install"
 dir = "e2e"
 depends = ["e2e:install"]
 run = "aube exec playwright test"
+
+[tasks.deploy]
+description = "Deploy to Cloudflare Workers (requires wrangler auth)"
+depends = ["build"]
+run = "wrangler deploy"
