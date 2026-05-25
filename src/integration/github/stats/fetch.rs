@@ -154,6 +154,7 @@ fn build_graphql_query(from: &str, to: &str) -> String {
           contributionDays {{ date contributionCount }}
         }}
       }}
+      restrictedContributionsCount
       totalCommitContributions
       totalPullRequestContributions
       totalIssueContributions
@@ -162,6 +163,59 @@ fn build_graphql_query(from: &str, to: &str) -> String {
   }}
 }}"#
     )
+}
+
+// ---------------------------------------------------------------------------
+// GraphQL contribution totals parser
+// ---------------------------------------------------------------------------
+
+/// Parses contribution counts from a `contributionsCollection` JSON object.
+///
+/// Adds [`restrictedContributionsCount`] into the returned `total` so that
+/// contributions to private organisations and repositories are reflected in the
+/// displayed count even when the access token cannot read their content.
+///
+/// # Arguments
+///
+/// * `contributions` - The `contributionsCollection` field from a GitHub
+///   GraphQL response.
+///
+/// # Returns
+///
+/// A tuple of `(total, commits, pull_requests, issues)` on success.
+///
+/// # Errors
+///
+/// Returns [`FetchError::Parse`] if any expected field is missing.
+pub fn parse_contribution_totals(
+    contributions: &serde_json::Value,
+) -> Result<(u32, u32, u32, u32), FetchError> {
+    let calendar_total = contributions["contributionCalendar"]["totalContributions"]
+        .as_u64()
+        .ok_or_else(|| FetchError::Parse("totalContributions missing".into()))?
+        as u32;
+
+    let restricted = contributions["restrictedContributionsCount"]
+        .as_u64()
+        .ok_or_else(|| FetchError::Parse("restrictedContributionsCount missing".into()))?
+        as u32;
+
+    let commits = contributions["totalCommitContributions"]
+        .as_u64()
+        .ok_or_else(|| FetchError::Parse("totalCommitContributions missing".into()))?
+        as u32;
+
+    let prs = contributions["totalPullRequestContributions"]
+        .as_u64()
+        .ok_or_else(|| FetchError::Parse("totalPullRequestContributions missing".into()))?
+        as u32;
+
+    let issues = contributions["totalIssueContributions"]
+        .as_u64()
+        .ok_or_else(|| FetchError::Parse("totalIssueContributions missing".into()))?
+        as u32;
+
+    Ok((calendar_total + restricted, commits, prs, issues))
 }
 
 // ---------------------------------------------------------------------------
@@ -218,21 +272,27 @@ fn parse_contribution_weeks(
 // Search API fetchers
 // ---------------------------------------------------------------------------
 
-/// Fetches the 6 most recent public commits authored by JP-Ellis via the
+/// Fetches the most recent public commits authored by JP-Ellis via the
 /// GitHub commit search API.
 ///
 /// Uses the `author:JP-Ellis is:public` search query sorted by author date.
 /// The commit search API requires the `application/vnd.github.cloak-preview`
 /// Accept header to be enabled.
 ///
+/// Fetches `limit * 2` results from the API so that after deduplication
+/// against PR titles in the display layer there are still enough items to
+/// fill `limit` slots.
+///
 /// # Arguments
 ///
 /// * `client` - A shared HTTP client.
 /// * `token` - A GitHub personal access token.
+/// * `limit` - Desired number of commits after the display layer deduplicates.
 ///
 /// # Returns
 ///
-/// A [`Vec`] of up to 6 [`ActivityItem`] values with [`ActivityKind::Commit`].
+/// A [`Vec`] of up to `limit * 2` [`ActivityItem`] values with
+/// [`ActivityKind::Commit`].
 ///
 /// # Errors
 ///
@@ -241,13 +301,15 @@ fn parse_contribution_weeks(
 async fn fetch_recent_commits(
     client: &reqwest::Client,
     token: &str,
+    limit: usize,
 ) -> Result<Vec<ActivityItem>, FetchError> {
-    // Fetch 12 so that after deduplication against PR titles in the display
-    // layer we still have enough to fill 6 slots.
-    let url = "https://api.github.com/search/commits?q=author:JP-Ellis+is:public&sort=author-date&order=desc&per_page=12";
+    let per_page = limit * 2;
+    let url = format!(
+        "https://api.github.com/search/commits?q=author:JP-Ellis+is:public&sort=author-date&order=desc&per_page={per_page}"
+    );
     let body = rest_get(
         client,
-        url,
+        &url,
         token,
         &[("Accept", "application/vnd.github.cloak-preview")],
     )
@@ -287,34 +349,27 @@ async fn fetch_recent_commits(
         .collect())
 }
 
-/// Fetches the 4 most recently created public PRs and issues authored by
-/// JP-Ellis via the GitHub issue search API.
+/// Parses the `items` array from a GitHub issue search API response into
+/// [`ActivityItem`] values.
 ///
-/// The query `author:JP-Ellis is:public` matches both PRs and issues. Items
-/// with a `pull_request` field are treated as PRs; the `merged_at` sub-field
-/// is used to distinguish merged PRs from simply-closed ones.
+/// Items that include a `pull_request` field are mapped to
+/// [`ActivityKind::PullRequest`]; all others are mapped to
+/// [`ActivityKind::Issue`]. For pull requests, the `merged_at` sub-field
+/// distinguishes merged PRs from simply-closed ones.
 ///
 /// # Arguments
 ///
-/// * `client` - A shared HTTP client.
-/// * `token` - A GitHub personal access token.
+/// * `body` - The parsed JSON response from the GitHub issue search API.
 ///
 /// # Returns
 ///
-/// A [`Vec`] of up to 4 [`ActivityItem`] values with [`ActivityKind::PullRequest`]
-/// or [`ActivityKind::Issue`].
+/// A [`Vec`] of [`ActivityItem`] values on success.
 ///
 /// # Errors
 ///
-/// Returns [`FetchError`] if the HTTP request fails or the response cannot be
-/// parsed.
-async fn fetch_recent_activity(
-    client: &reqwest::Client,
-    token: &str,
-) -> Result<Vec<ActivityItem>, FetchError> {
-    let url = "https://api.github.com/search/issues?q=author:JP-Ellis+is:public&sort=created&order=desc&per_page=4";
-    let body = rest_get(client, url, token, &[]).await?;
-
+/// Returns [`FetchError::Parse`] if the `items` field is missing or not an
+/// array.
+pub fn parse_activity_items(body: &serde_json::Value) -> Result<Vec<ActivityItem>, FetchError> {
     let items = body["items"]
         .as_array()
         .ok_or_else(|| FetchError::Parse("issue search items missing".into()))?;
@@ -365,16 +420,91 @@ async fn fetch_recent_activity(
         .collect())
 }
 
+/// Merges two [`ActivityItem`] lists, sorts the combined list by `created_at`
+/// in descending order, and truncates to `limit` items.
+///
+/// # Arguments
+///
+/// * `a` - First list of activity items (e.g. pull requests).
+/// * `b` - Second list of activity items (e.g. issues).
+/// * `limit` - Maximum number of items to return.
+///
+/// # Returns
+///
+/// A [`Vec`] of at most `limit` [`ActivityItem`] values, sorted newest-first.
+pub fn merge_and_sort_activity(
+    a: Vec<ActivityItem>,
+    b: Vec<ActivityItem>,
+    limit: usize,
+) -> Vec<ActivityItem> {
+    let mut combined: Vec<ActivityItem> = a.into_iter().chain(b).collect();
+    combined.sort_by_key(|i| Reverse(i.created_at));
+    combined.truncate(limit);
+    combined
+}
+
+/// Fetches the most recently created public PRs and issues authored by
+/// JP-Ellis via two concurrent GitHub issue search API requests.
+///
+/// GitHub's issue search API requires either `is:pull-request` or `is:issue`
+/// in the query; a combined query is not accepted. This function issues both
+/// requests concurrently and merges the results, returning the `limit` most
+/// recent items sorted newest-first.
+///
+/// Items with a `pull_request` field are mapped to
+/// [`ActivityKind::PullRequest`]; all others to [`ActivityKind::Issue`].
+///
+/// # Arguments
+///
+/// * `client` - A shared HTTP client.
+/// * `token` - A GitHub personal access token.
+/// * `limit` - Maximum number of items to return after merging.
+///
+/// # Returns
+///
+/// A [`Vec`] of up to `limit` [`ActivityItem`] values.
+///
+/// # Errors
+///
+/// Returns [`FetchError`] if either HTTP request fails or either response
+/// cannot be parsed.
+async fn fetch_recent_activity(
+    client: &reqwest::Client,
+    token: &str,
+    limit: usize,
+) -> Result<Vec<ActivityItem>, FetchError> {
+    let pr_url = format!(
+        "https://api.github.com/search/issues?q=author:JP-Ellis+is:pull-request+is:public&sort=created&order=desc&per_page={limit}"
+    );
+    let issue_url = format!(
+        "https://api.github.com/search/issues?q=author:JP-Ellis+is:issue+is:public&sort=created&order=desc&per_page={limit}"
+    );
+
+    let (pr_body, issue_body) = futures::try_join!(
+        rest_get(client, &pr_url, token, &[]),
+        rest_get(client, &issue_url, token, &[])
+    )?;
+
+    let prs = parse_activity_items(&pr_body)?;
+    let issues = parse_activity_items(&issue_body)?;
+
+    Ok(merge_and_sort_activity(prs, issues, limit))
+}
+
 // ---------------------------------------------------------------------------
 // Public entry point
 // ---------------------------------------------------------------------------
 
 /// Fetches live GitHub statistics for the JP-Ellis account.
 ///
-/// Issues three requests in sequence:
+/// Issues four requests:
 /// 1. A GraphQL request for the contribution calendar and public repository count.
 /// 2. A commit search request for the 6 most recent public commits.
-/// 3. An issue search request for the 4 most recently created public PRs and issues.
+/// 3. A PR search request for the most recently created public pull requests.
+/// 4. An issue search request for the most recently created public issues.
+///
+/// Requests 3 and 4 are issued concurrently; the results are merged and
+/// truncated to the 4 most recent items.
 ///
 /// # Arguments
 ///
@@ -404,25 +534,8 @@ pub async fn fetch_from_github(token: &str) -> Result<GitHubStats, FetchError> {
 
     let contributions = &user["contributionsCollection"];
 
-    let total_contributions = contributions["contributionCalendar"]["totalContributions"]
-        .as_u64()
-        .ok_or_else(|| FetchError::Parse("totalContributions missing".into()))?
-        as u32;
-
-    let commit_contributions = contributions["totalCommitContributions"]
-        .as_u64()
-        .ok_or_else(|| FetchError::Parse("totalCommitContributions missing".into()))?
-        as u32;
-
-    let pr_contributions = contributions["totalPullRequestContributions"]
-        .as_u64()
-        .ok_or_else(|| FetchError::Parse("totalPullRequestContributions missing".into()))?
-        as u32;
-
-    let issue_contributions = contributions["totalIssueContributions"]
-        .as_u64()
-        .ok_or_else(|| FetchError::Parse("totalIssueContributions missing".into()))?
-        as u32;
+    let (total_contributions, commit_contributions, pr_contributions, issue_contributions) =
+        parse_contribution_totals(contributions)?;
 
     let public_repos = user["repositories"]["totalCount"]
         .as_u64()
@@ -432,11 +545,8 @@ pub async fn fetch_from_github(token: &str) -> Result<GitHubStats, FetchError> {
     let contribution_weeks =
         parse_contribution_weeks(&contributions["contributionCalendar"]["weeks"])?;
 
-    let mut commits = fetch_recent_commits(&client, token).await?;
-    let mut others = fetch_recent_activity(&client, token).await?;
-
-    commits.sort_by_key(|c| Reverse(c.created_at));
-    others.sort_by_key(|o| Reverse(o.created_at));
+    let commits = fetch_recent_commits(&client, token, 6).await?;
+    let others = fetch_recent_activity(&client, token, 4).await?;
 
     let mut recent_activity: Vec<ActivityItem> = commits.into_iter().chain(others).collect();
     recent_activity.sort_by_key(|i| Reverse(i.created_at));
@@ -464,6 +574,40 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use super::*;
+
+    /// The GraphQL query must request `restrictedContributionsCount` so that
+    /// contributions to private orgs and repos are counted even when the token
+    /// cannot read their content.
+    #[test]
+    fn build_graphql_query_includes_restricted_contributions_count() {
+        let query = build_graphql_query("2025-01-01T00:00:00Z", "2026-01-01T23:59:59Z");
+        assert!(
+            query.contains("restrictedContributionsCount"),
+            "query must include restrictedContributionsCount; got:\n{query}"
+        );
+    }
+
+    /// `parse_contribution_totals` adds `restrictedContributionsCount` into the
+    /// returned total so that private-org contributions are reflected in the
+    /// displayed count even when the token cannot read their content.
+    #[test]
+    fn parse_contribution_totals_sums_restricted_contributions() {
+        let contributions = serde_json::json!({
+            "contributionCalendar": { "totalContributions": 2133 },
+            "restrictedContributionsCount": 485,
+            "totalCommitContributions": 843,
+            "totalPullRequestContributions": 189,
+            "totalIssueContributions": 29
+        });
+
+        let (total, commits, prs, issues) =
+            parse_contribution_totals(&contributions).expect("valid contribution JSON");
+
+        assert_eq!(total, 2618, "total must include restricted contributions");
+        assert_eq!(commits, 843);
+        assert_eq!(prs, 189);
+        assert_eq!(issues, 29);
+    }
 
     #[test]
     fn parse_contribution_weeks_parses_counts() {
@@ -588,6 +732,158 @@ mod tests {
         assert!(
             !is_pr,
             "item without pull_request field should be treated as issue"
+        );
+    }
+
+    /// `parse_activity_items` maps a PR search response body into [`ActivityItem`]
+    /// values with correct kind, state, repo, title, url, and created_at.
+    #[test]
+    fn parse_activity_items_parses_pr_search_response() {
+        let body = serde_json::json!({
+            "total_count": 2,
+            "items": [
+                {
+                    "title": "feat: merge me",
+                    "html_url": "https://github.com/owner/repo/pull/1",
+                    "repository_url": "https://api.github.com/repos/owner/repo",
+                    "created_at": "2026-04-20T10:00:00Z",
+                    "state": "closed",
+                    "pull_request": { "merged_at": "2026-04-21T10:00:00Z" }
+                },
+                {
+                    "title": "feat: open pr",
+                    "html_url": "https://github.com/owner/repo/pull/2",
+                    "repository_url": "https://api.github.com/repos/owner/repo",
+                    "created_at": "2026-04-18T08:00:00Z",
+                    "state": "open",
+                    "pull_request": { "merged_at": null }
+                }
+            ]
+        });
+
+        let items = parse_activity_items(&body).expect("valid PR search body");
+
+        assert_eq!(items.len(), 2);
+        assert_eq!(items[0].kind, ActivityKind::PullRequest);
+        assert_eq!(items[0].state, Some(ActivityState::Merged));
+        assert_eq!(items[0].title, "feat: merge me");
+        assert_eq!(items[0].repo, "owner/repo");
+        assert_eq!(items[1].kind, ActivityKind::PullRequest);
+        assert_eq!(items[1].state, Some(ActivityState::Open));
+    }
+
+    /// `parse_activity_items` correctly maps issue items (no `pull_request` field).
+    #[test]
+    fn parse_activity_items_parses_issue_search_response() {
+        let body = serde_json::json!({
+            "total_count": 1,
+            "items": [
+                {
+                    "title": "Bug: crash on startup",
+                    "html_url": "https://github.com/owner/repo/issues/7",
+                    "repository_url": "https://api.github.com/repos/owner/repo",
+                    "created_at": "2026-03-10T12:00:00Z",
+                    "state": "open"
+                }
+            ]
+        });
+
+        let items = parse_activity_items(&body).expect("valid issue search body");
+
+        assert_eq!(items.len(), 1);
+        assert_eq!(items[0].kind, ActivityKind::Issue);
+        assert_eq!(items[0].state, Some(ActivityState::Open));
+        assert_eq!(items[0].title, "Bug: crash on startup");
+    }
+
+    /// `merge_and_sort_activity` interleaves two lists in descending created_at order.
+    #[test]
+    fn merge_and_sort_activity_interleaves_by_date() {
+        let make = |kind: ActivityKind, state: ActivityState, ts: &str| ActivityItem {
+            kind,
+            repo: "owner/repo".into(),
+            title: ts.into(),
+            url: format!("https://example.com/{ts}"),
+            state: Some(state),
+            created_at: ts
+                .parse::<chrono::DateTime<Utc>>()
+                .expect("valid timestamp"),
+        };
+
+        let prs = vec![
+            make(
+                ActivityKind::PullRequest,
+                ActivityState::Merged,
+                "2026-04-20T10:00:00Z",
+            ),
+            make(
+                ActivityKind::PullRequest,
+                ActivityState::Open,
+                "2026-04-15T10:00:00Z",
+            ),
+        ];
+        let issues = vec![
+            make(
+                ActivityKind::Issue,
+                ActivityState::Open,
+                "2026-04-18T10:00:00Z",
+            ),
+            make(
+                ActivityKind::Issue,
+                ActivityState::Closed,
+                "2026-04-10T10:00:00Z",
+            ),
+        ];
+
+        let merged = merge_and_sort_activity(prs, issues, 10);
+
+        assert_eq!(merged.len(), 4);
+        // Must be strictly descending.
+        assert_eq!(
+            merged[0].created_at.to_rfc3339(),
+            "2026-04-20T10:00:00+00:00"
+        );
+        assert_eq!(
+            merged[1].created_at.to_rfc3339(),
+            "2026-04-18T10:00:00+00:00"
+        );
+        assert_eq!(
+            merged[2].created_at.to_rfc3339(),
+            "2026-04-15T10:00:00+00:00"
+        );
+        assert_eq!(
+            merged[3].created_at.to_rfc3339(),
+            "2026-04-10T10:00:00+00:00"
+        );
+    }
+
+    /// `merge_and_sort_activity` truncates to the requested limit.
+    #[test]
+    fn merge_and_sort_activity_truncates_to_limit() {
+        let make = |ts: &str| ActivityItem {
+            kind: ActivityKind::Issue,
+            repo: "r".into(),
+            title: ts.into(),
+            url: "u".into(),
+            state: Some(ActivityState::Open),
+            created_at: ts
+                .parse::<chrono::DateTime<Utc>>()
+                .expect("valid timestamp"),
+        };
+
+        let a = vec![
+            make("2026-04-20T00:00:00Z"),
+            make("2026-04-19T00:00:00Z"),
+            make("2026-04-18T00:00:00Z"),
+        ];
+        let b = vec![make("2026-04-17T00:00:00Z"), make("2026-04-16T00:00:00Z")];
+
+        let merged = merge_and_sort_activity(a, b, 4);
+
+        assert_eq!(merged.len(), 4);
+        assert_eq!(
+            merged[3].created_at.to_rfc3339(),
+            "2026-04-17T00:00:00+00:00"
         );
     }
 }
