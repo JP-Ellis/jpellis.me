@@ -108,7 +108,7 @@ sources = [
   "content/**/*",
   "wrangler.toml",
 ]
-outputs = ["target/site/**/*", "build/index.js"]
+outputs = ["target/site/**/*", "build/**/*"]
 
 [tasks."e2e:install"]
 dir = "e2e"

@@ -8,7 +8,7 @@ Cargo.lock
 # Cloudflare Workers
 /.wrangler/
 /dist/
-.dev.vars
+/.dev.vars
 
 # Stylance generated
 /style/stylance/
