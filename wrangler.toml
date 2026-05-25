@@ -14,22 +14,14 @@ directory = "./target/site"
 [triggers]
 crons = ["0 13 * * *", "0 13 * * 1"]
 
-# KV namespace for caching GitHub stats
-# TODO: Replace placeholder IDs with actual namespace IDs
-# Run: wrangler kv namespace create GITHUB_STATS
-# Run: wrangler kv namespace create GITHUB_STATS --preview
 [[kv_namespaces]]
 binding = "GITHUB_STATS"
-# Run: wrangler kv namespace create GITHUB_STATS
-id = ""
-# Run: wrangler kv namespace create GITHUB_STATS --preview
-preview_id = ""
+id = "5e502e4bfb6b4f6985fcde597f6460e7"
+preview_id = "4a22aeeb45134546ae5766655297f396"
 
 [[kv_namespaces]]
 binding = "WORK_STATS"
-# Run: wrangler kv namespace create WORK_STATS
-id = ""
-# Run: wrangler kv namespace create WORK_STATS --preview
-preview_id = ""
+id = "a56dd2a711c746e8890f9bb9662131d6"
+preview_id = "54f30bfa5bb44a33868229e83fd7b55b"
 
 # Secret: run `wrangler secret put GITHUB_TOKEN` to set the GitHub PAT
