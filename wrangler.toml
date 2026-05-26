@@ -6,7 +6,7 @@ compatibility_date = "2026-05-26"
 compatibility_flags = ["nodejs_compat"]
 
 [build]
-command = "cargo leptos build --release && LEPTOS_OUTPUT_NAME=jpellis-me worker-build --release --features ssr"
+command = "./scripts/generate-favicons.rs && cargo leptos build --release && LEPTOS_OUTPUT_NAME=jpellis-me worker-build --release --features ssr"
 
 [assets]
 directory = "./target/site"
