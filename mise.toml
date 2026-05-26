@@ -79,19 +79,6 @@ run = "cargo llvm-cov nextest"
 run = "cargo machete"
 
 [tasks.watch]
-run = '''
-#!/usr/bin/env bash
-stylance --watch . &
-STYLANCE_PID=$!
-cargo leptos watch &
-CARGO_PID=$!
-
-trap "kill $STYLANCE_PID $CARGO_PID 2>/dev/null; exit" INT TERM
-
-wait
-'''
-
-[tasks."watch:wrangler"]
 depends = ["build"]
 run = "wrangler dev"
 
