@@ -56,13 +56,14 @@ pub fn App() -> impl IntoView {
         <Stylesheet id="leptos" href="/pkg/jpellis-me.css" />
         <Title text="Joshua Ellis" />
         <Router>
-            <Routes fallback=|| "Page not found.".into_view()>
+            <Routes fallback=|| view! { <pages::NotFoundPage /> }>
                 <Route path=path!("") view=pages::HomePage />
                 <Route path=path!("contact") view=pages::ContactPage />
                 <Route path=path!("resume") view=pages::ResumePage />
                 <Route path=path!("work") view=pages::WorkPage />
                 <Route path=path!("blog") view=pages::BlogListPage />
                 <Route path=path!("blog/:slug") view=pages::BlogPostPage />
+                <Route path=path!("*any") view=|| view! { <pages::NotFoundPage /> } />
             </Routes>
         </Router>
     }
@@ -79,7 +80,7 @@ pub fn App() -> impl IntoView {
         <Stylesheet id="leptos" href="/pkg/jpellis-me.css" />
         <Title text="Joshua Ellis" />
         <Router>
-            <Routes fallback=|| "Page not found.".into_view()>
+            <Routes fallback=|| view! { <pages::NotFoundPage /> }>
                 <Route path=path!("") view=pages::HomePage />
                 <Route path=path!("contact") view=pages::ContactPage />
                 <Route path=path!("resume") view=pages::ResumePage />
@@ -93,6 +94,7 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("band") view=test_pages::BandPage />
                     <Route path=path!("css-foundation") view=test_pages::CssFoundationPage />
                 </ParentRoute>
+                <Route path=path!("*any") view=|| view! { <pages::NotFoundPage /> } />
             </Routes>
         </Router>
     }

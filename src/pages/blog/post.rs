@@ -11,6 +11,7 @@ use crate::blog::format_date;
 use crate::blog::source_domain;
 use crate::components::Footer;
 use crate::components::Masthead;
+use crate::pages::not_found::NotFoundPage;
 
 #[cfg(target_arch = "wasm32")]
 mod prism {
@@ -37,16 +38,11 @@ pub fn BlogPostPage() -> impl IntoView {
         {move || match post() {
             None => {
                 view! {
-                    <Masthead />
-                    <main>
-                        <section>
-                            <div class="container">
-                                <p>"Post not found."</p>
-                                <a href="/blog">"← All posts"</a>
-                            </div>
-                        </section>
-                    </main>
-                    <Footer />
+                    <NotFoundPage
+                        heading="Post not found."
+                        back_href="/blog"
+                        back_label="← All posts"
+                    />
                 }
                     .into_any()
             }
