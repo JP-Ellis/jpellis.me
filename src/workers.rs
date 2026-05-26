@@ -39,24 +39,32 @@ use crate::shell;
 /// Injects [`StatsProvider`] and [`WorkStatsProvider`] into Leptos context so
 /// server functions can access GitHub stats and work stats respectively.
 ///
+/// Missing bindings or an absent `GITHUB_TOKEN` secret are handled
+/// gracefully: the relevant provider falls back to hardcoded placeholder
+/// data and a `console_error!` is emitted, but the page still renders.
+///
 /// # Errors
 ///
-/// Returns a [`worker::Error`] if a required binding (`GITHUB_STATS` or
-/// `WORK_STATS` KV, or `GITHUB_TOKEN` secret) is missing, or if Axum fails
-/// to produce a response.
+/// Returns a [`worker::Error`] only if Axum fails to produce a response.
 #[event(fetch)]
 pub async fn fetch_handler(
     req: HttpRequest,
     env: Env,
     ctx: Context,
 ) -> Result<axum::response::Response> {
-    let stats_kv = env.kv("GITHUB_STATS")?;
-    let work_kv = env.kv("WORK_STATS")?;
-    let token = env.secret("GITHUB_TOKEN")?.to_string();
+    let token: Option<String> = match env.secret("GITHUB_TOKEN") {
+        Ok(s) => Some(s.to_string()),
+        Err(e) => {
+            console_error!(
+                "GITHUB_TOKEN secret not set: {e}; stats will use fallback or cached data"
+            );
+            None
+        }
+    };
     let ctx = std::sync::Arc::new(ctx);
 
-    let stats_provider = StatsProvider::kv(stats_kv, ctx.clone(), token.clone());
-    let work_provider = WorkStatsProvider::kv(work_kv, ctx, token);
+    let stats_provider = StatsProvider::kv(env.kv("GITHUB_STATS"), ctx.clone(), token.as_deref());
+    let work_provider = WorkStatsProvider::kv(env.kv("WORK_STATS"), ctx, token.as_deref());
 
     let leptos_options = leptos::config::LeptosOptions::builder()
         .output_name("jpellis-me")

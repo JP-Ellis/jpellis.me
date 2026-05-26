@@ -9,6 +9,10 @@
 //! - **[`KvStatsProvider`]** (CF Workers): reads from and writes to the
 //!   `GITHUB_STATS` KV namespace with the same stale-while-revalidate logic,
 //!   using `ctx.wait_until()` for the background refresh.
+//!
+//! - **[`StatsProvider::Fallback`]** (CF Workers, degraded): always returns
+//!   hardcoded placeholder data.  Used when the `GITHUB_STATS` KV binding is
+//!   unavailable so the site still renders rather than returning a 500.
 
 use crate::integration::github::stats::model::GitHubStats;
 
@@ -28,6 +32,12 @@ pub enum StatsProvider {
     #[cfg(all(target_arch = "wasm32", feature = "ssr"))]
     Kv(KvStatsProvider),
 
+    /// Degraded fallback when the `GITHUB_STATS` KV binding is unavailable.
+    /// Always returns hardcoded placeholder data; never constructed in a
+    /// correctly configured deployment.
+    #[cfg(all(target_arch = "wasm32", feature = "ssr"))]
+    Fallback,
+
     /// Placeholder variant so the enum is non-empty in the browser hydrate
     /// build, where neither `File` nor `Kv` are compiled in.  This variant is
     /// never constructed or matched at runtime.
@@ -43,14 +53,32 @@ impl StatsProvider {
         Self::File(FileStatsProvider { token })
     }
 
-    /// Creates a KV-backed provider for CF Workers production.
+    /// Creates a KV-backed provider for CF Workers production, or a fallback
+    /// provider if the KV binding is unavailable.
+    ///
+    /// Accepts the raw `Result` from `env.kv()` so the caller never needs to
+    /// match on it; binding errors are logged and handled here.  `token` is
+    /// `None` when `GITHUB_TOKEN` is absent — the provider will still serve
+    /// cached data but won't refresh it.
     #[cfg(all(target_arch = "wasm32", feature = "ssr"))]
     pub fn kv(
-        kv: worker::kv::KvStore,
+        kv: worker::Result<worker::kv::KvStore>,
         ctx: std::sync::Arc<worker::Context>,
-        token: String,
+        token: Option<&str>,
     ) -> Self {
-        Self::Kv(KvStatsProvider { kv, ctx, token })
+        match kv {
+            Ok(kv) => Self::Kv(KvStatsProvider {
+                kv,
+                ctx,
+                token: token.map(ToOwned::to_owned),
+            }),
+            Err(e) => {
+                leptos::logging::error!(
+                    "GITHUB_STATS binding unavailable: {e}; using fallback stats"
+                );
+                Self::Fallback
+            }
+        }
     }
 
     /// Returns GitHub stats using the appropriate backing store.
@@ -63,6 +91,9 @@ impl StatsProvider {
 
             #[cfg(all(target_arch = "wasm32", feature = "ssr"))]
             Self::Kv(p) => p.get().await,
+
+            #[cfg(all(target_arch = "wasm32", feature = "ssr"))]
+            Self::Fallback => crate::integration::github::stats::defaults::fallback_stats(),
 
             #[cfg(all(target_arch = "wasm32", not(feature = "ssr")))]
             Self::_Unreachable => {
@@ -150,7 +181,9 @@ pub struct KvStatsProvider {
     kv: worker::kv::KvStore,
     /// Wrapped in `Arc` because `worker::Context` does not implement `Clone`.
     ctx: std::sync::Arc<worker::Context>,
-    token: String,
+    /// `None` when `GITHUB_TOKEN` was absent at startup; cached data is still
+    /// served but background/cold-start refreshes are skipped.
+    token: Option<String>,
 }
 
 #[cfg(all(target_arch = "wasm32", feature = "ssr"))]
@@ -166,13 +199,14 @@ impl KvStatsProvider {
             Ok(Some(stats)) => {
                 let age = (Utc::now() - stats.fetched_at).num_seconds();
                 if age > Self::TTL_SECS {
-                    let kv2 = self.kv.clone();
-                    let token2 = self.token.clone();
-                    self.ctx.wait_until(async move {
-                        if let Ok(fresh) = fetch_from_github(&token2).await {
-                            Self::write_kv_cache(&kv2, &fresh).await;
-                        }
-                    });
+                    if let Some(token) = self.token.clone() {
+                        let kv2 = self.kv.clone();
+                        self.ctx.wait_until(async move {
+                            if let Ok(fresh) = fetch_from_github(&token).await {
+                                Self::write_kv_cache(&kv2, &fresh).await;
+                            }
+                        });
+                    }
                 }
                 stats
             }
@@ -188,7 +222,12 @@ impl KvStatsProvider {
         use crate::integration::github::stats::defaults::fallback_stats;
         use crate::integration::github::stats::fetch::fetch_from_github;
 
-        match fetch_from_github(&self.token).await {
+        let Some(token) = &self.token else {
+            leptos::logging::warn!("GITHUB_TOKEN not set; serving fallback stats");
+            return fallback_stats();
+        };
+
+        match fetch_from_github(token).await {
             Ok(fresh) => {
                 Self::write_kv_cache(&self.kv, &fresh).await;
                 fresh

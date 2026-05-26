@@ -1,6 +1,10 @@
+use std::sync::LazyLock;
+
+use chrono::DateTime;
 use chrono::Duration;
 use chrono::NaiveDate;
 use chrono::Utc;
+use serde::Deserialize;
 
 use crate::integration::github::stats::model::ActivityItem;
 use crate::integration::github::stats::model::ActivityKind;
@@ -9,11 +13,44 @@ use crate::integration::github::stats::model::ContributionDay;
 use crate::integration::github::stats::model::ContributionWeek;
 use crate::integration::github::stats::model::GitHubStats;
 
+// ─── Fallback JSON ────────────────────────────────────────────────────────────
+
+/// Deserialization shape for `fallback.json`.
+#[derive(Deserialize)]
+struct FallbackData {
+    commit_contributions: u32,
+    pr_contributions: u32,
+    issue_contributions: u32,
+    public_repos: u32,
+    recent_activity: Vec<FallbackActivity>,
+}
+
+/// A single recent-activity entry as stored in `fallback.json`.
+#[derive(Deserialize)]
+struct FallbackActivity {
+    kind: ActivityKind,
+    repo: String,
+    title: String,
+    url: String,
+    state: Option<ActivityState>,
+    /// Real timestamp from the GitHub API, written by `scripts/update-fallback-data.rs`.
+    created_at: DateTime<Utc>,
+}
+
+/// Parsed once at startup from the embedded `fallback.json`.
+static FALLBACK: LazyLock<FallbackData> = LazyLock::new(|| {
+    serde_json::from_str(include_str!("fallback.json"))
+        .expect("fallback.json is valid JSON matching FallbackData")
+});
+
+// ─── Public API ───────────────────────────────────────────────────────────────
+
 /// Returns placeholder [`GitHubStats`] for use when the GitHub API is unavailable.
 ///
-/// The contribution grid is generated deterministically via a linear congruential
-/// generator, so it always produces the same plausible-looking pattern. Dates are
-/// relative to the current time so the placeholder remains timely.
+/// Scalar counts come from [`FALLBACK`] (embedded `fallback.json`).  The
+/// contribution grid is generated deterministically via a linear congruential
+/// generator.  Dates are relative to the current time, so the placeholder
+/// remains timely regardless of when the binary was compiled.
 ///
 /// # Returns
 ///
@@ -39,52 +76,36 @@ pub fn fallback_stats() -> GitHubStats {
         .map(|d| d.count)
         .sum();
 
+    let fb = &*FALLBACK;
+
+    let recent_activity = fb
+        .recent_activity
+        .iter()
+        .map(|a| ActivityItem {
+            kind: a.kind.clone(),
+            repo: a.repo.clone(),
+            title: a.title.clone(),
+            url: a.url.clone(),
+            state: a.state.clone(),
+            created_at: a.created_at,
+        })
+        .collect();
+
     GitHubStats {
         fetched_at: now,
         total_contributions,
-        commit_contributions: 547,
-        pr_contributions: 23,
-        issue_contributions: 18,
-        public_repos: 14,
+        commit_contributions: fb.commit_contributions,
+        pr_contributions: fb.pr_contributions,
+        issue_contributions: fb.issue_contributions,
+        public_repos: fb.public_repos,
         period_from,
         period_to,
         contribution_weeks,
-        recent_activity: vec![
-            ActivityItem {
-                kind: ActivityKind::Commit,
-                repo: "pact-foundation/pact-python".to_string(),
-                title: "feat(ffi): bind verifier results".to_string(),
-                url: "https://github.com/pact-foundation/pact-python".to_string(),
-                state: None,
-                created_at: now - Duration::days(4),
-            },
-            ActivityItem {
-                kind: ActivityKind::Commit,
-                repo: "JP-Ellis/jpellis.me".to_string(),
-                title: "fix: fetch recent prs and issues".to_string(),
-                url: "https://github.com/JP-Ellis/jpellis.me".to_string(),
-                state: None,
-                created_at: now - Duration::days(5),
-            },
-            ActivityItem {
-                kind: ActivityKind::PullRequest,
-                repo: "pact-foundation/pact-python".to_string(),
-                title: "feat(ffi): verifier FFI bindings".to_string(),
-                url: "https://github.com/pact-foundation/pact-python/pull/1".to_string(),
-                state: Some(ActivityState::Merged),
-                created_at: now - Duration::days(8),
-            },
-            ActivityItem {
-                kind: ActivityKind::Issue,
-                repo: "pact-foundation/pact-python".to_string(),
-                title: "Support for Pact v4 plugins".to_string(),
-                url: "https://github.com/pact-foundation/pact-python/issues/1".to_string(),
-                state: Some(ActivityState::Open),
-                created_at: now - Duration::days(12),
-            },
-        ],
+        recent_activity,
     }
 }
+
+// ─── Grid generation ─────────────────────────────────────────────────────────
 
 fn fallback_grid(start: NaiveDate) -> Vec<ContributionWeek> {
     fn lcg(s: &mut u64) -> f64 {
@@ -112,6 +133,8 @@ fn fallback_grid(start: NaiveDate) -> Vec<ContributionWeek> {
     }
     weeks
 }
+
+// ─── Tests ────────────────────────────────────────────────────────────────────
 
 #[cfg(test)]
 mod tests {
