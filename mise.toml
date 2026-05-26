@@ -89,7 +89,7 @@ description = "Build release artifacts for Cloudflare Workers deployment"
 # but worker-build runs a separate cargo invocation that does not inherit it — so the SSR binary
 # would otherwise embed the wrong filename in the generated HTML.
 env = { LEPTOS_OUTPUT_NAME = "jpellis-me" }
-run = "cargo leptos build --release && worker-build --release --features ssr"
+run = "./scripts/generate-favicons.rs && cargo leptos build --release && worker-build --release --features ssr"
 sources = [
   "Cargo.toml",
   "Cargo.lock",
