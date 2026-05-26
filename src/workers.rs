@@ -13,6 +13,8 @@
 #![cfg(all(target_arch = "wasm32", feature = "ssr"))]
 
 use axum::Router;
+use axum::response::Redirect;
+use axum::routing::get;
 use leptos::prelude::provide_context;
 use leptos_axum::LeptosRoutes;
 use leptos_axum::generate_route_list;
@@ -72,6 +74,7 @@ pub async fn fetch_handler(
     let routes = generate_route_list(App);
 
     let app = Router::new()
+        .route("/about", get(|| async { Redirect::permanent("/") }))
         .leptos_routes_with_context(
             &leptos_options,
             routes,
