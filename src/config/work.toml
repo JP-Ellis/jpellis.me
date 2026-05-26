@@ -19,72 +19,72 @@ tracked_slugs = [
 [[oss_contribs]]
 slug = "fastapi/fastapi"
 name = "fastapi"
-stars = 97776
+stars = 98516
 
 [[oss_contribs]]
 slug = "home-assistant/core"
 name = "home-assistant"
-stars = 86870
+stars = 87302
 
 [[oss_contribs]]
 slug = "jdx/mise"
 name = "mise"
-stars = 27468
+stars = 28635
 
 [[oss_contribs]]
 slug = "home-assistant/home-assistant.io"
 name = "home-assistant.io"
-stars = 9174
+stars = 9305
 
 [[oss_contribs]]
 slug = "j178/prek"
 name = "prek"
-stars = 7467
+stars = 7717
 
 [[oss_contribs]]
 slug = "pypa/hatch"
 name = "hatch"
-stars = 7153
+stars = 7169
 
 [[oss_contribs]]
 slug = "traceloop/openllmetry"
 name = "openllmetry"
-stars = 7052
+stars = 7146
 
 [[oss_contribs]]
 slug = "pyinfra-dev/pyinfra"
 name = "pyinfra"
-stars = 4970
+stars = 5685
 
 [[oss_contribs]]
 slug = "microsoft/vscode-python"
 name = "vscode-python"
-stars = 4613
+stars = 4621
 
 [[oss_contribs]]
 slug = "SchemaStore/schemastore"
 name = "schemastore"
-stars = 3736
+stars = 3758
 
 [[oss_contribs]]
 slug = "tamasfe/taplo"
 name = "taplo"
-stars = 2242
+stars = 2277
 
 [[oss_contribs]]
 slug = "pact-foundation/pact-ruby"
 name = "pact-ruby"
-stars = 2194
+stars = 2195
 
 [[oss_contribs]]
 slug = "SuperCuber/dotter"
 name = "dotter"
-stars = 1942
+stars = 1966
 
 [[oss_contribs]]
 slug = "pact-foundation/pact-js"
 name = "pact-js"
-stars = 1763
+stars = 1775
 
 [[oss_contribs]]
 slug = "pact-foundation/pact-go"
@@ -94,17 +94,17 @@ stars = 938
 [[oss_contribs]]
 slug = "pact-foundation/pact-net"
 name = "pact-net"
-stars = 920
+stars = 923
 
 [[oss_contribs]]
 slug = "pact-foundation/pact_broker"
 name = "pact_broker"
-stars = 742
+stars = 743
 
 [[oss_contribs]]
 slug = "pypa/packaging"
 name = "packaging"
-stars = 725
+stars = 729
 
 [[oss_contribs]]
 slug = "pact-foundation/pact-js-core"
@@ -114,7 +114,12 @@ stars = 153
 [[oss_contribs]]
 slug = "pact-foundation/pact-reference"
 name = "pact-reference"
-stars = 101
+stars = 102
+
+[[oss_contribs]]
+slug = "pact-foundation/pact-stub-server"
+name = "pact-stub-server"
+stars = 79
 
 [[oss_contribs]]
 slug = "pact-foundation/pact-mock_service"
@@ -134,7 +139,7 @@ stars = 69
 [[oss_contribs]]
 slug = "surpher/PactSwift"
 name = "PactSwift"
-stars = 54
+stars = 55
 
 [[oss_contribs]]
 slug = "pact-foundation/pact-provider-verifier"
@@ -144,7 +149,7 @@ stars = 33
 [[oss_contribs]]
 slug = "afadesigns/zshellcheck"
 name = "zshellcheck"
-stars = 18
+stars = 24
 
 [[oss_contribs]]
 slug = "aio-libs/aioloop-proxy"
@@ -159,7 +164,7 @@ stars = 18
 [[oss_contribs]]
 slug = "olix0r/cargo-action-fmt"
 name = "cargo-action-fmt"
-stars = 14
+stars = 15
 
 [[oss_contribs]]
 slug = "pact-foundation/pact-docker-cli"
@@ -199,6 +204,11 @@ stars = 3
 [[oss_contribs]]
 slug = "i-m-mll/griffe-inherited-method-crossrefs"
 name = "griffe-crossrefs"
+stars = 1
+
+[[oss_contribs]]
+slug = "pact-foundation/pact-broker-cli"
+name = "pact-broker-cli"
 stars = 1
 
 [[oss_contribs]]
