@@ -271,47 +271,86 @@ fn StatsPanel(repo: Option<RepoStats>, activity: ActivityConfig) -> impl IntoVie
                         {activity
                             .release
                             .then(|| {
-                                let release: Option<ReleaseInfo> = repo
-                                    .as_ref()
-                                    .and_then(|r| r.latest_release.clone());
-                                release
-                                    .map(|rel| {
-                                        let label = format!(
-                                            "{} · {}",
-                                            rel.tag,
-                                            format_short_date(&rel.date),
-                                        );
-                                        let url = rel.url.clone();
-                                        view! {
-                                            <StatChip
-                                                icon="🚀"
-                                                label="latest release"
-                                                value=view! { {label} }.into_any()
-                                                link=Some(url)
-                                            />
-                                        }
-                                    })
+                                match &repo {
+                                    None => {
+                                        Some(
+                                            view! {
+                                                <StatChip
+                                                    icon="🚀"
+                                                    label="latest release"
+                                                    value=view! {
+                                                        <span class=style::chip_skeleton aria-hidden="true" />
+                                                    }
+                                                        .into_any()
+                                                    link=None
+                                                />
+                                            },
+                                        )
+                                    }
+                                    Some(r) => {
+                                        r.latest_release
+                                            .as_ref()
+                                            .map(|rel| {
+                                                let label = format!(
+                                                    "{} · {}",
+                                                    rel.tag,
+                                                    format_short_date(&rel.date),
+                                                );
+                                                let url = rel.url.clone();
+                                                view! {
+                                                    <StatChip
+                                                        icon="🚀"
+                                                        label="latest release"
+                                                        value=view! { {label} }.into_any()
+                                                        link=Some(url)
+                                                    />
+                                                }
+                                            })
+                                    }
+                                }
                             })}
                         {activity
                             .open_prs
                             .then(|| {
-                                repo.as_ref()
-                                    .map(|r| {
+                                match &repo {
+                                    None => {
+                                        Some(
+                                            view! {
+                                                <StatChip
+                                                    icon="🔀"
+                                                    label="pull requests"
+                                                    value=view! {
+                                                        <span class=style::chip_skeleton aria-hidden="true" />
+                                                    }
+                                                        .into_any()
+                                                    link=None
+                                                />
+                                            },
+                                        )
+                                    }
+                                    Some(r) => {
                                         let count = r.open_prs;
-                                        let label = if count == 1 {
-                                            "1 open PR".to_string()
+                                        if count == 0 {
+                                            None
                                         } else {
-                                            format!("{count} open PRs")
-                                        };
-                                        view! {
-                                            <StatChip
-                                                icon="🔀"
-                                                label="pull requests"
-                                                value=view! { {label} }.into_any()
-                                                link=None
-                                            />
+                                            let label = if count == 1 {
+                                                "1 open PR".to_string()
+                                            } else {
+                                                format!("{count} open PRs")
+                                            };
+                                            Some(
+                                                view! {
+                                                    <StatChip
+                                                        icon="🔀"
+                                                        label="pull requests"
+                                                        value=view! { {label} }.into_any()
+                                                        link=None
+                                                    />
+                                                },
+                                            )
                                         }
-                                    })
+                                    }
+                                }
                             })}
                     </div>
 

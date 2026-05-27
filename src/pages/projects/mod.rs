@@ -612,6 +612,29 @@ mod tests {
     }
 
     #[test]
+    fn project_pages_count_matches_content_files() {
+        // If this fails, a content/projects/*.md file has malformed frontmatter
+        // and build.rs silently skipped it.
+        assert_eq!(PROJECT_PAGES.len(), 4);
+    }
+
+    #[test]
+    fn projects_row_slug_matches_entry_name_for_all_detail_pages() {
+        // For every detail page, entry.name must match page.slug exactly.
+        // ProjectsRow uses entry.name for the URL; find_project_page matches slug.
+        // If these diverge, the link silently 404s.
+        for page in PROJECT_PAGES {
+            let found = PROJECTS.iter().any(|entry| entry.name == page.slug);
+            assert!(
+                found,
+                "ProjectPage slug {:?} has no matching ProjectEntry with the same name. \
+                 Either add an entry to PROJECTS or fix the slug in the content file.",
+                page.slug
+            );
+        }
+    }
+
+    #[test]
     fn all_github_projects_have_slash_in_slug() {
         for p in PROJECTS {
             if let Some(ProjectLink::GitHub(slug)) = p.link {
