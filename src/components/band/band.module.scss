@@ -3,6 +3,8 @@
 // Default: light page → dark band (most common case, no selector overhead)
 .band {
     @include theme-dark;
+    // background-color and color are declared once; they re-read --color-*
+    // vars automatically when the mixin overrides below change them.
     background-color: var(--color-paper);
     color: var(--color-ink);
 }
@@ -14,11 +16,12 @@
     }
 }
 
-// Manual theme overrides — these take precedence over both the default
-// and the OS-preference media query.
+// Explicit user preference — attribute selector wins on specificity over
+// the OS-preference media query.
 [data-theme="light"] .band {
     @include theme-dark;
 }
+
 [data-theme="dark"] .band {
     @include theme-light;
 }
