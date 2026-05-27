@@ -47,7 +47,7 @@
   }
 
   &:focus-visible {
-    @include focus-ring(2px);
+    @include focus-ring(var(--space-half));
   }
 }
 
@@ -85,7 +85,7 @@
   }
 
   &:focus-visible {
-    @include focus-ring(2px);
+    @include focus-ring(var(--space-half));
   }
 }
 
@@ -101,7 +101,7 @@
   font-size: var(--text-meta-size);
 
   &:focus-visible {
-    @include focus-ring(2px);
+    @include focus-ring(var(--space-half));
   }
 }
 
@@ -110,7 +110,7 @@
   color: var(--color-muted);
   margin-bottom: var(--space-5);
   padding: var(--space-3) var(--space-4);
-  border-left: 3px solid var(--color-accent);
+  border-left: var(--border-width-thick) solid var(--color-accent);
 }
 
 .post_header {
