@@ -39,14 +39,19 @@ pub struct RepoStats {
     /// Number of GitHub forks.
     pub forks: u32,
     /// Number of open issues.
+    #[serde(default)]
     pub open_issues: u32,
     /// Number of watchers.
+    #[serde(default)]
     pub watchers: u32,
     /// Latest release, or `None` if the repo has no releases.
+    #[serde(default)]
     pub latest_release: Option<ReleaseInfo>,
     /// Recent non-bot commits, capped at 5.
+    #[serde(default)]
     pub recent_commits: Vec<CommitInfo>,
     /// Number of open pull requests (capped at 100).
+    #[serde(default)]
     pub open_prs: u32,
 }
 

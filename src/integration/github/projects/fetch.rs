@@ -1,9 +1,11 @@
-//! Fetches per-repository star and fork counts from the GitHub REST API.
+//! Fetches per-repository stats and activity from the GitHub REST API.
 
 use chrono::Utc;
 use futures::future;
 
+use crate::integration::github::projects::model::CommitInfo;
 use crate::integration::github::projects::model::ProjectsStats;
+use crate::integration::github::projects::model::ReleaseInfo;
 use crate::integration::github::projects::model::RepoStats;
 
 /// Errors that can occur while fetching projects statistics.
@@ -26,65 +28,269 @@ impl std::fmt::Display for FetchError {
 
 impl std::error::Error for FetchError {}
 
-/// Fetches stars and forks for a single repository slug.
+// MARK: Pure parse functions
+
+/// Parses `stargazers_count`, `forks_count`, `open_issues_count`, and
+/// `watchers_count` from a GitHub REST repo response.
 ///
 /// # Arguments
 ///
-/// * `client` - A shared HTTP client.
-/// * `slug` - Repository slug, e.g. `"JP-Ellis/tikz-feynman"`.
-/// * `token` - A GitHub personal access token.
+/// * `slug` - Repository slug (used in error messages).
+/// * `body` - Parsed JSON from `GET /repos/{owner}/{repo}`.
 ///
 /// # Returns
 ///
-/// [`RepoStats`] on success.
+/// `(stars, forks, open_issues, watchers)` on success.
 ///
 /// # Errors
 ///
-/// Returns [`FetchError`] if the request fails or the response cannot be parsed.
-async fn fetch_single_repo(
-    client: &reqwest::Client,
+/// Returns [`FetchError::Parse`] if any required field is missing.
+pub fn parse_repo_response(
     slug: &str,
+    body: &serde_json::Value,
+) -> Result<(u32, u32, u32, u32), FetchError> {
+    let stars = body["stargazers_count"]
+        .as_u64()
+        .ok_or_else(|| FetchError::Parse(format!("{slug}: stargazers_count missing")))?
+        as u32;
+    let forks = body["forks_count"]
+        .as_u64()
+        .ok_or_else(|| FetchError::Parse(format!("{slug}: forks_count missing")))?
+        as u32;
+    let open_issues = body["open_issues_count"]
+        .as_u64()
+        .ok_or_else(|| FetchError::Parse(format!("{slug}: open_issues_count missing")))?
+        as u32;
+    let watchers = body["watchers_count"]
+        .as_u64()
+        .ok_or_else(|| FetchError::Parse(format!("{slug}: watchers_count missing")))?
+        as u32;
+    Ok((stars, forks, open_issues, watchers))
+}
+
+/// Parses a GitHub releases/latest response into [`ReleaseInfo`].
+///
+/// Returns `None` if any required field is absent (including 404-style
+/// `{ "message": "Not Found" }` responses).
+///
+/// # Arguments
+///
+/// * `body` - Parsed JSON from `GET /repos/{owner}/{repo}/releases/latest`.
+///
+/// # Returns
+///
+/// `Some(ReleaseInfo)` on success, `None` otherwise.
+pub fn parse_release_response(body: &serde_json::Value) -> Option<ReleaseInfo> {
+    let tag = body["tag_name"].as_str()?.to_string();
+    let date = body["published_at"].as_str()?.to_string();
+    let url = body["html_url"].as_str()?.to_string();
+    Some(ReleaseInfo { tag, date, url })
+}
+
+/// Parses a single commit object from the GitHub commits list API.
+///
+/// Returns `None` if the commit is authored by a bot (`author.type == "Bot"`)
+/// or if required fields are missing. Commits with a `null` GitHub author
+/// (not associated with a GitHub account) are treated as human commits.
+///
+/// # Arguments
+///
+/// * `commit` - A single element from `GET /repos/{owner}/{repo}/commits`.
+///
+/// # Returns
+///
+/// `Some(CommitInfo)` for human commits, `None` for bots or unparsable entries.
+pub fn parse_commit(commit: &serde_json::Value) -> Option<CommitInfo> {
+    // Filter bots: author object is present AND type is "Bot"
+    if let Some(author_obj) = commit["author"].as_object() {
+        if author_obj.get("type").and_then(|t| t.as_str()) == Some("Bot") {
+            return None;
+        }
+    }
+
+    let full_sha = commit["sha"].as_str()?;
+    let sha = full_sha.get(..7).unwrap_or(full_sha).to_string();
+
+    let full_message = commit["commit"]["message"].as_str().unwrap_or("");
+    let first_line = full_message.lines().next().unwrap_or("").trim();
+    let message = if first_line.len() > 72 {
+        format!("{}…", &first_line[..72])
+    } else {
+        first_line.to_string()
+    };
+
+    let date = commit["commit"]["author"]["date"]
+        .as_str()
+        .unwrap_or("")
+        .to_string();
+
+    // For User accounts use the GitHub login; for null author (not linked
+    // to a GitHub account) fall back to the git committer name.
+    let author = if let Some(login) = commit["author"]["login"].as_str() {
+        login.to_string()
+    } else {
+        commit["commit"]["author"]["name"]
+            .as_str()
+            .unwrap_or("unknown")
+            .to_string()
+    };
+
+    let url = commit["html_url"].as_str().unwrap_or("").to_string();
+
+    Some(CommitInfo {
+        sha,
+        message,
+        date,
+        author,
+        url,
+    })
+}
+
+/// Parses a GitHub commits list response, filtering bots and capping at 5.
+///
+/// # Arguments
+///
+/// * `body` - Parsed JSON array from `GET /repos/{owner}/{repo}/commits`.
+///
+/// # Returns
+///
+/// Up to 5 [`CommitInfo`] entries for non-bot commits.
+pub fn parse_commits_response(body: &serde_json::Value) -> Vec<CommitInfo> {
+    let Some(arr) = body.as_array() else {
+        return vec![];
+    };
+    arr.iter().filter_map(parse_commit).take(5).collect()
+}
+
+/// Counts open pull requests from a GitHub pulls list response.
+///
+/// # Arguments
+///
+/// * `body` - Parsed JSON array from `GET /repos/{owner}/{repo}/pulls?state=open`.
+///
+/// # Returns
+///
+/// Number of open PRs (0 if response is not an array).
+pub fn parse_prs_count(body: &serde_json::Value) -> u32 {
+    body.as_array().map(|a| a.len() as u32).unwrap_or(0)
+}
+
+// MARK: HTTP helpers
+
+async fn get_json(
+    client: &reqwest::Client,
+    url: &str,
     token: &str,
-) -> Result<RepoStats, FetchError> {
-    let url = format!("https://api.github.com/repos/{slug}");
+) -> Result<serde_json::Value, FetchError> {
     let resp = client
-        .get(&url)
+        .get(url)
         .header("Authorization", format!("Bearer {token}"))
         .header("User-Agent", "jpellis-me/1.0")
         .send()
         .await
         .map_err(|e| FetchError::Http(e.to_string()))?;
 
-    if !resp.status().is_success() {
-        return Err(FetchError::Http(format!(
-            "GET /repos/{slug} returned {}",
-            resp.status()
-        )));
-    }
-
+    let status = resp.status();
     let body = resp
         .json::<serde_json::Value>()
         .await
         .map_err(|e| FetchError::Parse(e.to_string()))?;
 
-    let (stars, forks) = parse_repo_response(slug, &body)?;
+    if !status.is_success() {
+        return Err(FetchError::Http(format!("GET {url} returned {status}")));
+    }
+
+    Ok(body)
+}
+
+async fn fetch_latest_release(
+    client: &reqwest::Client,
+    slug: &str,
+    token: &str,
+) -> Option<ReleaseInfo> {
+    let url = format!("https://api.github.com/repos/{slug}/releases/latest");
+    // 404 is expected for repos with no releases — treat as None, not an error
+    let resp = client
+        .get(&url)
+        .header("Authorization", format!("Bearer {token}"))
+        .header("User-Agent", "jpellis-me/1.0")
+        .send()
+        .await
+        .ok()?;
+
+    if resp.status().as_u16() == 404 {
+        return None;
+    }
+
+    let body = resp.json::<serde_json::Value>().await.ok()?;
+    parse_release_response(&body)
+}
+
+async fn fetch_recent_commits(
+    client: &reqwest::Client,
+    slug: &str,
+    token: &str,
+) -> Vec<CommitInfo> {
+    let url = format!("https://api.github.com/repos/{slug}/commits?per_page=20");
+    let body = match get_json(client, &url, token).await {
+        Ok(b) => b,
+        Err(e) => {
+            leptos::logging::warn!("projects::fetch commits {slug}: {e}");
+            return vec![];
+        }
+    };
+    parse_commits_response(&body)
+}
+
+async fn fetch_open_prs_count(client: &reqwest::Client, slug: &str, token: &str) -> u32 {
+    let url = format!("https://api.github.com/repos/{slug}/pulls?state=open&per_page=100");
+    let body = match get_json(client, &url, token).await {
+        Ok(b) => b,
+        Err(e) => {
+            leptos::logging::warn!("projects::fetch prs {slug}: {e}");
+            return 0;
+        }
+    };
+    parse_prs_count(&body)
+}
+
+async fn fetch_single_repo(
+    client: &reqwest::Client,
+    slug: &str,
+    token: &str,
+) -> Result<RepoStats, FetchError> {
+    let repo_url = format!("https://api.github.com/repos/{slug}");
+    let repo_body = get_json(client, &repo_url, token).await?;
+    let (stars, forks, open_issues, watchers) = parse_repo_response(slug, &repo_body)?;
+
+    // Fetch activity concurrently after we know the repo exists
+    use futures::join;
+    let (latest_release, recent_commits, open_prs) = join!(
+        fetch_latest_release(client, slug, token),
+        fetch_recent_commits(client, slug, token),
+        fetch_open_prs_count(client, slug, token),
+    );
 
     Ok(RepoStats {
         slug: slug.to_string(),
         stars,
         forks,
+        open_issues,
+        watchers,
+        latest_release,
+        recent_commits,
+        open_prs,
     })
 }
 
-/// Fetches stars and forks for the given repository slugs concurrently.
+/// Fetches stats and activity for the given repository slugs concurrently.
 ///
-/// Repos that fail to fetch are logged and skipped — a single repo being
-/// renamed, archived, or rate-limited does not fail the entire fetch.
+/// Repos that fail to fetch are logged and skipped.
 ///
 /// # Arguments
 ///
 /// * `token` - A GitHub personal access token with at least `public_repo` read scope.
-/// * `slugs` - Repository slugs to fetch, sourced from [`crate::config::projects::projects_config`].
+/// * `slugs` - Repository slugs from [`crate::config::projects::projects_config`].
 ///
 /// # Returns
 ///
@@ -114,34 +320,6 @@ pub async fn fetch_projects_stats(token: &str, slugs: &[String]) -> ProjectsStat
     }
 }
 
-/// Parses `stargazers_count` and `forks_count` from a GitHub REST repo response.
-///
-/// Extracted as a testable pure function.
-///
-/// # Arguments
-///
-/// * `slug` - Repository slug (used in error messages).
-/// * `body` - Parsed JSON from `GET /repos/{owner}/{repo}`.
-///
-/// # Returns
-///
-/// `(stars, forks)` on success.
-///
-/// # Errors
-///
-/// Returns [`FetchError::Parse`] if either field is missing.
-pub fn parse_repo_response(slug: &str, body: &serde_json::Value) -> Result<(u32, u32), FetchError> {
-    let stars = body["stargazers_count"]
-        .as_u64()
-        .ok_or_else(|| FetchError::Parse(format!("{slug}: stargazers_count missing")))?
-        as u32;
-    let forks = body["forks_count"]
-        .as_u64()
-        .ok_or_else(|| FetchError::Parse(format!("{slug}: forks_count missing")))?
-        as u32;
-    Ok((stars, forks))
-}
-
 #[cfg(test)]
 mod tests {
     use pretty_assertions::assert_eq;
@@ -149,22 +327,25 @@ mod tests {
     use super::*;
 
     #[test]
-    fn parse_repo_response_extracts_stars_and_forks() {
+    fn parse_repo_response_extracts_all_four_fields() {
         let body = serde_json::json!({
-            "full_name": "JP-Ellis/tikz-feynman",
             "stargazers_count": 158,
             "forks_count": 22,
-            "archived": false
+            "open_issues_count": 5,
+            "watchers_count": 12
         });
-        let (stars, forks) =
-            parse_repo_response("JP-Ellis/tikz-feynman", &body).expect("valid response");
+        let (stars, forks, open_issues, watchers) =
+            parse_repo_response("JP-Ellis/tikz-feynman", &body).expect("valid");
         assert_eq!(stars, 158);
         assert_eq!(forks, 22);
+        assert_eq!(open_issues, 5);
+        assert_eq!(watchers, 12);
     }
 
     #[test]
     fn parse_repo_response_errors_on_missing_stars() {
-        let body = serde_json::json!({ "forks_count": 5 });
+        let body =
+            serde_json::json!({ "forks_count": 5, "open_issues_count": 0, "watchers_count": 1 });
         let result = parse_repo_response("owner/repo", &body);
         assert!(result.is_err());
         assert!(result.unwrap_err().to_string().contains("stargazers_count"));
@@ -172,9 +353,145 @@ mod tests {
 
     #[test]
     fn parse_repo_response_errors_on_missing_forks() {
-        let body = serde_json::json!({ "stargazers_count": 100 });
+        let body = serde_json::json!({ "stargazers_count": 100, "open_issues_count": 0, "watchers_count": 1 });
         let result = parse_repo_response("owner/repo", &body);
         assert!(result.is_err());
         assert!(result.unwrap_err().to_string().contains("forks_count"));
+    }
+
+    #[test]
+    fn parse_release_response_extracts_release_info() {
+        let body = serde_json::json!({
+            "tag_name": "v3.1.0",
+            "published_at": "2025-01-14T10:00:00Z",
+            "html_url": "https://github.com/JP-Ellis/tikz-feynman/releases/tag/v3.1.0"
+        });
+        let info = parse_release_response(&body).expect("should parse");
+        assert_eq!(info.tag, "v3.1.0");
+        assert_eq!(info.date, "2025-01-14T10:00:00Z");
+        assert_eq!(
+            info.url,
+            "https://github.com/JP-Ellis/tikz-feynman/releases/tag/v3.1.0"
+        );
+    }
+
+    #[test]
+    fn parse_release_response_returns_none_on_missing_fields() {
+        let body = serde_json::json!({ "message": "Not Found" });
+        assert!(parse_release_response(&body).is_none());
+    }
+
+    #[test]
+    fn parse_commit_skips_bot_by_type() {
+        let commit = serde_json::json!({
+            "sha": "abc1234567890",
+            "commit": {
+                "message": "chore(deps): update deps\nMore details",
+                "author": { "name": "renovate[bot]", "date": "2025-05-01T09:00:00Z" }
+            },
+            "author": { "login": "renovate[bot]", "type": "Bot" },
+            "html_url": "https://github.com/owner/repo/commit/abc1234"
+        });
+        assert!(parse_commit(&commit).is_none());
+    }
+
+    #[test]
+    fn parse_commit_skips_null_author() {
+        // Commits not associated with a GitHub account have null author
+        let commit = serde_json::json!({
+            "sha": "abc1234567890",
+            "commit": {
+                "message": "Initial commit",
+                "author": { "name": "Someone", "date": "2025-05-01T09:00:00Z" }
+            },
+            "author": null,
+            "html_url": "https://github.com/owner/repo/commit/abc1234"
+        });
+        // null author = not associated with a GitHub user; treat as non-bot
+        let info = parse_commit(&commit).expect("null author is not a bot");
+        assert_eq!(info.author, "Someone");
+    }
+
+    #[test]
+    fn parse_commit_returns_commit_info_for_human() {
+        let commit = serde_json::json!({
+            "sha": "a1b2c3d4e5f6",
+            "commit": {
+                "message": "Fix diagram spacing\n\nLonger description here",
+                "author": { "name": "Joshua Ellis", "date": "2025-05-01T09:00:00Z" }
+            },
+            "author": { "login": "JP-Ellis", "type": "User" },
+            "html_url": "https://github.com/JP-Ellis/tikz-feynman/commit/a1b2c3d"
+        });
+        let info = parse_commit(&commit).expect("human commit");
+        assert_eq!(info.sha, "a1b2c3d"); // 7-char short SHA
+        assert_eq!(info.message, "Fix diagram spacing"); // first line only
+        assert_eq!(info.author, "JP-Ellis"); // GitHub login for Users
+        assert_eq!(info.date, "2025-05-01T09:00:00Z");
+    }
+
+    #[test]
+    fn parse_commit_truncates_long_message() {
+        let long_msg = format!("{}\nSecond line", "A".repeat(80));
+        let commit = serde_json::json!({
+            "sha": "a1b2c3d4e5f6",
+            "commit": {
+                "message": long_msg,
+                "author": { "name": "JP-Ellis", "date": "2025-01-01T00:00:00Z" }
+            },
+            "author": { "login": "JP-Ellis", "type": "User" },
+            "html_url": "https://example.com/commit/abc"
+        });
+        let info = parse_commit(&commit).expect("human commit");
+        assert!(info.message.len() <= 75); // 72 chars + "…"
+        assert!(info.message.ends_with('…'));
+    }
+
+    #[test]
+    fn parse_commits_response_filters_bots_and_caps_at_five() {
+        // 7 commits: 2 bots + 5 humans → should return 5 humans
+        let mut commits = Vec::new();
+        for i in 0..5 {
+            commits.push(serde_json::json!({
+                "sha": format!("human{i}abcdef"),
+                "commit": {
+                    "message": format!("Human commit {i}"),
+                    "author": { "name": "JP-Ellis", "date": "2025-05-01T09:00:00Z" }
+                },
+                "author": { "login": "JP-Ellis", "type": "User" },
+                "html_url": "https://example.com/commit/abc"
+            }));
+        }
+        for i in 0..2 {
+            commits.push(serde_json::json!({
+                "sha": format!("bot{i}abcdefgh"),
+                "commit": {
+                    "message": format!("chore(deps): bot commit {i}"),
+                    "author": { "name": "renovate[bot]", "date": "2025-05-01T09:00:00Z" }
+                },
+                "author": { "login": "renovate[bot]", "type": "Bot" },
+                "html_url": "https://example.com/commit/bot"
+            }));
+        }
+        let body = serde_json::Value::Array(commits);
+        let result = parse_commits_response(&body);
+        assert_eq!(result.len(), 5);
+        assert!(result.iter().all(|c| !c.author.contains("bot")));
+    }
+
+    #[test]
+    fn parse_prs_count_counts_array_length() {
+        let body = serde_json::json!([
+            { "number": 1 },
+            { "number": 2 },
+            { "number": 3 }
+        ]);
+        assert_eq!(parse_prs_count(&body), 3);
+    }
+
+    #[test]
+    fn parse_prs_count_returns_zero_for_empty() {
+        let body = serde_json::json!([]);
+        assert_eq!(parse_prs_count(&body), 0);
     }
 }
