@@ -29,6 +29,10 @@ directory = "./target/site"
 [triggers]
 crons = ["0 13 * * *", "0 13 * * 1"]
 
+[observability.logs]
+enabled = true
+invocation_logs = true
+
 [[kv_namespaces]]
 binding = "GITHUB_STATS"
 id = "5e502e4bfb6b4f6985fcde597f6460e7"
