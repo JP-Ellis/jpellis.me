@@ -1,0 +1,185 @@
+@use '../../style/tokens/breakpoints' as *;
+
+// ── Hero ──────────────────────────────────────────────────────────────────────
+
+.hero {
+    padding: var(--space-7) 0 var(--space-6);
+}
+
+.tagline {
+    font-size: var(--text-lead-size);
+    line-height: var(--text-lead-leading);
+    color: var(--color-muted);
+    max-width: 52ch;
+    margin-top: var(--space-3);
+}
+
+.github-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+    font-size: var(--text-body-size);
+    font-weight: 500;
+    color: var(--color-accent);
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+// ── Stats + Activity panel ────────────────────────────────────────────────────
+
+.stats-section {
+    border-top: 1px solid var(--color-rule);
+    border-bottom: 1px solid var(--color-rule);
+    padding: var(--space-6) 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+
+    @media (min-width: $bp-md) {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+    }
+}
+
+// ── Stat chips ────────────────────────────────────────────────────────────────
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-5);
+    align-content: start;
+}
+
+.chip {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 4rem;
+}
+
+.chip-icon-value {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-style: italic;
+    font-size: var(--text-lead-size);
+    line-height: 1;
+    color: var(--color-ink);
+}
+
+.chip-value-link {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+        color: var(--color-accent);
+    }
+}
+
+.chip-label {
+    font-size: var(--text-meta-size);
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.chip-skeleton {
+    display: inline-block;
+    width: 3rem;
+    height: 1.2em;
+    background: color-mix(in srgb, var(--color-muted) 20%, transparent);
+    border-radius: 2px;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+// ── Recent commits ────────────────────────────────────────────────────────────
+
+.commits {
+    display: none; // hidden on narrow screens
+
+    @media (min-width: $bp-md) {
+        display: block;
+    }
+}
+
+.commits-heading {
+    font-size: var(--text-meta-size);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-muted);
+    margin: 0 0 var(--space-3);
+}
+
+.commit-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.commit-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-1) var(--space-3);
+    font-size: var(--text-body-size);
+}
+
+.commit-sha {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    color: var(--color-accent);
+    text-decoration: none;
+    grid-row: span 2;
+    align-self: center;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.commit-message {
+    color: var(--color-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.commit-meta {
+    color: var(--color-muted);
+    font-size: var(--text-meta-size);
+}
+
+// ── Prose content ─────────────────────────────────────────────────────────────
+
+.prose-section {
+    padding: var(--space-8) 0;
+}
+
+// Dark-mode inversion for diagrams rendered on white backgrounds.
+// Apply class="invert-dark" to <img> tags in authored markdown.
+@media (prefers-color-scheme: dark) {
+    :global(.invert-dark) {
+        filter: invert(1);
+    }
+}
+
+[data-theme="dark"] :global(.invert-dark) {
+    filter: invert(1);
+}
