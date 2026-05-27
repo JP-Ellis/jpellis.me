@@ -19,6 +19,7 @@
 .stats-headline {
     font-family: var(--font-display);
     font-weight: 300;
+    // clamp(28px, 4vw, 36px): between --text-title-size (26px) and --text-section-size (32–46px); this component-specific range doesn't fit either ramp step cleanly
     font-size: clamp(28px, 4vw, 36px);
     margin-top: var(--space-2);
     letter-spacing: -0.015em;
@@ -40,7 +41,7 @@
 
 .commit-grid {
     display: flex;
-    gap: 3px;
+    gap: var(--space-half);
     overflow-x: auto;
     justify-content: center;
 }
@@ -48,14 +49,15 @@
 .commit-col {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: var(--space-half);
     flex-shrink: 0;
 }
 
 .commit-cell {
+    // 13px × 13px: commit grid cell dimensions — specific to this component's visual design
     width: 13px;
     height: 13px;
-    border-radius: 2.5px;
+    border-radius: var(--radius-sm);
     flex-shrink: 0;
 
     &[data-commit-level="0"] { background: var(--color-faint); }
@@ -82,6 +84,7 @@
 
 .commit-row {
     display: grid;
+    // column widths are component-specific layout decisions, not reusable tokens
     grid-template-columns: minmax(0, 160px) 1fr 40px;
     gap: var(--space-3);
     padding-block: var(--space-3);
@@ -96,6 +99,7 @@
 
 .activity-row {
     display: grid;
+    // column widths are component-specific layout decisions, not reusable tokens
     grid-template-columns: minmax(0, 160px) 1fr 40px;
     gap: var(--space-3);
     padding-block: var(--space-3);
@@ -111,13 +115,13 @@
 .activity-repo-wrap {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: var(--space-half);
     overflow: hidden;
 }
 
 .commit-repo {
     font-family: var(--font-mono);
-    font-size: 12.5px;
+    font-size: var(--text-meta-size);
     color: var(--color-accent-soft);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -133,7 +137,7 @@
 
 .commit-msg {
     font-family: var(--font-mono);
-    font-size: 12.5px;
+    font-size: var(--text-meta-size);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -141,7 +145,7 @@
 
 .commit-age {
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: var(--text-eyebrow-size);
     color: var(--color-muted);
     text-align: right;
 }
@@ -160,7 +164,7 @@
 
 .skeleton-line {
     display: inline-block;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     height: 0.8em;
     vertical-align: middle;
     background: linear-gradient(
@@ -170,5 +174,6 @@
         var(--color-faint) 75%
     );
     background-size: 200% 100%;
+    // 1.8s: intentionally slower than --duration-default (200ms) for a relaxed shimmer feel
     animation: skeleton-shimmer 1.8s ease-in-out infinite;
 }
