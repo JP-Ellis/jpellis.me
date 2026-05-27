@@ -43,11 +43,11 @@ pub fn HomePage() -> impl IntoView {
             // ── Year in Code ──────────────────────────────────────
             <YearInCode />
 
-            // ── Selected Work ─────────────────────────────────────
+            // ── Selected Projects ─────────────────────────────────
             <section class=style::projects_section>
                 <div class="container">
                     <div class="eyebrow-grid">
-                        <span class="eyebrow">"Selected work"</span>
+                        <span class="eyebrow">"Selected projects"</span>
                         <div>
                             {PROJECTS
                                 .iter()
@@ -108,11 +108,11 @@ pub fn HomePage() -> impl IntoView {
                 </div>
             </section>
 
-            // ── Elsewhere ─────────────────────────────────────────
+            // ── Recent Writing ────────────────────────────────────
             <section class=style::elsewhere_section>
                 <div class="container">
                     <div class="eyebrow-grid">
-                        <span class="eyebrow">"Elsewhere"</span>
+                        <span class="eyebrow">"Recent writing"</span>
                         <div>
                             {crate::blog::POSTS
                                 .iter()
