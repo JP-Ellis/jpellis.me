@@ -53,6 +53,8 @@ $warning-ch: 0.14   75;
     @include derived-tokens;
 }
 
+// Dark mode inverts the palette: paper takes the ink chroma/hue, ink takes the paper chroma/hue.
+// Lightness values are tuned independently.
 @mixin theme-dark {
     --color-paper:   oklch(0.20   #{$ink-ch});     // near-#1a1612 — tuned independently
     --color-ink:     oklch(0.95   #{$paper-ch});   // near-#f5f1ea — tuned independently
