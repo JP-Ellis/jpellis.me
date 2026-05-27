@@ -64,10 +64,7 @@
     min-width: 4rem;
 }
 
-.chip-icon-value {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-1);
+.chip-value {
     font-family: var(--font-display);
     font-weight: 300;
     font-style: italic;

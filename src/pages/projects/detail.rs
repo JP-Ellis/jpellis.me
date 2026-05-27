@@ -216,7 +216,6 @@ fn StatsPanel(repo: Option<RepoStats>, activity: ActivityConfig) -> impl IntoVie
                     // Left column: stat chips (all screen widths)
                     <div class=style::chips>
                         <StatChip
-                            icon="⭐"
                             label="stars"
                             value=repo
                                 .as_ref()
@@ -229,7 +228,6 @@ fn StatsPanel(repo: Option<RepoStats>, activity: ActivityConfig) -> impl IntoVie
                             link=None
                         />
                         <StatChip
-                            icon="🍴"
                             label="forks"
                             value=repo
                                 .as_ref()
@@ -242,7 +240,6 @@ fn StatsPanel(repo: Option<RepoStats>, activity: ActivityConfig) -> impl IntoVie
                             link=None
                         />
                         <StatChip
-                            icon="👁"
                             label="watchers"
                             value=repo
                                 .as_ref()
@@ -255,7 +252,6 @@ fn StatsPanel(repo: Option<RepoStats>, activity: ActivityConfig) -> impl IntoVie
                             link=None
                         />
                         <StatChip
-                            icon="❗"
                             label="open issues"
                             value=repo
                                 .as_ref()
@@ -275,7 +271,6 @@ fn StatsPanel(repo: Option<RepoStats>, activity: ActivityConfig) -> impl IntoVie
                                         Some(
                                             view! {
                                                 <StatChip
-                                                    icon="🚀"
                                                     label="latest release"
                                                     value=view! {
                                                         <span class=style::chip_skeleton aria-hidden="true" />
@@ -298,7 +293,6 @@ fn StatsPanel(repo: Option<RepoStats>, activity: ActivityConfig) -> impl IntoVie
                                                 let url = rel.url.clone();
                                                 view! {
                                                     <StatChip
-                                                        icon="🚀"
                                                         label="latest release"
                                                         value=view! { {label} }.into_any()
                                                         link=Some(url)
@@ -316,7 +310,6 @@ fn StatsPanel(repo: Option<RepoStats>, activity: ActivityConfig) -> impl IntoVie
                                         Some(
                                             view! {
                                                 <StatChip
-                                                    icon="🔀"
                                                     label="pull requests"
                                                     value=view! {
                                                         <span class=style::chip_skeleton aria-hidden="true" />
@@ -340,7 +333,6 @@ fn StatsPanel(repo: Option<RepoStats>, activity: ActivityConfig) -> impl IntoVie
                                             Some(
                                                 view! {
                                                     <StatChip
-                                                        icon="🔀"
                                                         label="pull requests"
                                                         value=view! { {label} }.into_any()
                                                         link=None
@@ -372,12 +364,7 @@ fn StatsPanel(repo: Option<RepoStats>, activity: ActivityConfig) -> impl IntoVie
 // ── StatChip ──────────────────────────────────────────────────────────────────
 
 #[component]
-fn StatChip(
-    icon: &'static str,
-    label: &'static str,
-    value: AnyView,
-    link: Option<String>,
-) -> impl IntoView {
+fn StatChip(label: &'static str, value: AnyView, link: Option<String>) -> impl IntoView {
     let value_node: AnyView = match link {
         Some(url) => view! {
             <a href=url target="_blank" rel="noopener noreferrer" class=style::chip_value_link>
@@ -391,10 +378,7 @@ fn StatChip(
     view! {
         <dl class=style::chip>
             <dt class=style::chip_label>{label}</dt>
-            <dd class=style::chip_icon_value>
-                <span aria-hidden="true">{icon}</span>
-                {value_node}
-            </dd>
+            <dd class=style::chip_value>{value_node}</dd>
         </dl>
     }
 }
