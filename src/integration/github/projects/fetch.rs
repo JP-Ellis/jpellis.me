@@ -3,10 +3,10 @@
 use chrono::Utc;
 use futures::future;
 
-use crate::integration::github::work::model::RepoStats;
-use crate::integration::github::work::model::WorkStats;
+use crate::integration::github::projects::model::ProjectsStats;
+use crate::integration::github::projects::model::RepoStats;
 
-/// Errors that can occur while fetching work statistics.
+/// Errors that can occur while fetching projects statistics.
 #[derive(Debug)]
 pub enum FetchError {
     /// An HTTP-level error.
@@ -84,12 +84,12 @@ async fn fetch_single_repo(
 /// # Arguments
 ///
 /// * `token` - A GitHub personal access token with at least `public_repo` read scope.
-/// * `slugs` - Repository slugs to fetch, sourced from [`crate::config::work::work_config`].
+/// * `slugs` - Repository slugs to fetch, sourced from [`crate::config::projects::projects_config`].
 ///
 /// # Returns
 ///
-/// A [`WorkStats`] with one [`RepoStats`] per successfully fetched repo.
-pub async fn fetch_work_stats(token: &str, slugs: &[String]) -> WorkStats {
+/// A [`ProjectsStats`] with one [`RepoStats`] per successfully fetched repo.
+pub async fn fetch_projects_stats(token: &str, slugs: &[String]) -> ProjectsStats {
     let client = reqwest::Client::new();
     let futs: Vec<_> = slugs
         .iter()
@@ -102,13 +102,13 @@ pub async fn fetch_work_stats(token: &str, slugs: &[String]) -> WorkStats {
         .filter_map(|result| match result {
             Ok(stats) => Some(stats),
             Err(e) => {
-                leptos::logging::warn!("work::fetch: {e}");
+                leptos::logging::warn!("projects::fetch: {e}");
                 None
             }
         })
         .collect();
 
-    WorkStats {
+    ProjectsStats {
         fetched_at: Utc::now(),
         repos,
     }

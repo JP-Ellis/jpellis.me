@@ -2,16 +2,16 @@ use std::sync::OnceLock;
 
 use serde::Deserialize;
 
-static CACHE: OnceLock<WorkConfig> = OnceLock::new();
+static CACHE: OnceLock<ProjectsConfig> = OnceLock::new();
 
-/// Configuration for the work page, loaded from `work.toml`.
+/// Configuration for the projects page, loaded from `projects.toml`.
 #[derive(Debug, Deserialize)]
-pub struct WorkConfig {
+pub struct ProjectsConfig {
     /// GitHub slugs to track for star/fork counts.
-    /// Must cover every `ProjectLink::GitHub` entry in `pages::work::PROJECTS`.
+    /// Must cover every `ProjectLink::GitHub` entry in `pages::projects::PROJECTS`.
     #[allow(dead_code)]
     pub tracked_slugs: Vec<String>,
-    /// Misc OSS contributions shown at the bottom of the work page.
+    /// Misc OSS contributions shown at the bottom of the projects page.
     #[serde(default)]
     pub oss_contribs: Vec<OssContrib>,
 }
@@ -28,12 +28,12 @@ pub struct OssContrib {
     pub stars: u64,
 }
 
-const WORK_CONFIG_TOML: &str = include_str!("work.toml");
+const PROJECTS_CONFIG_TOML: &str = include_str!("projects.toml");
 
-/// Returns the parsed work configuration, initialised once.
-pub fn work_config() -> &'static WorkConfig {
+/// Returns the parsed projects configuration, initialised once.
+pub fn projects_config() -> &'static ProjectsConfig {
     CACHE.get_or_init(|| {
-        toml::from_str(WORK_CONFIG_TOML).expect("src/config/work.toml is not valid TOML")
+        toml::from_str(PROJECTS_CONFIG_TOML).expect("src/config/projects.toml is not valid TOML")
     })
 }
 
@@ -43,7 +43,7 @@ mod tests {
 
     #[test]
     fn tracked_slugs_are_valid_format() {
-        for slug in &work_config().tracked_slugs {
+        for slug in &projects_config().tracked_slugs {
             assert!(!slug.is_empty(), "empty tracked slug");
             assert!(slug.contains('/'), "tracked slug missing '/': {slug}");
         }
@@ -51,7 +51,7 @@ mod tests {
 
     #[test]
     fn oss_contribs_slugs_are_valid_format() {
-        for c in &work_config().oss_contribs {
+        for c in &projects_config().oss_contribs {
             assert!(!c.slug.is_empty(), "empty oss_contrib slug");
             assert!(
                 c.slug.contains('/'),

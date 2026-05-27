@@ -2,8 +2,8 @@ use std::sync::LazyLock;
 
 use chrono::Utc;
 
-use crate::integration::github::work::model::RepoStats;
-use crate::integration::github::work::model::WorkStats;
+use crate::integration::github::projects::model::ProjectsStats;
+use crate::integration::github::projects::model::RepoStats;
 
 // ─── Fallback JSON ────────────────────────────────────────────────────────────
 
@@ -15,7 +15,7 @@ static FALLBACK_REPOS: LazyLock<Vec<RepoStats>> = LazyLock::new(|| {
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
-/// Returns placeholder [`WorkStats`] for use when the GitHub API is unavailable.
+/// Returns placeholder [`ProjectsStats`] for use when the GitHub API is unavailable.
 ///
 /// Repo data comes from [`FALLBACK_REPOS`] (embedded `fallback.json`), which
 /// holds approximate star/fork counts recorded at the time the file was last
@@ -24,10 +24,10 @@ static FALLBACK_REPOS: LazyLock<Vec<RepoStats>> = LazyLock::new(|| {
 ///
 /// # Returns
 ///
-/// A [`WorkStats`] with one [`RepoStats`] entry for every slug in
-/// `src/config/work.toml`, using hardcoded star/fork counts.
-pub fn fallback_work_stats() -> WorkStats {
-    WorkStats {
+/// A [`ProjectsStats`] with one [`RepoStats`] entry for every slug in
+/// `src/config/projects.toml`, using hardcoded star/fork counts.
+pub fn fallback_projects_stats() -> ProjectsStats {
+    ProjectsStats {
         fetched_at: Utc::now(),
         repos: FALLBACK_REPOS.clone(),
     }

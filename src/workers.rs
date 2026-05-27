@@ -4,11 +4,11 @@
 //! This module compiles only for WASM32 SSR targets.
 //!
 //! - **`fetch`**: Routes HTTP requests through Leptos SSR. Injects both
-//!   [`StatsProvider`] and [`WorkStatsProvider`] into Leptos context.
+//!   [`StatsProvider`] and [`ProjectsStatsProvider`] into Leptos context.
 //!
 //! - **`scheduled`**: Dispatches on `event.cron()`:
 //!   - Daily (`0 13 * * *`) → refreshes `github/stats`.
-//!   - Weekly (`0 13 * * 1`) → refreshes `github/work`.
+//!   - Weekly (`0 13 * * 1`) → refreshes `github/projects`.
 
 #![cfg(all(target_arch = "wasm32", feature = "ssr"))]
 
@@ -30,16 +30,16 @@ use worker::console_log;
 use worker::event;
 
 use crate::App;
+use crate::integration::ProjectsStatsProvider;
 use crate::integration::StatsProvider;
-use crate::integration::WorkStatsProvider;
+use crate::integration::github::projects::fetch::fetch_projects_stats;
 use crate::integration::github::stats::fetch::fetch_from_github;
-use crate::integration::github::work::fetch::fetch_work_stats;
 use crate::shell;
 
 /// Handles incoming HTTP fetch events.
 ///
-/// Injects [`StatsProvider`] and [`WorkStatsProvider`] into Leptos context so
-/// server functions can access GitHub stats and work stats respectively.
+/// Injects [`StatsProvider`] and [`ProjectsStatsProvider`] into Leptos context so
+/// server functions can access GitHub stats and projects stats respectively.
 ///
 /// Missing bindings or an absent `GITHUB_TOKEN` secret are handled
 /// gracefully: the relevant provider falls back to hardcoded placeholder
@@ -66,7 +66,8 @@ pub async fn fetch_handler(
     let ctx = std::sync::Arc::new(ctx);
 
     let stats_provider = StatsProvider::kv(env.kv("GITHUB_STATS"), ctx.clone(), token.as_deref());
-    let work_provider = WorkStatsProvider::kv(env.kv("WORK_STATS"), ctx, token.as_deref());
+    let projects_provider =
+        ProjectsStatsProvider::kv(env.kv("PROJECTS_STATS"), ctx, token.as_deref());
 
     let leptos_options = leptos::config::LeptosOptions::builder()
         .output_name("jpellis-me")
@@ -80,7 +81,7 @@ pub async fn fetch_handler(
             routes,
             move || {
                 provide_context(stats_provider.clone());
-                provide_context(work_provider.clone());
+                provide_context(projects_provider.clone());
             },
             {
                 let opts = leptos_options.clone();
@@ -95,7 +96,7 @@ pub async fn fetch_handler(
 /// Handles scheduled cron events.
 ///
 /// - `"0 13 * * *"` (daily) — refreshes GitHub contribution stats.
-/// - `"0 13 * * 1"` (weekly, Monday) — refreshes per-repo work stats.
+/// - `"0 13 * * 1"` (weekly, Monday) — refreshes per-repo projects stats.
 #[event(scheduled)]
 pub async fn scheduled_handler(event: ScheduledEvent, env: Env, _ctx: ScheduleContext) {
     let token = match env.secret("GITHUB_TOKEN") {
@@ -107,7 +108,7 @@ pub async fn scheduled_handler(event: ScheduledEvent, env: Env, _ctx: ScheduleCo
     };
 
     match event.cron().as_str() {
-        "0 13 * * 1" => refresh_work_stats(env, &token).await,
+        "0 13 * * 1" => refresh_projects_stats(env, &token).await,
         _ => refresh_github_stats(env, &token).await,
     }
 }
@@ -138,29 +139,33 @@ async fn refresh_github_stats(env: Env, token: &str) {
     }
 }
 
-async fn refresh_work_stats(env: Env, token: &str) {
-    let kv = match env.kv("WORK_STATS") {
+async fn refresh_projects_stats(env: Env, token: &str) {
+    let kv = match env.kv("PROJECTS_STATS") {
         Ok(k) => k,
         Err(e) => {
-            console_error!("WORK_STATS KV binding error: {e}");
+            console_error!("PROJECTS_STATS KV binding error: {e}");
             return;
         }
     };
-    let fresh = fetch_work_stats(token, &crate::config::work::work_config().tracked_slugs).await;
+    let fresh = fetch_projects_stats(
+        token,
+        &crate::config::projects::projects_config().tracked_slugs,
+    )
+    .await;
     match serde_json::to_string(&fresh) {
-        Ok(json) => match kv.put("work-stats", json) {
+        Ok(json) => match kv.put("projects-stats", json) {
             Ok(builder) => {
                 if let Err(e) = builder.execute().await {
-                    console_error!("KV work-stats write error: {e}");
+                    console_error!("KV projects-stats write error: {e}");
                 } else {
                     console_log!(
-                        "Work stats refreshed successfully ({} repos)",
+                        "Projects stats refreshed successfully ({} repos)",
                         fresh.repos.len()
                     );
                 }
             }
-            Err(e) => console_error!("KV work-stats put setup error: {e}"),
+            Err(e) => console_error!("KV projects-stats put setup error: {e}"),
         },
-        Err(e) => console_error!("Work stats serialisation error: {e}"),
+        Err(e) => console_error!("Projects stats serialisation error: {e}"),
     }
 }

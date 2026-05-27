@@ -6,8 +6,8 @@ use crate::blog::source_domain;
 use crate::components::Footer;
 use crate::components::Masthead;
 use crate::components::YearInCode;
-use crate::pages::work::PROJECTS;
-use crate::pages::work::ProjectLink;
+use crate::pages::projects::PROJECTS;
+use crate::pages::projects::ProjectLink;
 
 import_style!(style, "home.module.scss");
 
@@ -44,7 +44,7 @@ pub fn HomePage() -> impl IntoView {
             <YearInCode />
 
             // ── Selected Work ─────────────────────────────────────
-            <section class=style::work_section>
+            <section class=style::projects_section>
                 <div class="container">
                     <div class="eyebrow-grid">
                         <span class="eyebrow">"Selected work"</span>
@@ -61,7 +61,7 @@ pub fn HomePage() -> impl IntoView {
                                                 view! {
                                                     <a
                                                         href=format!("https://github.com/{slug}")
-                                                        class=style::work_link
+                                                        class=style::projects_link
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                     >
@@ -76,7 +76,7 @@ pub fn HomePage() -> impl IntoView {
                                                 view! {
                                                     <a
                                                         href=url
-                                                        class=style::work_link
+                                                        class=style::projects_link
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                     >
@@ -90,18 +90,18 @@ pub fn HomePage() -> impl IntoView {
                                     };
                                     view! {
                                         <div
-                                            class=format!("{} {}", style::work_row, border)
-                                            data-testid="work-row"
+                                            class=format!("{} {}", style::projects_row, border)
+                                            data-testid="projects-row"
                                         >
-                                            <span class=style::work_name>{entry.name}</span>
-                                            <span class=style::work_kind>{entry.kind}</span>
-                                            <span class=style::work_summary>{entry.summary}</span>
+                                            <span class=style::projects_name>{entry.name}</span>
+                                            <span class=style::projects_kind>{entry.kind}</span>
+                                            <span class=style::projects_summary>{entry.summary}</span>
                                             {link_view}
                                         </div>
                                     }
                                 })
-                                .collect_view()} <a href="/work" class=style::work_all_link>
-                                "↗ All work"
+                                .collect_view()} <a href="/projects" class=style::projects_all_link>
+                                "↗ All projects"
                             </a>
                         </div>
                     </div>
@@ -156,7 +156,7 @@ pub fn HomePage() -> impl IntoView {
                                         </div>
                                     }
                                 })
-                                .collect_view()} <a href="/blog" class=style::work_all_link>
+                                .collect_view()} <a href="/blog" class=style::projects_all_link>
                                 "↗ All posts"
                             </a>
                         </div>

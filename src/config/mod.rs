@@ -1,1 +1,1 @@
-pub mod work;
+pub mod projects;

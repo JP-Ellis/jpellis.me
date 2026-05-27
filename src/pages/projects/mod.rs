@@ -4,12 +4,12 @@ use stylance::import_style;
 use crate::components::Band;
 use crate::components::Footer;
 use crate::components::Masthead;
-use crate::config::work::work_config;
-use crate::integration::WorkStats;
-use crate::integration::get_work_stats;
-use crate::integration::github::work::model::RepoStats;
+use crate::config::projects::projects_config;
+use crate::integration::ProjectsStats;
+use crate::integration::get_projects_stats;
+use crate::integration::github::projects::model::RepoStats;
 
-import_style!(style, "work.module.scss");
+import_style!(style, "projects.module.scss");
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -185,7 +185,7 @@ pub const PROJECTS: &[ProjectEntry] = &[
 /// # Example
 ///
 /// ```
-/// # use jpellis_me::pages::work::format_stars;
+/// # use jpellis_me::pages::projects::format_stars;
 /// assert_eq!(format_stars(664), "664");
 /// assert_eq!(format_stars(1400), "1.4k");
 /// ```
@@ -205,24 +205,27 @@ pub fn github_slug(entry: &ProjectEntry) -> Option<&'static str> {
     }
 }
 
-/// Looks up [`RepoStats`] for a project entry from a fetched [`WorkStats`].
-pub fn find_repo_stats<'a>(entry: &ProjectEntry, stats: &'a WorkStats) -> Option<&'a RepoStats> {
+/// Looks up [`RepoStats`] for a project entry from a fetched [`ProjectsStats`].
+pub fn find_repo_stats<'a>(
+    entry: &ProjectEntry,
+    stats: &'a ProjectsStats,
+) -> Option<&'a RepoStats> {
     let slug = github_slug(entry)?;
     stats.repos.iter().find(|r| r.slug == slug)
 }
 
-// ─── WorkBand ────────────────────────────────────────────────────────────────
+// ─── ProjectsBand ────────────────────────────────────────────────────────────
 
-fn total_stars(stats: &WorkStats) -> u32 {
+fn total_stars(stats: &ProjectsStats) -> u32 {
     stats.repos.iter().map(|r| r.stars).sum()
 }
 
-fn total_forks(stats: &WorkStats) -> u32 {
+fn total_forks(stats: &ProjectsStats) -> u32 {
     stats.repos.iter().map(|r| r.forks).sum()
 }
 
 #[component]
-fn WorkBand(stats: Option<WorkStats>) -> impl IntoView {
+fn ProjectsBand(stats: Option<ProjectsStats>) -> impl IntoView {
     let stars: AnyView = match &stats {
         Some(s) => format_stars(total_stars(s)).into_any(),
         None => view! { <span class=style::row_stars_skeleton aria-hidden="true" /> }.into_any(),
@@ -233,7 +236,7 @@ fn WorkBand(stats: Option<WorkStats>) -> impl IntoView {
     };
 
     view! {
-        <Band test_id="work-band">
+        <Band test_id="projects-band">
             <div class=format!("container {}", style::band_inner)>
 
                 <div class=style::stats_row>
@@ -275,10 +278,10 @@ fn WorkBand(stats: Option<WorkStats>) -> impl IntoView {
     }
 }
 
-// ─── WorkRow ─────────────────────────────────────────────────────────────────
+// ─── ProjectsRow ─────────────────────────────────────────────────────────────
 
 #[component]
-fn WorkRow(entry: &'static ProjectEntry, repo: Option<RepoStats>) -> impl IntoView {
+fn ProjectsRow(entry: &'static ProjectEntry, repo: Option<RepoStats>) -> impl IntoView {
     let status_class = match entry.status {
         Status::Active => style::row_status_active,
         Status::Maintained => style::row_status_maintained,
@@ -324,7 +327,7 @@ fn WorkRow(entry: &'static ProjectEntry, repo: Option<RepoStats>) -> impl IntoVi
     };
 
     view! {
-        <div class=format!("{} rule-list", style::index_row) data-testid="work-row">
+        <div class=format!("{} rule-list", style::index_row) data-testid="projects-row">
             {name_cell}
             <span class=style::row_kind>{entry.kind}</span>
             <div>
@@ -341,10 +344,10 @@ fn WorkRow(entry: &'static ProjectEntry, repo: Option<RepoStats>) -> impl IntoVi
     }
 }
 
-// ─── WorkIndex ───────────────────────────────────────────────────────────────
+// ─── ProjectsIndex ───────────────────────────────────────────────────────────
 
 #[component]
-fn WorkIndex(stats: Option<WorkStats>) -> impl IntoView {
+fn ProjectsIndex(stats: Option<ProjectsStats>) -> impl IntoView {
     let rows = PROJECTS
         .iter()
         .map(|entry| {
@@ -352,7 +355,7 @@ fn WorkIndex(stats: Option<WorkStats>) -> impl IntoView {
                 .as_ref()
                 .and_then(|s| find_repo_stats(entry, s))
                 .cloned();
-            view! { <WorkRow entry=entry repo=repo /> }
+            view! { <ProjectsRow entry=entry repo=repo /> }
         })
         .collect_view();
 
@@ -381,7 +384,7 @@ fn WorkIndex(stats: Option<WorkStats>) -> impl IntoView {
 
 #[component]
 fn OpenContributions() -> impl IntoView {
-    let links = work_config()
+    let links = projects_config()
         .oss_contribs
         .iter()
         .take(20)
@@ -423,18 +426,18 @@ fn OpenContributions() -> impl IntoView {
     }
 }
 
-// ─── WorkPage ────────────────────────────────────────────────────────────────
+// ─── ProjectsPage ────────────────────────────────────────────────────────────
 
 #[component]
-pub fn WorkPage() -> impl IntoView {
-    let work_res = LocalResource::new(get_work_stats);
+pub fn ProjectsPage() -> impl IntoView {
+    let projects_res = LocalResource::new(get_projects_stats);
 
     view! {
         <Masthead />
         <main>
             <section class=style::hero>
                 <div class="container">
-                    <p class="eyebrow">"Work"</p>
+                    <p class="eyebrow">"Projects"</p>
                     <h1>"Things I've " <em>"built"</em> ", still standing."</h1>
                     <p class=style::lead>
                         "A small index. Each item links to a write-up, the README, "
@@ -445,15 +448,15 @@ pub fn WorkPage() -> impl IntoView {
 
             <Suspense fallback=move || {
                 view! {
-                    <WorkBand stats=None />
-                    <WorkIndex stats=None />
+                    <ProjectsBand stats=None />
+                    <ProjectsIndex stats=None />
                 }
             }>
                 {move || {
-                    let stats: Option<WorkStats> = work_res.get().and_then(|r| r.ok());
+                    let stats: Option<ProjectsStats> = projects_res.get().and_then(|r| r.ok());
                     view! {
-                        <WorkBand stats=stats.clone() />
-                        <WorkIndex stats=stats />
+                        <ProjectsBand stats=stats.clone() />
+                        <ProjectsIndex stats=stats />
                     }
                         .into_any()
                 }}
@@ -530,7 +533,7 @@ mod tests {
 
     #[test]
     fn all_github_project_slugs_are_tracked_in_config() {
-        let tracked: std::collections::HashSet<&str> = crate::config::work::work_config()
+        let tracked: std::collections::HashSet<&str> = crate::config::projects::projects_config()
             .tracked_slugs
             .iter()
             .map(|s| s.as_str())
@@ -539,7 +542,7 @@ mod tests {
             if let Some(ProjectLink::GitHub(slug)) = p.link {
                 assert!(
                     tracked.contains(slug),
-                    "project '{}' slug '{}' is missing from tracked_slugs in src/config/work.toml",
+                    "project '{}' slug '{}' is missing from tracked_slugs in src/config/projects.toml",
                     p.name,
                     slug,
                 );

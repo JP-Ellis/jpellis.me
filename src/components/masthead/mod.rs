@@ -9,7 +9,7 @@ import_style!(style, "masthead.module.scss");
 
 const NAV: &[(&str, &str)] = &[
     ("Index", "/"),
-    ("Work", "/work"),
+    ("Projects", "/projects"),
     ("Résumé", "/resume"),
     ("Blog", "/blog"),
     ("Contact", "/contact"),

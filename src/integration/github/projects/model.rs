@@ -16,7 +16,7 @@ pub struct RepoStats {
 
 /// Cached per-repository star and fork counts.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct WorkStats {
+pub struct ProjectsStats {
     /// Timestamp when the stats were fetched.
     pub fetched_at: DateTime<Utc>,
     /// Per-repository stats, one entry per tracked slug.
@@ -30,8 +30,8 @@ mod tests {
 
     use super::*;
 
-    fn sample() -> WorkStats {
-        WorkStats {
+    fn sample() -> ProjectsStats {
+        ProjectsStats {
             fetched_at: Utc
                 .with_ymd_and_hms(2026, 4, 30, 12, 0, 0)
                 .single()
@@ -55,7 +55,7 @@ mod tests {
     fn round_trips_through_json() {
         let original = sample();
         let json = serde_json::to_string(&original).expect("serialize");
-        let decoded: WorkStats = serde_json::from_str(&json).expect("deserialize");
+        let decoded: ProjectsStats = serde_json::from_str(&json).expect("deserialize");
         assert_eq!(decoded, original);
     }
 

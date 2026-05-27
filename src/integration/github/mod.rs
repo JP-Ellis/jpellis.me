@@ -1,2 +1,2 @@
+pub mod projects;
 pub mod stats;
-pub mod work;

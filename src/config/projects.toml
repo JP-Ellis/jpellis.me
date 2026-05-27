@@ -1,5 +1,5 @@
 # GitHub slugs to fetch star/fork counts for.
-# Must cover all projects in pages/work/mod.rs that use ProjectLink::GitHub.
+# Must cover all projects in pages/projects/mod.rs that use ProjectLink::GitHub.
 tracked_slugs = [
   "pact-foundation/pact-python",
   "JP-Ellis/tikz-feynman",

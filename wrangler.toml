@@ -20,7 +20,7 @@ id = "5e502e4bfb6b4f6985fcde597f6460e7"
 preview_id = "4a22aeeb45134546ae5766655297f396"
 
 [[kv_namespaces]]
-binding = "WORK_STATS"
+binding = "PROJECTS_STATS"
 id = "a56dd2a711c746e8890f9bb9662131d6"
 preview_id = "54f30bfa5bb44a33868229e83fd7b55b"
 
