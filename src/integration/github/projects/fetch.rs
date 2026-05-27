@@ -113,8 +113,9 @@ pub fn parse_commit(commit: &serde_json::Value) -> Option<CommitInfo> {
 
     let full_message = commit["commit"]["message"].as_str().unwrap_or("");
     let first_line = full_message.lines().next().unwrap_or("").trim();
-    let message = if first_line.len() > 72 {
-        format!("{}…", &first_line[..72])
+    let message = if first_line.chars().count() > 72 {
+        let truncated: String = first_line.chars().take(72).collect();
+        format!("{truncated}…")
     } else {
         first_line.to_string()
     };
@@ -231,6 +232,7 @@ async fn fetch_recent_commits(
     slug: &str,
     token: &str,
 ) -> Vec<CommitInfo> {
+    // Fetch 20 to provide a bot-filtering buffer; we cap the result at 5 human commits
     let url = format!("https://api.github.com/repos/{slug}/commits?per_page=20");
     let body = match get_json(client, &url, token).await {
         Ok(b) => b,
@@ -396,7 +398,7 @@ mod tests {
     }
 
     #[test]
-    fn parse_commit_skips_null_author() {
+    fn parse_commit_accepts_null_author_as_human() {
         // Commits not associated with a GitHub account have null author
         let commit = serde_json::json!({
             "sha": "abc1234567890",
@@ -432,7 +434,8 @@ mod tests {
 
     #[test]
     fn parse_commit_truncates_long_message() {
-        let long_msg = format!("{}\nSecond line", "A".repeat(80));
+        // Use multi-byte characters to verify char-based (not byte-based) truncation
+        let long_msg = format!("{}\nSecond line", "🚀".repeat(80));
         let commit = serde_json::json!({
             "sha": "a1b2c3d4e5f6",
             "commit": {
@@ -443,8 +446,11 @@ mod tests {
             "html_url": "https://example.com/commit/abc"
         });
         let info = parse_commit(&commit).expect("human commit");
-        assert!(info.message.len() <= 75); // 72 chars + "…"
+        // 72 chars × 4 bytes each + 3 bytes for "…" = 291 bytes max
+        // The important thing is it doesn't panic and ends with "…"
         assert!(info.message.ends_with('…'));
+        // Confirm char count is exactly 73 (72 truncated chars + "…" ellipsis = 1 char)
+        assert_eq!(info.message.chars().count(), 73);
     }
 
     #[test]
