@@ -9,16 +9,23 @@ use toml::value::Datetime;
 
 fn main() {
     println!("cargo:rerun-if-changed=content/blog");
+    println!("cargo:rerun-if-changed=content/projects");
 
     let out_dir = env::var("OUT_DIR").expect("OUT_DIR not set");
-    let out_path = PathBuf::from(&out_dir).join("blog_posts.rs");
 
+    // MARK: Blog posts
+    let blog_out_path = PathBuf::from(&out_dir).join("blog_posts.rs");
     let mut tab_counter = 0usize;
     let mut posts: Vec<Post> = collect_posts(Path::new("content/blog"), &mut tab_counter);
     posts.sort_by(|a, b| b.date.cmp(&a.date));
-
     let code = generate_code(&posts);
-    fs::write(&out_path, code).expect("failed to write blog_posts.rs");
+    fs::write(&blog_out_path, code).expect("failed to write blog_posts.rs");
+
+    // MARK: Project pages
+    let pages_out_path = PathBuf::from(&out_dir).join("project_pages.rs");
+    let project_pages = collect_project_pages(Path::new("content/projects"));
+    let pages_code = generate_project_pages_code(&project_pages);
+    fs::write(&pages_out_path, pages_code).expect("failed to write project_pages.rs");
 }
 
 // ── Frontmatter ───────────────────────────────────────────────────────────
@@ -417,6 +424,126 @@ fn process_file(path: &Path, tab_counter: &mut usize) -> Option<Post> {
     })
 }
 
+// ── Project pages ─────────────────────────────────────────────────────────────
+
+#[derive(Deserialize)]
+struct ProjectFrontmatter {
+    title: String,
+    slug: String,
+    github: String,
+    tagline: String,
+    #[serde(default)]
+    activity: ProjectActivityFrontmatter,
+}
+
+/// All activity flags default to `true` — only set fields you want to disable.
+#[derive(Deserialize)]
+struct ProjectActivityFrontmatter {
+    #[serde(default = "bool_true")]
+    release: bool,
+    #[serde(default = "bool_true")]
+    recent_commits: bool,
+    #[serde(default = "bool_true")]
+    open_prs: bool,
+}
+
+impl Default for ProjectActivityFrontmatter {
+    fn default() -> Self {
+        Self {
+            release: true,
+            recent_commits: true,
+            open_prs: true,
+        }
+    }
+}
+
+fn bool_true() -> bool {
+    true
+}
+
+struct ProjectPageData {
+    slug: String,
+    title: String,
+    github: String,
+    tagline: String,
+    activity_release: bool,
+    activity_recent_commits: bool,
+    activity_open_prs: bool,
+    body_html: String,
+}
+
+fn collect_project_pages(dir: &Path) -> Vec<ProjectPageData> {
+    let Ok(entries) = fs::read_dir(dir) else {
+        return vec![];
+    };
+    let mut pages: Vec<ProjectPageData> = entries
+        .flatten()
+        .filter(|e| e.path().extension().and_then(|ext| ext.to_str()) == Some("md"))
+        .filter_map(|e| process_project_file(&e.path()))
+        .collect();
+    pages.sort_by(|a, b| a.slug.cmp(&b.slug));
+    pages
+}
+
+fn process_project_file(path: &Path) -> Option<ProjectPageData> {
+    println!("cargo:rerun-if-changed={}", path.display());
+    let content = fs::read_to_string(path).ok()?;
+    let (fm, body_md) = parse_project_frontmatter(&content)?;
+    let body_html = render_markdown(body_md);
+    Some(ProjectPageData {
+        slug: fm.slug,
+        title: fm.title,
+        github: fm.github,
+        tagline: fm.tagline,
+        activity_release: fm.activity.release,
+        activity_recent_commits: fm.activity.recent_commits,
+        activity_open_prs: fm.activity.open_prs,
+        body_html,
+    })
+}
+
+fn parse_project_frontmatter(content: &str) -> Option<(ProjectFrontmatter, &str)> {
+    let content = content.trim_start();
+    let after_open = content
+        .strip_prefix("+++\n")
+        .or_else(|| content.strip_prefix("+++\r\n"))?;
+    let close_pos = after_open.find("\n+++")?;
+    let fm_str = &after_open[..close_pos];
+    let rest = &after_open[close_pos + 4..];
+    let body = rest
+        .strip_prefix('\n')
+        .or_else(|| rest.strip_prefix("\r\n"))
+        .unwrap_or(rest);
+    let fm: ProjectFrontmatter = toml::from_str(fm_str).ok()?;
+    Some((fm, body))
+}
+
+fn generate_project_pages_code(pages: &[ProjectPageData]) -> String {
+    let mut code = String::new();
+    writeln!(code, "pub static PROJECT_PAGES: &[ProjectPage] = &[").unwrap();
+    for page in pages {
+        writeln!(code, "    ProjectPage {{").unwrap();
+        writeln!(code, "        slug: {:?},", page.slug).unwrap();
+        writeln!(code, "        title: {:?},", page.title).unwrap();
+        writeln!(code, "        github: {:?},", page.github).unwrap();
+        writeln!(code, "        tagline: {:?},", page.tagline).unwrap();
+        writeln!(code, "        activity: ActivityConfig {{").unwrap();
+        writeln!(code, "            release: {:?},", page.activity_release).unwrap();
+        writeln!(
+            code,
+            "            recent_commits: {:?},",
+            page.activity_recent_commits
+        )
+        .unwrap();
+        writeln!(code, "            open_prs: {:?},", page.activity_open_prs).unwrap();
+        writeln!(code, "        }},").unwrap();
+        writeln!(code, "        body_html: {:?},", page.body_html).unwrap();
+        writeln!(code, "    }},").unwrap();
+    }
+    writeln!(code, "];").unwrap();
+    code
+}
+
 // ── Code generation ───────────────────────────────────────────────────────
 
 fn generate_code(posts: &[Post]) -> String {
@@ -446,4 +573,39 @@ fn generate_code(posts: &[Post]) -> String {
     }
     writeln!(code, "];").unwrap();
     code
+}
+
+#[cfg(test)]
+mod project_tests {
+    use super::*;
+
+    #[test]
+    fn parse_project_frontmatter_minimal() {
+        let input = "+++\ntitle = \"TikZ-Feynman\"\nslug = \"tikz-feynman\"\ngithub = \"JP-Ellis/tikz-feynman\"\ntagline = \"Feynman diagrams in LaTeX\"\n+++\n\nBody here.";
+        let (fm, body) = parse_project_frontmatter(input).expect("should parse");
+        assert_eq!(fm.slug, "tikz-feynman");
+        assert_eq!(fm.title, "TikZ-Feynman");
+        assert_eq!(fm.github, "JP-Ellis/tikz-feynman");
+        assert_eq!(fm.tagline, "Feynman diagrams in LaTeX");
+        // All activity fields default to true when [activity] section is omitted
+        assert!(fm.activity.release);
+        assert!(fm.activity.recent_commits);
+        assert!(fm.activity.open_prs);
+        assert_eq!(body.trim(), "Body here.");
+    }
+
+    #[test]
+    fn parse_project_frontmatter_with_activity_override() {
+        let input = "+++\ntitle = \"rust-skiplist\"\nslug = \"rust-skiplist\"\ngithub = \"JP-Ellis/rust-skiplist\"\ntagline = \"Skip list in Rust\"\n\n[activity]\nrecent_commits = false\n+++\n\nContent.";
+        let (fm, _) = parse_project_frontmatter(input).expect("should parse");
+        assert!(fm.activity.release); // defaulted to true
+        assert!(!fm.activity.recent_commits); // explicitly false
+        assert!(fm.activity.open_prs); // defaulted to true
+    }
+
+    #[test]
+    fn parse_project_frontmatter_returns_none_without_delimiters() {
+        let input = "title = \"No delimiters\"\n";
+        assert!(parse_project_frontmatter(input).is_none());
+    }
 }
