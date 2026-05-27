@@ -12,7 +12,6 @@ use crate::components::Masthead;
 use crate::integration::ProjectsStats;
 use crate::integration::get_projects_stats;
 use crate::integration::github::projects::model::CommitInfo;
-use crate::integration::github::projects::model::ReleaseInfo;
 use crate::integration::github::projects::model::RepoStats;
 use crate::pages::not_found::NotFoundPage;
 use crate::pages::projects::ActivityConfig;
