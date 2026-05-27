@@ -5,7 +5,7 @@
 @layer components {
     .prose {
         blockquote {
-            border-left: 3px solid var(--color-rule);
+            border-left: var(--border-width-thick) solid var(--color-rule);
             padding-left: var(--space-4);
             color: var(--color-muted);
             margin-inline: 0;
@@ -41,15 +41,15 @@
 
             .tab-bar {
                 display: flex;
-                border-bottom: 2px solid var(--color-rule);
+                border-bottom: var(--border-width-thick) solid var(--color-rule);
                 margin-bottom: var(--space-3);
 
                 label {
                     padding: var(--space-2) var(--space-4);
                     cursor: pointer;
                     color: var(--color-muted);
-                    border-bottom: 2px solid transparent;
-                    margin-bottom: -2px;
+                    border-bottom: var(--border-width-thick) solid transparent;
+                    margin-bottom: calc(var(--border-width-thick) * -1);
 
                     &:hover { color: var(--color-ink); }
                 }

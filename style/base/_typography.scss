@@ -117,8 +117,8 @@
     :not(pre) > code {
         font-size: 14px;
         background: oklch(from var(--color-accent) l c h / 8%);
-        padding: 1px 6px;
-        border-radius: 3px;
+        padding: 1px 6px; // 1px hairline; 6px sits between --space-1 (4px) and --space-2 (8px) — no closer token
+        border-radius: var(--radius-sm);
         letter-spacing: 0;
     }
 
