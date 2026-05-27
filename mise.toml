@@ -78,18 +78,35 @@ run = "cargo llvm-cov nextest"
 [tasks.machete]
 run = "cargo machete"
 
-[tasks.watch]
-depends = ["build"]
-run = "wrangler dev"
+[tasks.favicons]
+description = "Generate favicon variants from public/favicon.png"
+run = "./scripts/generate-favicons.rs"
+sources = ["scripts/generate-favicons.rs", "public/favicon.png"]
+outputs = [
+  "public/favicon.ico",
+  "public/favicon-16x16.png",
+  "public/favicon-32x32.png",
+  "public/apple-touch-icon.png",
+  "public/android-chrome-192x192.png",
+  "public/android-chrome-512x512.png",
+  "public/mstile-150x150.png",
+]
+
+[tasks.stylance]
+description = "Generate scoped CSS module files from *.module.scss sources"
+run = "stylance ."
+sources = ["src/**/*.module.scss"]
+outputs = ["style/stylance/_index.scss"]
 
 [tasks.build]
 description = "Build release artifacts for Cloudflare Workers deployment"
+depends = ["favicons", "stylance"]
 # LEPTOS_OUTPUT_NAME tells HydrationScripts to reference `{name}.wasm` rather than `{name}_bg.wasm`.
 # cargo-leptos sets this automatically for its own sub-builds and renames the WASM accordingly,
 # but worker-build runs a separate cargo invocation that does not inherit it — so the SSR binary
 # would otherwise embed the wrong filename in the generated HTML.
 env = { LEPTOS_OUTPUT_NAME = "jpellis-me" }
-run = "./scripts/generate-favicons.rs && cargo leptos build --release && worker-build --release --features ssr"
+run = "cargo leptos build --release && worker-build --release --features ssr"
 sources = [
   "Cargo.toml",
   "Cargo.lock",
@@ -101,6 +118,11 @@ sources = [
   "wrangler.toml",
 ]
 outputs = ["target/site/**/*", "build/**/*"]
+
+[tasks.watch]
+description = "Start the dev server; wrangler re-runs `mise run build` on source changes"
+depends = ["build"]
+run = "wrangler dev"
 
 [tasks."e2e:install"]
 dir = "e2e"
