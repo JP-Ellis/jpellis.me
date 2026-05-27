@@ -10,7 +10,7 @@
     font-size: var(--text-lead-size);
     line-height: var(--text-lead-leading);
     color: var(--color-muted);
-    max-width: 760px;
+    max-width: var(--width-narrow);
     margin-top: var(--space-5);
 }
 
@@ -26,6 +26,7 @@
 
 .email-display {
     font-family: var(--font-mono);
+    // clamp(2rem, 5vw, 4rem): dramatic mono display for the email address; intentionally outside the type ramp
     font-size: clamp(2rem, 5vw, 4rem);
     font-weight: 400;
     letter-spacing: -0.02em;

@@ -75,6 +75,7 @@
 
 .index-header {
     display: grid;
+    // column widths are layout-specific decisions tied to the index table structure
     grid-template-columns: minmax(0, 20ch) 140px 1fr 60px 100px;
     gap: var(--space-5);
     padding: var(--space-3) 0;
@@ -88,6 +89,7 @@
 
 .index-row {
     display: grid;
+    // column widths are layout-specific decisions tied to the index table structure
     grid-template-columns: minmax(0, 20ch) 140px 1fr 60px 100px;
     gap: var(--space-5);
     padding: var(--space-5) 0;
@@ -116,7 +118,7 @@
 
 .row-name-link {
     text-decoration: none;
-    min-height: 44px;
+    min-height: var(--touch-target);
     display: inline-flex;
     align-items: center;
 
@@ -178,7 +180,7 @@
     width: 3ch;
     height: 1em;
     background: var(--color-faint);
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
     vertical-align: middle;
 }
 
@@ -186,7 +188,7 @@
     font-family: var(--font-mono);
     font-size: var(--text-meta-size);
     letter-spacing: 0.04em;
-    min-height: 44px;
+    min-height: var(--touch-target);
     display: inline-flex;
     align-items: center;
 

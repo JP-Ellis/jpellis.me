@@ -36,6 +36,7 @@
     align-items: baseline;
 
     @media (min-width: $bp-md) {
+        // 160px date column + proportional content columns; intentional résumé layout
         grid-template-columns: 160px 1.2fr 1.6fr;
         gap: var(--space-6);
     }
@@ -44,6 +45,7 @@
 .date-col {
     font-family: var(--font-mono);
     font-size: var(--text-meta-size);
+    // 1.6: tighter than --text-body-leading (1.55) for date stacking; intentional
     line-height: 1.6;
 }
 
