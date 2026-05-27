@@ -3,7 +3,7 @@
 // --radius-sm          — tight corners: inline code, chips, skeletons, focus ring
 @layer tokens {
     :root {
-        --border-width-thick: 2px; // replaces all literal 2px and 3px border widths
-        --radius-sm:          2px; // replaces all literal 2–3px border-radius values
+        --border-width-thick: 2px; // UI chrome accents; 3px sites consolidated to this value
+        --radius-sm:          2px; // tight corners; 3px sites consolidated to this value
     }
 }
