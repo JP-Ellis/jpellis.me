@@ -45,7 +45,7 @@
 .date-col {
     font-family: var(--font-mono);
     font-size: var(--text-meta-size);
-    // 1.6: tighter than --text-body-leading (1.55) for date stacking; intentional
+    // 1.6: slightly above --text-body-leading (1.55); preserves compact date stacking
     line-height: 1.6;
 }
 

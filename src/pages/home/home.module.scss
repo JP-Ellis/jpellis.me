@@ -72,13 +72,12 @@
 }
 
 .projects-summary {
-    // 18px: between --text-body-size (15–17px) and --text-lead-size (19px); intentional
+    // 18px: heavier than body copy but below full lead rhythm; no token fits this in-between weight
     font-size: 18px;
 }
 
 .projects-link {
     font-family: var(--font-mono);
-    // 11.5px is 0.5px from --text-eyebrow-size (11px); imperceptible difference
     font-size: var(--text-eyebrow-size);
     color: var(--color-muted);
     text-align: right;
@@ -88,7 +87,6 @@
 .projects-all-link {
     display: block;
     font-family: var(--font-mono);
-    // 11.5px is 0.5px from --text-eyebrow-size (11px); imperceptible difference
     font-size: var(--text-eyebrow-size);
     color: var(--color-accent);
     margin-top: var(--space-3);
@@ -133,7 +131,6 @@
 
 .cross-post-date {
     font-family: var(--font-mono);
-    // 11.5px is 0.5px from --text-eyebrow-size (11px); imperceptible difference
     font-size: var(--text-eyebrow-size);
     color: var(--color-muted);
     text-align: right;
