@@ -343,30 +343,43 @@ fn ProjectsRow(entry: &'static ProjectEntry, repo: Option<RepoStats>) -> impl In
         },
     };
 
-    let name_cell = match entry.link {
-        Some(ProjectLink::GitHub(slug)) => view! {
+    // Detail page takes priority over GitHub / external links
+    let name_cell = if find_project_page(entry.name).is_some() {
+        view! {
             <a
-                href=format!("https://github.com/{slug}")
+                href=format!("/projects/{}", entry.name)
                 class=format!("{} {}", style::row_name, style::row_name_link)
-                target="_blank"
-                rel="noopener noreferrer"
             >
                 {entry.name}
             </a>
         }
-        .into_any(),
-        Some(ProjectLink::External(url)) => view! {
-            <a
-                href=url
-                class=format!("{} {}", style::row_name, style::row_name_link)
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                {entry.name}
-            </a>
+        .into_any()
+    } else {
+        match entry.link {
+            Some(ProjectLink::GitHub(slug)) => view! {
+                <a
+                    href=format!("https://github.com/{slug}")
+                    class=format!("{} {}", style::row_name, style::row_name_link)
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    {entry.name}
+                </a>
+            }
+            .into_any(),
+            Some(ProjectLink::External(url)) => view! {
+                <a
+                    href=url
+                    class=format!("{} {}", style::row_name, style::row_name_link)
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    {entry.name}
+                </a>
+            }
+            .into_any(),
+            None => view! { <span class=style::row_name>{entry.name}</span> }.into_any(),
         }
-        .into_any(),
-        None => view! { <span class=style::row_name>{entry.name}</span> }.into_any(),
     };
 
     view! {
