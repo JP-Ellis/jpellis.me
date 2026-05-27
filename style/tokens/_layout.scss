@@ -4,13 +4,17 @@
 @layer tokens {
     :root {
         // Content widths
-        --width-prose: 880px; // blog posts, case studies, contact
+        --width-prose:  880px; // blog posts, case studies, contact
         --width-index: 1280px; // index, work, résumé pages
+        --width-narrow:  760px; // narrower prose containers (home lead, contact lead)
 
         // Horizontal gutters
         --gutter-page: 80px; // desktop
         --gutter-page-mobile: var(--space-5); // 24px — mobile
         --gutter-eyebrow: 140px; // left label column on editorial pages
+
+        // Accessibility
+        --touch-target: 44px; // minimum touch target height (WCAG 2.5.5)
 
         // Z-index scale — always use these, never raw integers
         --z-below: -1;

@@ -1,0 +1,9 @@
+// Border-width and border-radius tokens.
+// --border-width-thick — UI chrome: focus rings, tab indicators, accent borders
+// --radius-sm          — tight corners: inline code, chips, skeletons, focus ring
+@layer tokens {
+    :root {
+        --border-width-thick: 2px; // replaces all literal 2px and 3px border widths
+        --radius-sm:          2px; // replaces all literal 2–3px border-radius values
+    }
+}

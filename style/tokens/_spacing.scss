@@ -3,6 +3,7 @@
 // reconsider the layout rather than adding a new value.
 @layer tokens {
     :root {
+        --space-half: 2px; // micro-spacing for tight adjacent elements
         --space-1: 4px;
         --space-2: 8px;
         --space-3: 12px;
