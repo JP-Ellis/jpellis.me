@@ -11,4 +11,5 @@ pub use contact::ContactPage;
 pub use home::HomePage;
 pub use not_found::NotFoundPage;
 pub use projects::ProjectsPage;
+pub use projects::detail::ProjectDetailPage;
 pub use resume::ResumePage;

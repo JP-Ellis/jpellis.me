@@ -11,6 +11,49 @@ use crate::integration::github::projects::model::RepoStats;
 
 import_style!(style, "projects.module.scss");
 
+// ─── Project detail pages ─────────────────────────────────────────────────────
+
+/// Runtime configuration controlling which activity panels render on a detail page.
+#[derive(Clone, Copy)]
+pub struct ActivityConfig {
+    pub release: bool,
+    pub recent_commits: bool,
+    pub open_prs: bool,
+}
+
+/// A project detail page loaded from `content/projects/*.md` at compile time.
+#[derive(Clone, Copy)]
+pub struct ProjectPage {
+    pub slug: &'static str,
+    pub title: &'static str,
+    /// GitHub slug, e.g. `"JP-Ellis/tikz-feynman"`.
+    pub github: &'static str,
+    pub tagline: &'static str,
+    pub activity: ActivityConfig,
+    pub body_html: &'static str,
+}
+
+include!(concat!(env!("OUT_DIR"), "/project_pages.rs"));
+
+/// Returns the project detail page for the given slug, if one exists.
+///
+/// The slug must match the `slug` field in the markdown frontmatter exactly.
+/// Called by `ProjectsRow` (to determine link target) and `ProjectDetailPage`
+/// (to look up page content from the route parameter).
+///
+/// # Arguments
+///
+/// * `slug` - The URL slug to look up, e.g. `"tikz-feynman"`.
+///
+/// # Returns
+///
+/// `Some(&'static ProjectPage)` if a matching page exists, `None` otherwise.
+pub fn find_project_page(slug: &str) -> Option<&'static ProjectPage> {
+    PROJECT_PAGES.iter().find(|p| p.slug == slug)
+}
+
+pub mod detail;
+
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 #[derive(Clone, Copy)]
@@ -548,6 +591,11 @@ mod tests {
                 );
             }
         }
+    }
+
+    #[test]
+    fn find_project_page_returns_none_for_unknown_slug() {
+        assert!(find_project_page("no-such-project-xyz").is_none());
     }
 
     #[test]
