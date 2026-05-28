@@ -102,10 +102,10 @@ pub fn parse_release_response(body: &serde_json::Value) -> Option<ReleaseInfo> {
 /// `Some(CommitInfo)` for human commits, `None` for bots or unparsable entries.
 pub fn parse_commit(commit: &serde_json::Value) -> Option<CommitInfo> {
     // Filter bots: author object is present AND type is "Bot"
-    if let Some(author_obj) = commit["author"].as_object() {
-        if author_obj.get("type").and_then(|t| t.as_str()) == Some("Bot") {
-            return None;
-        }
+    if let Some(author_obj) = commit["author"].as_object()
+        && author_obj.get("type").and_then(|t| t.as_str()) == Some("Bot")
+    {
+        return None;
     }
 
     let full_sha = commit["sha"].as_str()?;

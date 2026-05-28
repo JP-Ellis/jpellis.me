@@ -18,7 +18,7 @@ pub fn ContactPage() -> impl IntoView {
     let copied = RwSignal::new(false);
 
     let copy_email = move |_| {
-        #[cfg(feature = "hydrate")]
+        #[cfg(all(feature = "hydrate", target_arch = "wasm32"))]
         {
             if let Some(window) = leptos::web_sys::window() {
                 let _ = window.navigator().clipboard().write_text(EMAIL.as_ref());

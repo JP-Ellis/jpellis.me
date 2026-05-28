@@ -46,12 +46,8 @@ pub fn BlogListPage() -> impl IntoView {
         POSTS
             .iter()
             .filter(|p| {
-                let tag_ok = tag
-                    .as_ref()
-                    .map_or(true, |t| p.tags.iter().any(|&pt| pt == t.as_str()));
-                let year_ok = year
-                    .as_ref()
-                    .map_or(true, |y| p.date.starts_with(y.as_str()));
+                let tag_ok = tag.as_ref().is_none_or(|t| p.tags.contains(&t.as_str()));
+                let year_ok = year.as_ref().is_none_or(|y| p.date.starts_with(y.as_str()));
                 tag_ok && year_ok
             })
             .collect::<Vec<_>>()
