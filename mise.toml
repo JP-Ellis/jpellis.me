@@ -126,7 +126,7 @@ run = "wrangler dev"
 
 [tasks."e2e:install"]
 dir = "e2e"
-run = "aube install"
+run = ["aube install", "aube exec playwright install --with-deps chromium"]
 
 [tasks."e2e:test"]
 dir = "e2e"
