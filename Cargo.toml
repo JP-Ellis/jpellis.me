@@ -65,7 +65,7 @@ toml = { version = "1.0", default-features = false, features = [
   axum = { version = "0.8", default-features = false, optional = true }
   chrono = { version = "0.4", features = ["serde", "wasmbind"] }
   getrandom = { version = "0.4", features = ["wasm_js"] }
-  getrandom03 = { package = "getrandom", version = "0.3", features = ["wasm_js"] }
+  getrandom03 = { package = "getrandom", version = "0.4", features = ["wasm_js"] }
   leptos_axum = { version = "0.8", default-features = false, features = ["wasm"], optional = true }
   reqwest = { version = "0.13", default-features = false, features = ["json"], optional = true }
   send_wrapper = { version = "0.6", optional = true }
