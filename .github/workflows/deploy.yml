@@ -7,6 +7,15 @@ on:
       - main
 
 jobs:
+  completion:
+    name: Deploy completion check
+    runs-on: ubuntu-latest
+    needs:
+      - deploy
+    if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
+    steps:
+      - run: exit 1
+
   deploy:
     name: Deploy to Cloudflare Workers
     runs-on: ubuntu-latest
