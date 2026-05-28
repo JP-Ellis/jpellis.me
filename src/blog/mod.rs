@@ -90,7 +90,7 @@ mod tests {
         slugs.sort_unstable();
         let before = slugs.len();
         slugs.dedup();
-        assert_eq!(slugs.len(), before, "duplicate slugs in POSTS");
+        pretty_assertions::assert_eq!(slugs.len(), before, "duplicate slugs in POSTS");
     }
 
     #[test]
@@ -113,7 +113,7 @@ mod tests {
         let first = POSTS.first().unwrap();
         let found = find_post(first.slug);
         assert!(found.is_some(), "find_post failed for '{}'", first.slug);
-        assert_eq!(found.unwrap().slug, first.slug);
+        pretty_assertions::assert_eq!(found.unwrap().slug, first.slug);
     }
 
     #[test]
