@@ -98,9 +98,13 @@ run = "stylance ."
 sources = ["src/**/*.module.scss"]
 outputs = ["style/stylance/_index.scss"]
 
+[tasks."rust:wasm-target"]
+description = "Ensure wasm32-unknown-unknown target is installed"
+run = "rustup target add wasm32-unknown-unknown"
+
 [tasks.build]
 description = "Build release artifacts for Cloudflare Workers deployment"
-depends = ["favicons", "stylance"]
+depends = ["rust:wasm-target", "favicons", "stylance"]
 # LEPTOS_OUTPUT_NAME tells HydrationScripts to reference `{name}.wasm` rather than `{name}_bg.wasm`.
 # cargo-leptos sets this automatically for its own sub-builds and renames the WASM accordingly,
 # but worker-build runs a separate cargo invocation that does not inherit it — so the SSR binary
