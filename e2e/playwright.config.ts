@@ -20,7 +20,7 @@ export const config: PlaywrightTestConfig = {
   workers: IS_CI ? 1 : "100%",
   reporter: IS_CI ? "github" : "html",
   use: {
-    baseURL: "http://localhost:3000/",
+    baseURL: "http://localhost:8787/",
     trace: "on-first-retry",
   },
   projects: [
@@ -37,11 +37,11 @@ export const config: PlaywrightTestConfig = {
       use: { ...use, colorScheme },
     })),
   ),
-  // webServer: {
-  //   command: "mise run watch",
-  //   url: "http://localhost:3000/",
-  //   reuseExistingServer: !IS_CI,
-  // },
+  webServer: {
+    command: "mise run watch",
+    url: "http://localhost:8787/",
+    reuseExistingServer: !IS_CI,
+  },
 };
 
 export default config;
