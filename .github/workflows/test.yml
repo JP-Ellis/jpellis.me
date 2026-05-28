@@ -71,6 +71,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6.0.2
       - uses: jdx/mise-action@v4.0.1
+      - run: rustup component add rustfmt --toolchain nightly
       - run: cargo +nightly fmt --all --check
 
   machete:
