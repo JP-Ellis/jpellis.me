@@ -27,10 +27,6 @@ use crate::integration::github::stats::model::GitHubStats;
 // ---------------------------------------------------------------------------
 
 /// Errors that can occur while fetching GitHub statistics.
-#[expect(
-    clippy::module_name_repetitions,
-    reason = "the full name is clearer in cross-module imports"
-)]
 #[non_exhaustive]
 #[derive(Debug)]
 pub enum FetchError {
@@ -557,10 +553,6 @@ async fn fetch_recent_activity(
 /// Returns [`FetchError::Http`] if any API call fails, or
 /// [`FetchError::Parse`] if the response cannot be interpreted.
 #[inline]
-#[expect(
-    clippy::module_name_repetitions,
-    reason = "the full name is clearer in cross-module imports"
-)]
 pub async fn fetch_from_github(token: &str) -> Result<GitHubStats, FetchError> {
     let now = Utc::now();
     let period_to = now.date_naive();

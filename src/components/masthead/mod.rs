@@ -1,8 +1,3 @@
-#![expect(
-    clippy::module_name_repetitions,
-    reason = "component names mirror their module for discoverability"
-)]
-
 use leptos::prelude::*;
 use leptos_router::hooks::use_location;
 use stylance::import_style;

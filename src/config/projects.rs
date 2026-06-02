@@ -6,10 +6,6 @@ use serde::Deserialize;
 static CACHE: OnceLock<ProjectsConfig> = OnceLock::new();
 
 /// Configuration for the projects page, loaded from `projects.toml`.
-#[expect(
-    clippy::module_name_repetitions,
-    reason = "name is intentionally qualified"
-)]
 #[derive(Debug, Deserialize)]
 pub struct ProjectsConfig {
     /// GitHub slugs to track for star/fork counts.
@@ -43,10 +39,6 @@ const PROJECTS_CONFIG_TOML: &str = include_str!("projects.toml");
 #[expect(
     clippy::expect_used,
     reason = "static initializer: corrupt embedded config should panic at startup"
-)]
-#[expect(
-    clippy::module_name_repetitions,
-    reason = "the full name is clearer in cross-module imports"
 )]
 pub fn projects_config() -> &'static ProjectsConfig {
     CACHE.get_or_init(|| {

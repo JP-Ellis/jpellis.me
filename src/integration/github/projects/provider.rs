@@ -14,10 +14,6 @@
 use crate::integration::github::projects::model::ProjectsStats;
 
 /// Abstracts over native-file and CF-Workers-KV projects-stats sources.
-#[expect(
-    clippy::module_name_repetitions,
-    reason = "the full name is clearer in cross-module imports"
-)]
 #[non_exhaustive]
 #[derive(Clone)]
 pub enum ProjectsStatsProvider {
@@ -118,10 +114,6 @@ impl ProjectsStatsProvider {
 /// Caches projects stats in `./target/cache/projects-stats.json`.
 ///
 /// Hard TTL: 7 days. SWR threshold: 1 day.
-#[expect(
-    clippy::module_name_repetitions,
-    reason = "the full name is clearer in cross-module imports"
-)]
 #[cfg(not(target_arch = "wasm32"))]
 #[derive(Clone)]
 pub struct FileProjectsStatsProvider {
@@ -192,10 +184,6 @@ impl FileProjectsStatsProvider {
 /// Caches projects stats in the `PROJECTS_STATS` Cloudflare KV namespace.
 ///
 /// Hard TTL: 7 days. SWR threshold: 1 day.
-#[expect(
-    clippy::module_name_repetitions,
-    reason = "the full name is clearer in cross-module imports"
-)]
 #[cfg(all(target_arch = "wasm32", feature = "ssr"))]
 #[derive(Clone)]
 pub struct KvProjectsStatsProvider {

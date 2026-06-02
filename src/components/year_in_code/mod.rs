@@ -357,10 +357,6 @@ fn year_in_code_inner(stats: GitHubStats, grid: Vec<Vec<u8>>) -> impl IntoView {
 ///
 /// Fetches stats via [`get_github_stats`] and shows [`fallback_stats`] while
 /// loading or on error.
-#[expect(
-    clippy::module_name_repetitions,
-    reason = "the full name is clearer in cross-module imports"
-)]
 #[component]
 pub fn YearInCode() -> impl IntoView {
     let stats_res = LocalResource::new(get_github_stats);

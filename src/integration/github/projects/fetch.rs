@@ -13,10 +13,6 @@ use crate::integration::github::projects::model::ReleaseInfo;
 use crate::integration::github::projects::model::RepoStats;
 
 /// Errors that can occur while fetching projects statistics.
-#[expect(
-    clippy::module_name_repetitions,
-    reason = "the full name is clearer in cross-module imports"
-)]
 #[non_exhaustive]
 #[derive(Debug)]
 pub enum FetchError {
@@ -333,10 +329,6 @@ async fn fetch_single_repo(
 /// A [`ProjectsStats`] with one [`RepoStats`] per successfully fetched repo.
 #[must_use = "the fetched stats are discarded if not used"]
 #[inline]
-#[expect(
-    clippy::module_name_repetitions,
-    reason = "the full name is clearer in cross-module imports"
-)]
 pub async fn fetch_projects_stats(token: &str, slugs: &[String]) -> ProjectsStats {
     let client = reqwest::Client::new();
     let futs: Vec<_> = slugs
