@@ -64,6 +64,10 @@ pub fn App() -> impl IntoView {
                 <Route path=path!("projects/:slug") view=pages::ProjectDetailPage />
                 <Route path=path!("blog") view=pages::BlogListPage />
                 <Route path=path!("blog/:slug") view=pages::BlogPostPage />
+                <Route
+                    path=path!("tools/colorspace-visualizer")
+                    view=pages::ColorspaceVisualizerPage
+                />
                 <Route path=path!("*any") view=|| view! { <pages::NotFoundPage /> } />
             </Routes>
         </Router>
@@ -89,6 +93,10 @@ pub fn App() -> impl IntoView {
                 <Route path=path!("projects/:slug") view=pages::ProjectDetailPage />
                 <Route path=path!("blog") view=pages::BlogListPage />
                 <Route path=path!("blog/:slug") view=pages::BlogPostPage />
+                <Route
+                    path=path!("tools/colorspace-visualizer")
+                    view=pages::ColorspaceVisualizerPage
+                />
                 <ParentRoute path=path!("__test") view=test_pages::TestLayout>
                     <Route path=path!("") view=test_pages::TestIndex />
                     <Route path=path!("masthead") view=test_pages::MastheadPage />

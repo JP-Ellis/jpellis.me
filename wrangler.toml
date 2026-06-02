@@ -21,6 +21,7 @@ watch_dir = [
   "style/utilities",
   "content",
   "scripts",
+  "crates",
 ]
 
 [assets]

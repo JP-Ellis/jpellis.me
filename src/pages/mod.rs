@@ -1,4 +1,5 @@
 pub mod blog;
+pub mod colorspace_visualizer;
 pub mod contact;
 pub mod home;
 pub mod not_found;
@@ -7,6 +8,7 @@ pub mod resume;
 
 pub use blog::BlogListPage;
 pub use blog::post::BlogPostPage;
+pub use colorspace_visualizer::ColorspaceVisualizerPage;
 pub use contact::ContactPage;
 pub use home::HomePage;
 pub use not_found::NotFoundPage;
