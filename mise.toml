@@ -46,14 +46,18 @@ run = [
 
 [tasks.lint]
 run = [
-  "cargo clippy --all-targets --",
+  "cargo clippy --all-targets --features ssr",
+  "cargo clippy --target wasm32-unknown-unknown --features hydrate",
+  "cargo clippy --target wasm32-unknown-unknown --features ssr",
   "biome lint .",
   "tombi lint .",
 ]
 
 [tasks."lint:fix"]
 run = [
-  "cargo clippy --all-targets --fix --",
+  "cargo clippy --all-targets --features ssr --fix",
+  "cargo clippy --target wasm32-unknown-unknown --features hydrate --fix",
+  "cargo clippy --target wasm32-unknown-unknown --features ssr --fix",
   "biome lint --write .",
 ]
 
