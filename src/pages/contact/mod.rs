@@ -5,14 +5,19 @@ use crate::components::Band;
 use crate::components::Footer;
 use crate::components::Masthead;
 
+/// Email address newtype with styled display rendering.
 mod email;
+/// PGP key fingerprint newtype with URL and formatted display.
 mod pgp;
 import_style!(style, "contact.module.scss");
 
+/// PGP key fingerprint displayed on the contact page.
 const PGP_KEY: pgp::PgpKey = pgp::PgpKey("AA152D8F537EE25D3AC2FADCF162288C8BA20FCE");
+/// Email address shown and linked on the contact page.
 const EMAIL: email::EmailAddress = email::EmailAddress("website@jpellis.me");
 
 /// Contact page.
+#[expect(clippy::too_many_lines, reason = "Leptos component template")]
 #[component]
 pub fn ContactPage() -> impl IntoView {
     let copied = RwSignal::new(false);
@@ -21,7 +26,7 @@ pub fn ContactPage() -> impl IntoView {
         #[cfg(all(feature = "hydrate", target_arch = "wasm32"))]
         {
             if let Some(window) = leptos::web_sys::window() {
-                let _ = window.navigator().clipboard().write_text(EMAIL.as_ref());
+                drop(window.navigator().clipboard().write_text(EMAIL.as_ref()));
             }
             copied.set(true);
             leptos::leptos_dom::helpers::set_timeout(

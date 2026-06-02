@@ -1,3 +1,8 @@
+#![expect(
+    clippy::expect_used,
+    reason = "static LazyLock initializers: corrupt embedded data should panic"
+)]
+
 use std::sync::LazyLock;
 
 use chrono::Utc;
@@ -26,6 +31,7 @@ static FALLBACK_REPOS: LazyLock<Vec<RepoStats>> = LazyLock::new(|| {
 ///
 /// A [`ProjectsStats`] with one [`RepoStats`] entry for every slug in
 /// `src/config/projects.toml`, using hardcoded star/fork counts.
+#[inline]
 pub fn fallback_projects_stats() -> ProjectsStats {
     ProjectsStats {
         fetched_at: Utc::now(),

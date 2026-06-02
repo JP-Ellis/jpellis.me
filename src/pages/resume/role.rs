@@ -1,3 +1,8 @@
+#![expect(
+    clippy::shadow_reuse,
+    reason = "Leptos #[component] macro internally re-binds function parameters"
+)]
+
 use leptos::prelude::*;
 use serde::Deserialize;
 use stylance::import_style;
@@ -35,7 +40,10 @@ pub struct Role {
 ///
 /// * `role` - The featured role data (must have `featured = true`).
 #[component]
-pub fn FeaturedRole(role: Role) -> impl IntoView {
+pub fn FeaturedRole(
+    /// The featured role data to render (must have `featured = true`).
+    role: Role,
+) -> impl IntoView {
     view! {
         <div class=style::featured_inner>
             <p class=style::featured_body>{role.body}</p>
@@ -57,10 +65,15 @@ pub fn FeaturedRole(role: Role) -> impl IntoView {
 /// # Arguments
 ///
 /// * `role` - The role data to render.
-/// * `index` - Row index (0 gets `rule-section` weight, others get `rule-list`).
+/// * `row_index` - Row index (0 gets `rule-section` weight, others get `rule-list`).
 #[component]
-pub fn TimelineRow(role: Role, index: usize) -> impl IntoView {
-    let border = if index == 0 {
+pub fn TimelineRow(
+    /// The role data to render.
+    role: Role,
+    /// Row index; 0 gets `rule-section` weight, others get `rule-list`.
+    row_index: usize,
+) -> impl IntoView {
+    let border = if row_index == 0 {
         "rule-section"
     } else {
         "rule-list"

@@ -4,6 +4,11 @@
 //! for recent public commits, and a Search API request for recent public PRs
 //! and issues, then assembles a [`GitHubStats`] struct.
 
+#![expect(
+    clippy::indexing_slicing,
+    reason = "serde_json Value indexing returns Null for missing keys, not a panic"
+)]
+
 use std::cmp::Reverse;
 
 use chrono::Duration;
@@ -22,6 +27,11 @@ use crate::integration::github::stats::model::GitHubStats;
 // ---------------------------------------------------------------------------
 
 /// Errors that can occur while fetching GitHub statistics.
+#[expect(
+    clippy::module_name_repetitions,
+    reason = "the full name is clearer in cross-module imports"
+)]
+#[non_exhaustive]
 #[derive(Debug)]
 pub enum FetchError {
     /// An HTTP-level error (connection failure, unexpected status code, etc.).
@@ -31,6 +41,7 @@ pub enum FetchError {
 }
 
 impl std::fmt::Display for FetchError {
+    #[inline]
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             FetchError::Http(e) => write!(f, "HTTP error: {e}"),
@@ -187,33 +198,49 @@ fn build_graphql_query(from: &str, to: &str) -> String {
 /// # Errors
 ///
 /// Returns [`FetchError::Parse`] if any expected field is missing.
+#[must_use = "the parsed contribution totals are discarded if not used"]
+#[inline]
+#[expect(
+    clippy::arithmetic_side_effects,
+    reason = "contribution counts from the GitHub API are small enough that overflow is not a concern"
+)]
 pub fn parse_contribution_totals(
     contributions: &serde_json::Value,
 ) -> Result<(u32, u32, u32, u32), FetchError> {
-    let calendar_total = contributions["contributionCalendar"]["totalContributions"]
-        .as_u64()
-        .ok_or_else(|| FetchError::Parse("totalContributions missing".into()))?
-        as u32;
+    let calendar_total = u32::try_from(
+        contributions["contributionCalendar"]["totalContributions"]
+            .as_u64()
+            .ok_or_else(|| FetchError::Parse("totalContributions missing".into()))?,
+    )
+    .map_err(|e| FetchError::Parse(format!("totalContributions exceeds u32: {e}")))?;
 
-    let restricted = contributions["restrictedContributionsCount"]
-        .as_u64()
-        .ok_or_else(|| FetchError::Parse("restrictedContributionsCount missing".into()))?
-        as u32;
+    let restricted = u32::try_from(
+        contributions["restrictedContributionsCount"]
+            .as_u64()
+            .ok_or_else(|| FetchError::Parse("restrictedContributionsCount missing".into()))?,
+    )
+    .map_err(|e| FetchError::Parse(format!("restrictedContributionsCount exceeds u32: {e}")))?;
 
-    let commits = contributions["totalCommitContributions"]
-        .as_u64()
-        .ok_or_else(|| FetchError::Parse("totalCommitContributions missing".into()))?
-        as u32;
+    let commits = u32::try_from(
+        contributions["totalCommitContributions"]
+            .as_u64()
+            .ok_or_else(|| FetchError::Parse("totalCommitContributions missing".into()))?,
+    )
+    .map_err(|e| FetchError::Parse(format!("totalCommitContributions exceeds u32: {e}")))?;
 
-    let prs = contributions["totalPullRequestContributions"]
-        .as_u64()
-        .ok_or_else(|| FetchError::Parse("totalPullRequestContributions missing".into()))?
-        as u32;
+    let prs = u32::try_from(
+        contributions["totalPullRequestContributions"]
+            .as_u64()
+            .ok_or_else(|| FetchError::Parse("totalPullRequestContributions missing".into()))?,
+    )
+    .map_err(|e| FetchError::Parse(format!("totalPullRequestContributions exceeds u32: {e}")))?;
 
-    let issues = contributions["totalIssueContributions"]
-        .as_u64()
-        .ok_or_else(|| FetchError::Parse("totalIssueContributions missing".into()))?
-        as u32;
+    let issues = u32::try_from(
+        contributions["totalIssueContributions"]
+            .as_u64()
+            .ok_or_else(|| FetchError::Parse("totalIssueContributions missing".into()))?,
+    )
+    .map_err(|e| FetchError::Parse(format!("totalIssueContributions exceeds u32: {e}")))?;
 
     Ok((calendar_total + restricted, commits, prs, issues))
 }
@@ -256,10 +283,13 @@ fn parse_contribution_weeks(
                             NaiveDate::parse_from_str(s, "%Y-%m-%d")
                                 .map_err(|e| FetchError::Parse(e.to_string()))
                         })?;
-                    let count = day["contributionCount"]
-                        .as_u64()
-                        .ok_or_else(|| FetchError::Parse("contributionCount missing".into()))?
-                        as u32;
+                    let count =
+                        u32::try_from(day["contributionCount"].as_u64().ok_or_else(|| {
+                            FetchError::Parse("contributionCount missing".into())
+                        })?)
+                        .map_err(|e| {
+                            FetchError::Parse(format!("contributionCount exceeds u32: {e}"))
+                        })?;
                     Ok(ContributionDay { date, count })
                 })
                 .collect::<Result<Vec<_>, _>>()?;
@@ -303,6 +333,10 @@ async fn fetch_recent_commits(
     token: &str,
     limit: usize,
 ) -> Result<Vec<ActivityItem>, FetchError> {
+    #[expect(
+        clippy::arithmetic_side_effects,
+        reason = "limit is a small constant (5); multiplication cannot overflow usize"
+    )]
     let per_page = limit * 2;
     let url = format!(
         "https://api.github.com/search/commits?q=author:JP-Ellis+is:public&sort=author-date&order=desc&per_page={per_page}"
@@ -322,11 +356,11 @@ async fn fetch_recent_commits(
     Ok(items
         .iter()
         .filter_map(|item| {
-            let sha = item["sha"].as_str()?;
-            let html_url = item["html_url"].as_str()?.to_string();
-            let repo = item["repository"]["full_name"].as_str()?.to_string();
+            let _sha = item["sha"].as_str()?; // sha is embedded in html_url already
+            let html_url = item["html_url"].as_str()?.to_owned();
+            let repo = item["repository"]["full_name"].as_str()?.to_owned();
             let message = item["commit"]["message"].as_str()?;
-            let title = message.lines().next().unwrap_or("").to_string();
+            let title = message.lines().next().unwrap_or("").to_owned();
             if title.is_empty() {
                 return None;
             }
@@ -336,7 +370,6 @@ async fn fetch_recent_commits(
                     .ok()
                     .map(|dt| dt.to_utc())
             })?;
-            let _ = sha; // sha is embedded in html_url already
             Some(ActivityItem {
                 kind: ActivityKind::Commit,
                 repo,
@@ -369,6 +402,8 @@ async fn fetch_recent_commits(
 ///
 /// Returns [`FetchError::Parse`] if the `items` field is missing or not an
 /// array.
+#[must_use = "the parsed activity items are discarded if not used"]
+#[inline]
 pub fn parse_activity_items(body: &serde_json::Value) -> Result<Vec<ActivityItem>, FetchError> {
     let items = body["items"]
         .as_array()
@@ -377,12 +412,12 @@ pub fn parse_activity_items(body: &serde_json::Value) -> Result<Vec<ActivityItem
     Ok(items
         .iter()
         .filter_map(|item| {
-            let title = item["title"].as_str()?.to_string();
-            let url = item["html_url"].as_str()?.to_string();
+            let title = item["title"].as_str()?.to_owned();
+            let url = item["html_url"].as_str()?.to_owned();
             let repo = item["repository_url"]
                 .as_str()?
                 .trim_start_matches("https://api.github.com/repos/")
-                .to_string();
+                .to_owned();
             let created_at = item["created_at"]
                 .as_str()
                 .and_then(|s| s.parse::<chrono::DateTime<Utc>>().ok())?;
@@ -432,6 +467,8 @@ pub fn parse_activity_items(body: &serde_json::Value) -> Result<Vec<ActivityItem
 /// # Returns
 ///
 /// A [`Vec`] of at most `limit` [`ActivityItem`] values, sorted newest-first.
+#[must_use]
+#[inline]
 pub fn merge_and_sort_activity(
     a: Vec<ActivityItem>,
     b: Vec<ActivityItem>,
@@ -519,12 +556,21 @@ async fn fetch_recent_activity(
 ///
 /// Returns [`FetchError::Http`] if any API call fails, or
 /// [`FetchError::Parse`] if the response cannot be interpreted.
+#[inline]
+#[expect(
+    clippy::module_name_repetitions,
+    reason = "the full name is clearer in cross-module imports"
+)]
 pub async fn fetch_from_github(token: &str) -> Result<GitHubStats, FetchError> {
     let now = Utc::now();
     let period_to = now.date_naive();
+    #[expect(
+        clippy::arithmetic_side_effects,
+        reason = "subtracting a fixed 365-day duration from a real date cannot overflow NaiveDate"
+    )]
     let period_from = period_to - Duration::days(365);
-    let from = format!("{}T00:00:00Z", period_from);
-    let to = format!("{}T23:59:59Z", period_to);
+    let from = format!("{period_from}T00:00:00Z");
+    let to = format!("{period_to}T23:59:59Z");
 
     let client = reqwest::Client::new();
 
@@ -537,10 +583,12 @@ pub async fn fetch_from_github(token: &str) -> Result<GitHubStats, FetchError> {
     let (total_contributions, commit_contributions, pr_contributions, issue_contributions) =
         parse_contribution_totals(contributions)?;
 
-    let public_repos = user["repositories"]["totalCount"]
-        .as_u64()
-        .ok_or_else(|| FetchError::Parse("totalCount missing".into()))?
-        as u32;
+    let public_repos = u32::try_from(
+        user["repositories"]["totalCount"]
+            .as_u64()
+            .ok_or_else(|| FetchError::Parse("totalCount missing".into()))?,
+    )
+    .map_err(|e| FetchError::Parse(format!("repositories totalCount exceeds u32: {e}")))?;
 
     let contribution_weeks =
         parse_contribution_weeks(&contributions["contributionCalendar"]["weeks"])?;
@@ -571,6 +619,11 @@ pub async fn fetch_from_github(token: &str) -> Result<GitHubStats, FetchError> {
 
 #[cfg(test)]
 mod tests {
+    #![expect(
+        clippy::default_numeric_fallback,
+        reason = "integer literals in serde_json::json! test fixtures — type inference is unambiguous in context"
+    )]
+
     use pretty_assertions::assert_eq;
 
     use super::*;
@@ -642,18 +695,25 @@ mod tests {
         });
 
         // Replicate the mapping logic from fetch_recent_commits inline.
-        let sha = item["sha"].as_str().unwrap();
-        let html_url = item["html_url"].as_str().unwrap().to_string();
+        let _sha = item["sha"].as_str().expect("test fixture has sha"); // sha is embedded in html_url
+        let html_url = item["html_url"]
+            .as_str()
+            .expect("test fixture has html_url")
+            .to_owned();
         let repo = item["repository"]["full_name"]
             .as_str()
-            .unwrap()
-            .to_string();
-        let message = item["commit"]["message"].as_str().unwrap();
-        let title = message.lines().next().unwrap_or("").to_string();
+            .expect("test fixture has full_name")
+            .to_owned();
+        let message = item["commit"]["message"]
+            .as_str()
+            .expect("test fixture has message");
+        let title = message.lines().next().unwrap_or("").to_owned();
         let created_at = chrono::DateTime::parse_from_rfc3339(
-            item["commit"]["author"]["date"].as_str().unwrap(),
+            item["commit"]["author"]["date"]
+                .as_str()
+                .expect("test fixture has date"),
         )
-        .unwrap()
+        .expect("test fixture date is valid RFC 3339")
         .to_utc();
 
         assert_eq!(title, "feat: add thing");
@@ -664,7 +724,6 @@ mod tests {
         );
         // Date should be converted to UTC (15:58:14+10:00 = 05:58:14Z).
         assert_eq!(created_at.format("%H:%M:%S").to_string(), "05:58:14");
-        let _ = sha;
     }
 
     #[test]
@@ -736,7 +795,7 @@ mod tests {
     }
 
     /// `parse_activity_items` maps a PR search response body into [`ActivityItem`]
-    /// values with correct kind, state, repo, title, url, and created_at.
+    /// values with correct `kind`, `state`, `repo`, `title`, `url`, and `created_at`.
     #[test]
     fn parse_activity_items_parses_pr_search_response() {
         let body = serde_json::json!({
@@ -796,7 +855,7 @@ mod tests {
         assert_eq!(items[0].title, "Bug: crash on startup");
     }
 
-    /// `merge_and_sort_activity` interleaves two lists in descending created_at order.
+    /// `merge_and_sort_activity` interleaves two lists in descending `created_at` order.
     #[test]
     fn merge_and_sort_activity_interleaves_by_date() {
         let make = |kind: ActivityKind, state: ActivityState, ts: &str| ActivityItem {

@@ -26,11 +26,15 @@ import_style!(style, "year_in_code.module.scss");
 /// # Returns
 ///
 /// A level from 0 (no contributions) to 4 (highest activity).
+#[expect(
+    clippy::float_arithmetic,
+    reason = "float division for level computation is intentional"
+)]
 fn cell_level_from_count(count: u32, max: u32) -> u8 {
     if max == 0 || count == 0 {
         return 0;
     }
-    let ratio = count as f64 / max as f64;
+    let ratio = f64::from(count) / f64::from(max);
     if ratio < 0.25 {
         1
     } else if ratio < 0.50 {
@@ -83,16 +87,22 @@ fn build_grid_levels(stats: &GitHubStats) -> Vec<Vec<u8>> {
 /// # Returns
 ///
 /// A string like `"1h"`, `"3d"`, or `"2w"`.
+#[expect(
+    clippy::arithmetic_side_effects,
+    clippy::integer_division,
+    clippy::integer_division_remainder_used,
+    reason = "divisions are by non-zero constants; chrono subtraction is saturating; truncating division for display formatting is intentional"
+)]
 fn time_ago(dt: &DateTime<Utc>) -> String {
     let secs = (Utc::now() - *dt).num_seconds().max(0);
-    if secs < 3600 {
+    if secs < 3_600 {
         format!("{}m", (secs / 60).max(1))
-    } else if secs < 86400 {
-        format!("{}h", secs / 3600)
-    } else if secs < 604800 {
-        format!("{}d", secs / 86400)
+    } else if secs < 86_400 {
+        format!("{}h", secs / 3_600)
+    } else if secs < 604_800 {
+        format!("{}d", secs / 86_400)
     } else {
-        format!("{}w", secs / 604800)
+        format!("{}w", secs / 604_800)
     }
 }
 
@@ -122,6 +132,7 @@ fn dedup_commits_against_prs(activity: Vec<ActivityItem>) -> Vec<ActivityItem> {
         .collect()
 }
 
+/// Renders a skeleton placeholder for the year-in-code band while data loads.
 fn year_in_code_skeleton() -> impl IntoView {
     view! {
         <Band test_id="year-in-code">
@@ -142,27 +153,26 @@ fn year_in_code_skeleton() -> impl IntoView {
                     <span class=style::skeleton_line style="width:38ch;display:block" />
                 </div>
                 <div class=style::commit_grid>
-                    {(0..53_usize)
-                        .map(|_| {
+                    {std::iter::repeat_with(|| {
                             view! {
                                 <div class=style::commit_col data-testid="commit-col">
-                                    {(0..7_usize)
-                                        .map(|_| {
+                                    {std::iter::repeat_with(|| {
                                             view! {
                                                 <span class=style::commit_cell data-commit-level="0" />
                                             }
                                         })
+                                        .take(7)
                                         .collect_view()}
                                 </div>
                             }
                         })
+                        .take(53)
                         .collect_view()}
                 </div>
                 <div class=style::band_latest>
                     <div>
                         <p class=format!("eyebrow {}", style::latest_label)>"Latest commits"</p>
-                        {(0..6_usize)
-                            .map(|_| {
+                        {std::iter::repeat_with(|| {
                                 view! {
                                     <div class=style::commit_row data-testid="commit-row">
                                         <span class=style::skeleton_line style="width:80%" />
@@ -171,6 +181,7 @@ fn year_in_code_skeleton() -> impl IntoView {
                                     </div>
                                 }
                             })
+                            .take(6)
                             .collect_view()}
                     </div>
                     <div>
@@ -178,8 +189,7 @@ fn year_in_code_skeleton() -> impl IntoView {
                             "eyebrow {}",
                             style::latest_label,
                         )>"Latest issues & PRs"</p>
-                        {(0..4_usize)
-                            .map(|_| {
+                        {std::iter::repeat_with(|| {
                                 view! {
                                     <div class=style::activity_row data-testid="activity-row">
                                         <div class=style::activity_repo_wrap>
@@ -191,6 +201,7 @@ fn year_in_code_skeleton() -> impl IntoView {
                                     </div>
                                 }
                             })
+                            .take(4)
                             .collect_view()}
                     </div>
                 </div>
@@ -199,6 +210,8 @@ fn year_in_code_skeleton() -> impl IntoView {
     }
 }
 
+/// Renders the full year-in-code band with live data.
+#[expect(clippy::too_many_lines, reason = "Leptos component template")]
 fn year_in_code_inner(stats: GitHubStats, grid: Vec<Vec<u8>>) -> impl IntoView {
     let commit_count = stats.commit_contributions.to_string();
     let pr_count = stats.pr_contributions.to_string();
@@ -344,6 +357,10 @@ fn year_in_code_inner(stats: GitHubStats, grid: Vec<Vec<u8>>) -> impl IntoView {
 ///
 /// Fetches stats via [`get_github_stats`] and shows [`fallback_stats`] while
 /// loading or on error.
+#[expect(
+    clippy::module_name_repetitions,
+    reason = "the full name is clearer in cross-module imports"
+)]
 #[component]
 pub fn YearInCode() -> impl IntoView {
     let stats_res = LocalResource::new(get_github_stats);
@@ -384,6 +401,10 @@ mod tests {
     }
 
     #[test]
+    #[expect(
+        clippy::indexing_slicing,
+        reason = "test assertions on known-size grid; expect on infallible date construction"
+    )]
     fn build_grid_levels_normalises_correctly() {
         use chrono::NaiveDate;
         use chrono::Utc;
@@ -441,9 +462,9 @@ mod tests {
     fn make_item(kind: ActivityKind, title: &str) -> ActivityItem {
         ActivityItem {
             kind,
-            repo: "owner/repo".to_string(),
-            title: title.to_string(),
-            url: "https://example.com".to_string(),
+            repo: "owner/repo".to_owned(),
+            title: title.to_owned(),
+            url: "https://example.com".to_owned(),
             state: None,
             created_at: Utc::now(),
         }

@@ -1,3 +1,8 @@
+#![expect(
+    clippy::shadow_reuse,
+    reason = "Leptos #[component] macro internally re-binds function parameters"
+)]
+
 use leptos::prelude::*;
 
 use crate::components::Band;
@@ -5,7 +10,11 @@ use crate::components::Footer;
 use crate::components::Masthead;
 
 #[component]
-fn SpacingRow(#[prop(into)] token: String) -> impl IntoView {
+fn SpacingRow(
+    /// CSS custom property name for the spacing token (e.g. `"--space-4"`).
+    #[prop(into)]
+    token: String,
+) -> impl IntoView {
     let bar_style = format!(
         "width: var({token}); height: 4px; background: var(--color-ink); \
          display: inline-block; flex-shrink: 0;"
@@ -21,7 +30,11 @@ fn SpacingRow(#[prop(into)] token: String) -> impl IntoView {
 }
 
 #[component]
-fn Swatch(#[prop(into)] token: String) -> impl IntoView {
+fn Swatch(
+    /// CSS custom property name for the color token (e.g. `"--color-accent"`).
+    #[prop(into)]
+    token: String,
+) -> impl IntoView {
     let testid = format!("swatch-{}", token.trim_start_matches("--"));
     let style = format!(
         "display: inline-block; width: 48px; height: 48px; \
@@ -30,6 +43,7 @@ fn Swatch(#[prop(into)] token: String) -> impl IntoView {
     view! { <span data-testid=testid style=style /> }
 }
 
+#[expect(clippy::too_many_lines, reason = "Leptos component template")]
 #[component]
 pub fn CssFoundationPage() -> impl IntoView {
     view! {

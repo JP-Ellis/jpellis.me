@@ -13,6 +13,10 @@ impl PgpKey {
 /// Formats the PGP key fingerprint with spaces every 4 characters for
 /// readability.
 impl fmt::Display for PgpKey {
+    #[expect(
+        clippy::integer_division_remainder_used,
+        reason = "modulo-4 check for spacing is intentional"
+    )]
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let spaced = self
             .0
@@ -20,12 +24,12 @@ impl fmt::Display for PgpKey {
             .enumerate()
             .map(|(i, c)| {
                 if i % 4 == 0 && i != 0 {
-                    format!(" {}", c)
+                    format!(" {c}")
                 } else {
                     c.to_string()
                 }
             })
             .collect::<String>();
-        write!(f, "{}", spaced)
+        write!(f, "{spaced}")
     }
 }

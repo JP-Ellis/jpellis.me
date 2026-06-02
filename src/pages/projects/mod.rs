@@ -1,3 +1,8 @@
+#![expect(
+    clippy::shadow_reuse,
+    reason = "Leptos #[component] macro internally re-binds function parameters"
+)]
+
 use leptos::prelude::*;
 use stylance::import_style;
 
@@ -16,20 +21,28 @@ import_style!(style, "projects.module.scss");
 /// Runtime configuration controlling which activity panels render on a detail page.
 #[derive(Clone, Copy)]
 pub struct ActivityConfig {
+    /// Show the latest release chip.
     pub release: bool,
+    /// Show the recent commits panel.
     pub recent_commits: bool,
+    /// Show the open pull requests chip.
     pub open_prs: bool,
 }
 
 /// A project detail page loaded from `content/projects/*.md` at compile time.
 #[derive(Clone, Copy)]
 pub struct ProjectPage {
+    /// URL slug matching the content filename and `ProjectEntry::name`.
     pub slug: &'static str,
+    /// Display title for the page heading and `<title>` tag.
     pub title: &'static str,
     /// GitHub slug, e.g. `"JP-Ellis/tikz-feynman"`.
     pub github: &'static str,
+    /// Short tagline used in the hero and meta description.
     pub tagline: &'static str,
+    /// Which activity panels are enabled for this project.
     pub activity: ActivityConfig,
+    /// Pre-rendered HTML body from the markdown content file.
     pub body_html: &'static str,
 }
 
@@ -52,20 +65,28 @@ pub fn find_project_page(slug: &str) -> Option<&'static ProjectPage> {
     PROJECT_PAGES.iter().find(|p| p.slug == slug)
 }
 
+/// Individual project detail page, loaded from `content/projects/*.md`.
 pub mod detail;
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
+/// Development status of a project entry.
 #[derive(Clone, Copy)]
 pub enum Status {
+    /// Actively developed; new features and fixes land regularly.
     Active,
+    /// Feature-complete and stable; bug fixes accepted.
     Maintained,
+    /// Read-only; no further development planned.
     Archived,
+    /// Delivered as a discrete engagement; not actively maintained.
     Shipped,
+    /// Work-in-progress; not yet publicly released.
     Wip,
 }
 
 impl Status {
+    /// Returns the human-readable label for this status.
     fn label(self) -> &'static str {
         match self {
             Status::Active => "active",
@@ -77,6 +98,7 @@ impl Status {
     }
 }
 
+/// Link target for a project entry row.
 #[derive(Clone, Copy)]
 pub enum ProjectLink {
     /// GitHub slug, e.g. `"pact-foundation/pact-python"`.
@@ -86,18 +108,26 @@ pub enum ProjectLink {
     External(&'static str),
 }
 
+/// A single row in the projects index table.
 #[derive(Clone, Copy)]
 pub struct ProjectEntry {
+    /// Short project name, also used as the URL path segment.
     pub name: &'static str,
+    /// Category label displayed in the "kind" column (e.g. `"OSS · library"`).
     pub kind: &'static str,
+    /// Technology stack summary (e.g. `"rust · python · ffi"`).
     pub stack: &'static str,
+    /// One-sentence description shown in the summary column.
     pub summary: &'static str,
+    /// Development status of this project.
     pub status: Status,
+    /// Optional link target for the project row.
     pub link: Option<ProjectLink>,
 }
 
 // ─── Project data ─────────────────────────────────────────────────────────────
 
+/// All projects displayed on the projects index page.
 pub const PROJECTS: &[ProjectEntry] = &[
     ProjectEntry {
         name: "pact-python",
@@ -232,9 +262,13 @@ pub const PROJECTS: &[ProjectEntry] = &[
 /// assert_eq!(format_stars(664), "664");
 /// assert_eq!(format_stars(1400), "1.4k");
 /// ```
+#[expect(
+    clippy::float_arithmetic,
+    reason = "float division for human-readable star count formatting is intentional"
+)]
 pub fn format_stars(n: u32) -> String {
     if n >= 1000 {
-        format!("{:.1}k", n as f64 / 1000.0)
+        format!("{:.1}k", f64::from(n) / 1000.0)
     } else {
         n.to_string()
     }
@@ -259,16 +293,21 @@ pub fn find_repo_stats<'a>(
 
 // ─── ProjectsBand ────────────────────────────────────────────────────────────
 
+/// Returns the total star count across all tracked repositories.
 fn total_stars(stats: &ProjectsStats) -> u32 {
     stats.repos.iter().map(|r| r.stars).sum()
 }
 
+/// Returns the total fork count across all tracked repositories.
 fn total_forks(stats: &ProjectsStats) -> u32 {
     stats.repos.iter().map(|r| r.forks).sum()
 }
 
 #[component]
-fn ProjectsBand(stats: Option<ProjectsStats>) -> impl IntoView {
+fn ProjectsBand(
+    /// Fetched project stats used to populate star and fork totals; `None` renders skeletons.
+    stats: Option<ProjectsStats>,
+) -> impl IntoView {
     let stars: AnyView = match &stats {
         Some(s) => format_stars(total_stars(s)).into_any(),
         None => view! { <span class=style::row_stars_skeleton aria-hidden="true" /> }.into_any(),
@@ -324,7 +363,12 @@ fn ProjectsBand(stats: Option<ProjectsStats>) -> impl IntoView {
 // ─── ProjectsRow ─────────────────────────────────────────────────────────────
 
 #[component]
-fn ProjectsRow(entry: &'static ProjectEntry, repo: Option<RepoStats>) -> impl IntoView {
+fn ProjectsRow(
+    /// The project entry to render.
+    entry: &'static ProjectEntry,
+    /// Fetched GitHub stats for this project; `None` renders a star skeleton.
+    repo: Option<RepoStats>,
+) -> impl IntoView {
     let status_class = match entry.status {
         Status::Active => style::row_status_active,
         Status::Maintained => style::row_status_maintained,
@@ -403,7 +447,10 @@ fn ProjectsRow(entry: &'static ProjectEntry, repo: Option<RepoStats>) -> impl In
 // ─── ProjectsIndex ───────────────────────────────────────────────────────────
 
 #[component]
-fn ProjectsIndex(stats: Option<ProjectsStats>) -> impl IntoView {
+fn ProjectsIndex(
+    /// Fetched project stats passed down to each row; `None` renders star skeletons.
+    stats: Option<ProjectsStats>,
+) -> impl IntoView {
     let rows = PROJECTS
         .iter()
         .map(|entry| {
@@ -448,8 +495,11 @@ fn OpenContributions() -> impl IntoView {
         .map(|(i, c)| {
             let href = format!("https://github.com/{}", c.slug);
             let name = c.name.clone();
-            let stars_label = format!("{}★", format_stars(c.stars as u32));
-            let sep: Option<&'static str> = if i > 0 { Some(" · ") } else { None };
+            let stars_label = format!(
+                "{}★",
+                format_stars(u32::try_from(c.stars).unwrap_or(u32::MAX))
+            );
+            let sep: Option<&'static str> = (i > 0).then_some(" · ");
             view! {
                 {sep}
                 <a href=href target="_blank" rel="noopener noreferrer">
@@ -509,7 +559,9 @@ pub fn ProjectsPage() -> impl IntoView {
                 }
             }>
                 {move || {
-                    let stats: Option<ProjectsStats> = projects_res.get().and_then(|r| r.ok());
+                    let stats: Option<ProjectsStats> = projects_res
+                        .get()
+                        .and_then(std::result::Result::ok);
                     view! {
                         <ProjectsBand stats=stats.clone() />
                         <ProjectsIndex stats=stats />
@@ -592,7 +644,7 @@ mod tests {
         let tracked: std::collections::HashSet<&str> = crate::config::projects::projects_config()
             .tracked_slugs
             .iter()
-            .map(|s| s.as_str())
+            .map(std::string::String::as_str)
             .collect();
         for p in PROJECTS {
             if let Some(ProjectLink::GitHub(slug)) = p.link {

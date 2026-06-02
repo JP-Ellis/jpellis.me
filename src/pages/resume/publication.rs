@@ -1,3 +1,8 @@
+#![expect(
+    clippy::shadow_reuse,
+    reason = "Leptos #[component] macro internally re-binds function parameters"
+)]
+
 use leptos::prelude::*;
 use serde::Deserialize;
 use stylance::import_style;
@@ -26,10 +31,15 @@ pub struct Publication {
 /// # Arguments
 ///
 /// * `publication` - The publication data to render.
-/// * `index` - Row index (0 gets `rule-section` weight, others get `rule-list`).
+/// * `row_index` - Row index (0 gets `rule-section` weight, others get `rule-list`).
 #[component]
-pub fn PublicationRow(publication: Publication, index: usize) -> impl IntoView {
-    let border = if index == 0 {
+pub fn PublicationRow(
+    /// The publication data to render.
+    publication: Publication,
+    /// Row index; 0 gets `rule-section` weight, others get `rule-list`.
+    row_index: usize,
+) -> impl IntoView {
+    let border = if row_index == 0 {
         "rule-section"
     } else {
         "rule-list"

@@ -2,14 +2,22 @@ use std::sync::OnceLock;
 
 use serde::Deserialize;
 
+/// Lazily initialised cache for the parsed projects configuration.
 static CACHE: OnceLock<ProjectsConfig> = OnceLock::new();
 
 /// Configuration for the projects page, loaded from `projects.toml`.
+#[expect(
+    clippy::module_name_repetitions,
+    reason = "name is intentionally qualified"
+)]
 #[derive(Debug, Deserialize)]
 pub struct ProjectsConfig {
     /// GitHub slugs to track for star/fork counts.
     /// Must cover every `ProjectLink::GitHub` entry in `pages::projects::PROJECTS`.
-    #[allow(dead_code)]
+    #[cfg_attr(
+        all(target_arch = "wasm32", not(feature = "ssr")),
+        expect(dead_code, reason = "only read by SSR and native build paths")
+    )]
     pub tracked_slugs: Vec<String>,
     /// Misc OSS contributions shown at the bottom of the projects page.
     #[serde(default)]
@@ -28,9 +36,18 @@ pub struct OssContrib {
     pub stars: u64,
 }
 
+/// Raw TOML content of the embedded projects configuration file.
 const PROJECTS_CONFIG_TOML: &str = include_str!("projects.toml");
 
 /// Returns the parsed projects configuration, initialised once.
+#[expect(
+    clippy::expect_used,
+    reason = "static initializer: corrupt embedded config should panic at startup"
+)]
+#[expect(
+    clippy::module_name_repetitions,
+    reason = "the full name is clearer in cross-module imports"
+)]
 pub fn projects_config() -> &'static ProjectsConfig {
     CACHE.get_or_init(|| {
         toml::from_str(PROJECTS_CONFIG_TOML).expect("src/config/projects.toml is not valid TOML")

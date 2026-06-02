@@ -1,3 +1,8 @@
+#![expect(
+    clippy::shadow_reuse,
+    reason = "Leptos #[component] macro internally re-binds function parameters"
+)]
+
 use leptos::prelude::*;
 use leptos_meta::Title;
 use stylance::import_style;

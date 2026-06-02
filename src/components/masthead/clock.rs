@@ -27,11 +27,11 @@ use leptos::prelude::*;
 /// assert_eq!(to_roman(2026), "mmxxvi");
 /// ```
 #[cfg(any(feature = "ssr", feature = "hydrate", test))]
+#[expect(
+    clippy::arithmetic_side_effects,
+    reason = "loop subtracts table values; value is always <= remaining by loop guard"
+)]
 fn to_roman(n: u32) -> String {
-    if n == 0 {
-        return "○".to_string();
-    }
-    assert!(n < 4000, "to_roman: {n} is out of range (0–3999)");
     const TABLE: &[(u32, &str)] = &[
         (1000, "m"),
         (900, "cm"),
@@ -47,6 +47,10 @@ fn to_roman(n: u32) -> String {
         (4, "iv"),
         (1, "i"),
     ];
+    if n == 0 {
+        return "○".to_owned();
+    }
+    assert!(n < 4000, "to_roman: {n} is out of range (0–3999)");
     let mut result = String::new();
     let mut remaining = n;
     for &(value, symbol) in TABLE {
@@ -59,11 +63,15 @@ fn to_roman(n: u32) -> String {
 }
 
 #[cfg(feature = "hydrate")]
+/// Formats the given local time as a Roman numeral string `hour · minute · second`.
+///
+/// Pads the seconds field to 7 characters with non-breaking spaces to prevent
+/// layout shifts as the value changes every tick.
 fn format_time(now: chrono::DateTime<chrono::Local>) -> String {
     let seconds = to_roman(now.second());
     // Pad seconds to max width (38 = "xxxviii" = 7 chars) with non-breaking spaces
     // to prevent layout shifts as the value changes every tick.
-    let padding = 7usize.saturating_sub(seconds.chars().count());
+    let padding = 7_usize.saturating_sub(seconds.chars().count());
     format!(
         "{} · {} · {}{}",
         to_roman(now.hour()),
@@ -74,6 +82,7 @@ fn format_time(now: chrono::DateTime<chrono::Local>) -> String {
 }
 
 #[cfg(feature = "ssr")]
+/// Formats today's date as a Roman numeral string for server-side rendering.
 fn server_date() -> String {
     let now = chrono::Local::now();
     format!(
@@ -105,6 +114,10 @@ pub fn Clock() -> impl IntoView {
     let text = RwSignal::new(initial);
 
     #[cfg(feature = "hydrate")]
+    #[expect(
+        clippy::expect_used,
+        reason = "set_interval_with_handle always succeeds in a browser context"
+    )]
     Effect::new(move |_| {
         text.set(format_time(chrono::Local::now()));
         let handle = leptos::leptos_dom::helpers::set_interval_with_handle(

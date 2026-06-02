@@ -6,6 +6,7 @@ use serde::Serialize;
 
 /// GitHub statistics including contributions and recent activity.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct GitHubStats {
     /// Timestamp when the stats were fetched.
     pub fetched_at: DateTime<Utc>,
@@ -31,6 +32,7 @@ pub struct GitHubStats {
 
 /// A week of contribution data.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct ContributionWeek {
     /// Daily contribution counts for the week.
     pub days: Vec<ContributionDay>,
@@ -38,6 +40,7 @@ pub struct ContributionWeek {
 
 /// A single day's contribution count.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct ContributionDay {
     /// Date of the contribution.
     pub date: NaiveDate,
@@ -47,6 +50,7 @@ pub struct ContributionDay {
 
 /// An activity item (commit, PR, or issue).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct ActivityItem {
     /// Type of activity.
     pub kind: ActivityKind,
@@ -63,6 +67,7 @@ pub struct ActivityItem {
 }
 
 /// Type of GitHub activity.
+#[non_exhaustive]
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum ActivityKind {
@@ -75,6 +80,7 @@ pub enum ActivityKind {
 }
 
 /// State of an activity item.
+#[non_exhaustive]
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum ActivityState {
@@ -88,7 +94,7 @@ pub enum ActivityState {
 
 #[cfg(test)]
 mod tests {
-    use chrono::TimeZone;
+    use chrono::TimeZone as _;
     use pretty_assertions::assert_eq;
 
     use super::*;
@@ -114,9 +120,9 @@ mod tests {
             }],
             recent_activity: vec![ActivityItem {
                 kind: ActivityKind::Commit,
-                repo: "pact-python".to_string(),
-                title: "feat: bind verifier results".to_string(),
-                url: "https://github.com/JP-Ellis/pact-python/commit/abc".to_string(),
+                repo: "pact-python".to_owned(),
+                title: "feat: bind verifier results".to_owned(),
+                url: "https://github.com/JP-Ellis/pact-python/commit/abc".to_owned(),
                 state: None,
                 created_at: Utc
                     .with_ymd_and_hms(2026, 4, 28, 6, 0, 0)
@@ -127,6 +133,7 @@ mod tests {
     }
 
     #[test]
+    #[expect(clippy::unwrap_used, reason = "test helper — panicking is acceptable")]
     fn round_trips_through_json() {
         let stats = sample_stats();
         let json = serde_json::to_string(&stats).unwrap();
@@ -135,12 +142,13 @@ mod tests {
     }
 
     #[test]
+    #[expect(clippy::unwrap_used, reason = "test helper — panicking is acceptable")]
     fn activity_state_serialises_to_snake_case() {
         let item = ActivityItem {
             kind: ActivityKind::PullRequest,
-            repo: "repo".to_string(),
-            title: "title".to_string(),
-            url: "url".to_string(),
+            repo: "repo".to_owned(),
+            title: "title".to_owned(),
+            url: "url".to_owned(),
             state: Some(ActivityState::Merged),
             created_at: Utc
                 .with_ymd_and_hms(2026, 4, 28, 6, 0, 0)

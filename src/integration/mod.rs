@@ -1,3 +1,10 @@
+//! External integrations (currently GitHub API).
+#![expect(
+    clippy::pub_use,
+    reason = "module facade: flat re-exports give callers a single import path"
+)]
+
+/// GitHub API integration modules.
 pub mod github;
 
 pub use github::projects::model::ProjectsStats;

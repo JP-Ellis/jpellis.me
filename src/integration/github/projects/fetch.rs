@@ -1,4 +1,8 @@
 //! Fetches per-repository stats and activity from the GitHub REST API.
+#![expect(
+    clippy::indexing_slicing,
+    reason = "serde_json Value indexing returns Null for missing keys, not a panic"
+)]
 
 use chrono::Utc;
 use futures::future;
@@ -9,6 +13,11 @@ use crate::integration::github::projects::model::ReleaseInfo;
 use crate::integration::github::projects::model::RepoStats;
 
 /// Errors that can occur while fetching projects statistics.
+#[expect(
+    clippy::module_name_repetitions,
+    reason = "the full name is clearer in cross-module imports"
+)]
+#[non_exhaustive]
 #[derive(Debug)]
 pub enum FetchError {
     /// An HTTP-level error.
@@ -18,6 +27,7 @@ pub enum FetchError {
 }
 
 impl std::fmt::Display for FetchError {
+    #[inline]
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             FetchError::Http(e) => write!(f, "HTTP error: {e}"),
@@ -45,26 +55,36 @@ impl std::error::Error for FetchError {}
 /// # Errors
 ///
 /// Returns [`FetchError::Parse`] if any required field is missing.
+#[must_use = "the parsed stats are discarded if not used"]
+#[inline]
 pub fn parse_repo_response(
     slug: &str,
     body: &serde_json::Value,
 ) -> Result<(u32, u32, u32, u32), FetchError> {
-    let stars = body["stargazers_count"]
-        .as_u64()
-        .ok_or_else(|| FetchError::Parse(format!("{slug}: stargazers_count missing")))?
-        as u32;
-    let forks = body["forks_count"]
-        .as_u64()
-        .ok_or_else(|| FetchError::Parse(format!("{slug}: forks_count missing")))?
-        as u32;
-    let open_issues = body["open_issues_count"]
-        .as_u64()
-        .ok_or_else(|| FetchError::Parse(format!("{slug}: open_issues_count missing")))?
-        as u32;
-    let watchers = body["watchers_count"]
-        .as_u64()
-        .ok_or_else(|| FetchError::Parse(format!("{slug}: watchers_count missing")))?
-        as u32;
+    let stars = u32::try_from(
+        body["stargazers_count"]
+            .as_u64()
+            .ok_or_else(|| FetchError::Parse(format!("{slug}: stargazers_count missing")))?,
+    )
+    .map_err(|e| FetchError::Parse(format!("{slug}: stargazers_count exceeds u32: {e}")))?;
+    let forks = u32::try_from(
+        body["forks_count"]
+            .as_u64()
+            .ok_or_else(|| FetchError::Parse(format!("{slug}: forks_count missing")))?,
+    )
+    .map_err(|e| FetchError::Parse(format!("{slug}: forks_count exceeds u32: {e}")))?;
+    let open_issues = u32::try_from(
+        body["open_issues_count"]
+            .as_u64()
+            .ok_or_else(|| FetchError::Parse(format!("{slug}: open_issues_count missing")))?,
+    )
+    .map_err(|e| FetchError::Parse(format!("{slug}: open_issues_count exceeds u32: {e}")))?;
+    let watchers = u32::try_from(
+        body["watchers_count"]
+            .as_u64()
+            .ok_or_else(|| FetchError::Parse(format!("{slug}: watchers_count missing")))?,
+    )
+    .map_err(|e| FetchError::Parse(format!("{slug}: watchers_count exceeds u32: {e}")))?;
     Ok((stars, forks, open_issues, watchers))
 }
 
@@ -80,10 +100,12 @@ pub fn parse_repo_response(
 /// # Returns
 ///
 /// `Some(ReleaseInfo)` on success, `None` otherwise.
+#[must_use = "the parsed release info is discarded if not used"]
+#[inline]
 pub fn parse_release_response(body: &serde_json::Value) -> Option<ReleaseInfo> {
-    let tag = body["tag_name"].as_str()?.to_string();
-    let date = body["published_at"].as_str()?.to_string();
-    let url = body["html_url"].as_str()?.to_string();
+    let tag = body["tag_name"].as_str()?.to_owned();
+    let date = body["published_at"].as_str()?.to_owned();
+    let url = body["html_url"].as_str()?.to_owned();
     Some(ReleaseInfo { tag, date, url })
 }
 
@@ -100,6 +122,8 @@ pub fn parse_release_response(body: &serde_json::Value) -> Option<ReleaseInfo> {
 /// # Returns
 ///
 /// `Some(CommitInfo)` for human commits, `None` for bots or unparsable entries.
+#[must_use = "the parsed commit info is discarded if not used"]
+#[inline]
 pub fn parse_commit(commit: &serde_json::Value) -> Option<CommitInfo> {
     // Filter bots: author object is present AND type is "Bot"
     if let Some(author_obj) = commit["author"].as_object()
@@ -109,7 +133,7 @@ pub fn parse_commit(commit: &serde_json::Value) -> Option<CommitInfo> {
     }
 
     let full_sha = commit["sha"].as_str()?;
-    let sha = full_sha.get(..7).unwrap_or(full_sha).to_string();
+    let sha = full_sha.get(..7).unwrap_or(full_sha).to_owned();
 
     let full_message = commit["commit"]["message"].as_str().unwrap_or("");
     let first_line = full_message.lines().next().unwrap_or("").trim();
@@ -117,26 +141,26 @@ pub fn parse_commit(commit: &serde_json::Value) -> Option<CommitInfo> {
         let truncated: String = first_line.chars().take(72).collect();
         format!("{truncated}…")
     } else {
-        first_line.to_string()
+        first_line.to_owned()
     };
 
     let date = commit["commit"]["author"]["date"]
         .as_str()
         .unwrap_or("")
-        .to_string();
+        .to_owned();
 
     // For User accounts use the GitHub login; for null author (not linked
     // to a GitHub account) fall back to the git committer name.
     let author = if let Some(login) = commit["author"]["login"].as_str() {
-        login.to_string()
+        login.to_owned()
     } else {
         commit["commit"]["author"]["name"]
             .as_str()
             .unwrap_or("unknown")
-            .to_string()
+            .to_owned()
     };
 
-    let url = commit["html_url"].as_str().unwrap_or("").to_string();
+    let url = commit["html_url"].as_str().unwrap_or("").to_owned();
 
     Some(CommitInfo {
         sha,
@@ -156,6 +180,8 @@ pub fn parse_commit(commit: &serde_json::Value) -> Option<CommitInfo> {
 /// # Returns
 ///
 /// Up to 5 [`CommitInfo`] entries for non-bot commits.
+#[must_use = "the parsed commits are discarded if not used"]
+#[inline]
 pub fn parse_commits_response(body: &serde_json::Value) -> Vec<CommitInfo> {
     let Some(arr) = body.as_array() else {
         return vec![];
@@ -172,12 +198,16 @@ pub fn parse_commits_response(body: &serde_json::Value) -> Vec<CommitInfo> {
 /// # Returns
 ///
 /// Number of open PRs (0 if response is not an array).
+#[must_use = "the PR count is discarded if not used"]
+#[inline]
 pub fn parse_prs_count(body: &serde_json::Value) -> u32 {
-    body.as_array().map(|a| a.len() as u32).unwrap_or(0)
+    body.as_array()
+        .map_or(0, |a| u32::try_from(a.len()).unwrap_or(u32::MAX))
 }
 
 // MARK: HTTP helpers
 
+/// Performs a GET request and returns the parsed JSON body.
 async fn get_json(
     client: &reqwest::Client,
     url: &str,
@@ -204,6 +234,7 @@ async fn get_json(
     Ok(body)
 }
 
+/// Fetches the latest release for a repository, returning `None` if none exists.
 async fn fetch_latest_release(
     client: &reqwest::Client,
     slug: &str,
@@ -227,6 +258,7 @@ async fn fetch_latest_release(
     parse_release_response(&body)
 }
 
+/// Fetches recent commits for a repository, returning an empty list on error.
 async fn fetch_recent_commits(
     client: &reqwest::Client,
     slug: &str,
@@ -244,6 +276,7 @@ async fn fetch_recent_commits(
     parse_commits_response(&body)
 }
 
+/// Fetches the number of open pull requests for a repository.
 async fn fetch_open_prs_count(client: &reqwest::Client, slug: &str, token: &str) -> u32 {
     let url = format!("https://api.github.com/repos/{slug}/pulls?state=open&per_page=100");
     let body = match get_json(client, &url, token).await {
@@ -256,17 +289,18 @@ async fn fetch_open_prs_count(client: &reqwest::Client, slug: &str, token: &str)
     parse_prs_count(&body)
 }
 
+/// Fetches all stats and activity for a single repository.
 async fn fetch_single_repo(
     client: &reqwest::Client,
     slug: &str,
     token: &str,
 ) -> Result<RepoStats, FetchError> {
+    use futures::join;
     let repo_url = format!("https://api.github.com/repos/{slug}");
     let repo_body = get_json(client, &repo_url, token).await?;
     let (stars, forks, open_issues, watchers) = parse_repo_response(slug, &repo_body)?;
 
     // Fetch activity concurrently after we know the repo exists
-    use futures::join;
     let (latest_release, recent_commits, open_prs) = join!(
         fetch_latest_release(client, slug, token),
         fetch_recent_commits(client, slug, token),
@@ -274,7 +308,7 @@ async fn fetch_single_repo(
     );
 
     Ok(RepoStats {
-        slug: slug.to_string(),
+        slug: slug.to_owned(),
         stars,
         forks,
         open_issues,
@@ -297,6 +331,12 @@ async fn fetch_single_repo(
 /// # Returns
 ///
 /// A [`ProjectsStats`] with one [`RepoStats`] per successfully fetched repo.
+#[must_use = "the fetched stats are discarded if not used"]
+#[inline]
+#[expect(
+    clippy::module_name_repetitions,
+    reason = "the full name is clearer in cross-module imports"
+)]
 pub async fn fetch_projects_stats(token: &str, slugs: &[String]) -> ProjectsStats {
     let client = reqwest::Client::new();
     let futs: Vec<_> = slugs
@@ -324,6 +364,11 @@ pub async fn fetch_projects_stats(token: &str, slugs: &[String]) -> ProjectsStat
 
 #[cfg(test)]
 mod tests {
+    #![expect(
+        clippy::default_numeric_fallback,
+        reason = "integer literals in serde_json::json! test fixtures — type inference is unambiguous in context"
+    )]
+
     use pretty_assertions::assert_eq;
 
     use super::*;
@@ -331,31 +376,46 @@ mod tests {
     #[test]
     fn parse_repo_response_extracts_all_four_fields() {
         let body = serde_json::json!({
-            "stargazers_count": 158,
-            "forks_count": 22,
-            "open_issues_count": 5,
-            "watchers_count": 12
+            "stargazers_count": 158_i64,
+            "forks_count": 22_i64,
+            "open_issues_count": 5_i64,
+            "watchers_count": 12_i64
         });
         let (stars, forks, open_issues, watchers) =
             parse_repo_response("JP-Ellis/tikz-feynman", &body).expect("valid");
-        assert_eq!(stars, 158);
-        assert_eq!(forks, 22);
-        assert_eq!(open_issues, 5);
-        assert_eq!(watchers, 12);
+        assert_eq!(stars, 158_u32);
+        assert_eq!(forks, 22_u32);
+        assert_eq!(open_issues, 5_u32);
+        assert_eq!(watchers, 12_u32);
     }
 
     #[test]
+    #[expect(
+        clippy::unwrap_used,
+        reason = "test assertion on expected error variant"
+    )]
     fn parse_repo_response_errors_on_missing_stars() {
-        let body =
-            serde_json::json!({ "forks_count": 5, "open_issues_count": 0, "watchers_count": 1 });
+        let body = serde_json::json!({
+            "forks_count": 5_i64,
+            "open_issues_count": 0_i64,
+            "watchers_count": 1_i64,
+        });
         let result = parse_repo_response("owner/repo", &body);
         assert!(result.is_err());
         assert!(result.unwrap_err().to_string().contains("stargazers_count"));
     }
 
     #[test]
+    #[expect(
+        clippy::unwrap_used,
+        reason = "test assertion on expected error variant"
+    )]
     fn parse_repo_response_errors_on_missing_forks() {
-        let body = serde_json::json!({ "stargazers_count": 100, "open_issues_count": 0, "watchers_count": 1 });
+        let body = serde_json::json!({
+            "stargazers_count": 100_i64,
+            "open_issues_count": 0_i64,
+            "watchers_count": 1_i64,
+        });
         let result = parse_repo_response("owner/repo", &body);
         assert!(result.is_err());
         assert!(result.unwrap_err().to_string().contains("forks_count"));
@@ -488,11 +548,11 @@ mod tests {
     #[test]
     fn parse_prs_count_counts_array_length() {
         let body = serde_json::json!([
-            { "number": 1 },
-            { "number": 2 },
-            { "number": 3 }
+            { "number": 1_i64 },
+            { "number": 2_i64 },
+            { "number": 3_i64 }
         ]);
-        assert_eq!(parse_prs_count(&body), 3);
+        assert_eq!(parse_prs_count(&body), 3_u32);
     }
 
     #[test]
