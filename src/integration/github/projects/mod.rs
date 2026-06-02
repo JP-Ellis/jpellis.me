@@ -3,10 +3,6 @@
     clippy::pub_use,
     reason = "module facade: re-exporting types for a clean public API surface"
 )]
-#![expect(
-    clippy::module_name_repetitions,
-    reason = "re-exported names include the module name for clarity at call sites"
-)]
 
 /// Default/fallback project stats when the API is unavailable.
 pub mod defaults;

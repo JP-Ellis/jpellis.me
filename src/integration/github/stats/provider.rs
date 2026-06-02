@@ -21,10 +21,6 @@ use crate::integration::github::stats::model::GitHubStats;
 /// Inject into Leptos context so that [`get_github_stats`] is cfg-free.
 ///
 /// [`get_github_stats`]: crate::integration::github::stats::server_fn::get_github_stats
-#[expect(
-    clippy::module_name_repetitions,
-    reason = "the full name is clearer in cross-module imports"
-)]
 #[non_exhaustive]
 #[derive(Clone)]
 pub enum StatsProvider {
@@ -128,10 +124,6 @@ impl StatsProvider {
 /// Serves stale data immediately (stale-while-revalidate) and spawns a
 /// background Tokio task when the cache is older than one hour.
 #[cfg(not(target_arch = "wasm32"))]
-#[expect(
-    clippy::module_name_repetitions,
-    reason = "the full name is clearer in cross-module imports"
-)]
 #[derive(Clone)]
 pub struct FileStatsProvider {
     /// GitHub personal access token used to authenticate API requests.

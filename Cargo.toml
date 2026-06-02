@@ -49,6 +49,7 @@ members = ["."]
     min_ident_chars = "allow"  # single-letter names (e.g. `i`, `n`) are fine in tight scopes
     missing_trait_methods = "allow"  # partial trait implementations with provided defaults are intentional
     mod_module_files = "allow"  # prefer mod.rs to organise modules by directory
+    module_name_repetitions = "allow"  # allow 'foo.rs' to contain `struct FooBar`, or `fn foo_bar`
     multiple_crate_versions = "allow"  # duplicate transitive deps are unavoidable in a large workspace
     non_ascii_literal = "allow"  # Unicode string literals are used for currency symbols and display text
     pattern_type_mismatch = "allow"  # match ergonomics (auto-ref in patterns) is standard Rust style
@@ -169,6 +170,17 @@ ssr = [
 
 [lints]
 workspace = true
+
+# [patch]
+#   [patch.crates-io]
+#   leptos = { path = "../../leptos-rs/leptos/leptos" }
+#   leptos_axum = { path = "../../leptos-rs/leptos/integrations/axum" }
+#   leptos_config = { path = "../../leptos-rs/leptos/leptos_config" }
+#   leptos_integration_utils = { path = "../../leptos-rs/leptos/integrations/utils" }
+#   leptos_macro = { path = "../../leptos-rs/leptos/leptos_macro" }
+#   leptos_router = { path = "../../leptos-rs/leptos/router" }
+#   leptos_router_macro = { path = "../../leptos-rs/leptos/router_macro" }
+#   tachys = { path = "../../leptos-rs/leptos/tachys" }
 
 [profile.wasm-release]
 inherits = "release"
