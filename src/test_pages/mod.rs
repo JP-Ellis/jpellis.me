@@ -1,6 +1,15 @@
+#![expect(
+    clippy::pub_use,
+    reason = "re-exports flatten the module hierarchy for callers — the sub-modules are implementation details"
+)]
+
+/// Band component test page.
 mod band;
+/// CSS foundation (tokens, colours, spacing) test page.
 mod css_foundation;
+/// Footer component test page.
 mod footer;
+/// Masthead / navigation test page.
 mod masthead;
 
 pub use band::BandPage;

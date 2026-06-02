@@ -12,6 +12,7 @@ use crate::pages::projects::ProjectLink;
 import_style!(style, "home.module.scss");
 
 /// Almanac home page.
+#[expect(clippy::too_many_lines, reason = "Leptos component template")]
 #[component]
 pub fn HomePage() -> impl IntoView {
     view! {
@@ -124,7 +125,7 @@ pub fn HomePage() -> impl IntoView {
                                     let source_domain = post
                                         .source
                                         .and_then(|s| {
-                                            source_domain(s).map(|d| (d.to_string(), s))
+                                            source_domain(s).map(|d| (d.to_owned(), s))
                                         });
                                     view! {
                                         <div

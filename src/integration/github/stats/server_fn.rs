@@ -7,6 +7,21 @@
 //! futures are `!Send` because of `JsFuture`, but the runtime is always
 //! single-threaded so `SendWrapper` is safe).
 
+#![cfg_attr(
+    any(not(target_arch = "wasm32"), feature = "ssr"),
+    expect(
+        clippy::exhaustive_structs,
+        reason = "#[server] proc-macro generates the payload struct; #[non_exhaustive] cannot be applied here"
+    )
+)]
+#![cfg_attr(
+    any(not(target_arch = "wasm32"), feature = "ssr"),
+    expect(
+        clippy::missing_inline_in_public_items,
+        reason = "#[server] proc-macro generates the public function; #[inline] cannot be applied here"
+    )
+)]
+
 use leptos::prelude::*;
 
 use crate::integration::github::stats::model::GitHubStats;

@@ -1,3 +1,8 @@
+#![expect(
+    clippy::expect_used,
+    reason = "LazyLock initializer: bad TOML or wrong data at deploy time is a programmer error, not a runtime user error"
+)]
+
 use std::sync::LazyLock;
 
 use leptos::prelude::*;
@@ -8,8 +13,11 @@ use crate::components::Band;
 use crate::components::Footer;
 use crate::components::Masthead;
 
+/// Honour/award data type and row component.
 mod honour;
+/// Publication data type and row component.
 mod publication;
+/// Role data type and timeline row component.
 mod role;
 
 use honour::Honour;
@@ -22,25 +30,30 @@ use role::TimelineRow;
 
 import_style!(style, "resume.module.scss");
 
+/// Deserialization shape for `content/resume.toml`.
 #[derive(Debug, Deserialize)]
 struct ResumeData {
+    /// Work and education roles, in reverse-chronological order.
     roles: Vec<Role>,
+    /// Peer-reviewed publications.
     publications: Vec<Publication>,
+    /// Honours and awards.
     honours: Vec<Honour>,
 }
 
-// Content is embedded at compile-time via `include_str!`; a panic here is a
-// deploy-time programmer error (bad TOML or wrong data), not a runtime user error.
+/// Parsed resume content, embedded at compile-time from `content/resume.toml`.
+///
+/// A panic here is a deploy-time programmer error (bad TOML or wrong data),
+/// not a runtime user error.
 static RESUME: LazyLock<ResumeData> = LazyLock::new(|| {
     let data: ResumeData = toml::from_str(include_str!("../../../content/resume.toml"))
         .expect("content/resume.toml is invalid TOML");
     let featured_count = data.roles.iter().filter(|r| r.featured).count();
-    if featured_count != 1 {
-        panic!(
-            "content/resume.toml must have exactly one role with \
-             featured = true (found {featured_count})"
-        );
-    }
+    assert!(
+        featured_count == 1,
+        "content/resume.toml must have exactly one role with \
+         featured = true (found {featured_count})"
+    );
     data
 });
 
@@ -112,7 +125,7 @@ pub fn ResumePage() -> impl IntoView {
                             {rest
                                 .into_iter()
                                 .enumerate()
-                                .map(|(i, role)| view! { <TimelineRow role=role index=i /> })
+                                .map(|(i, role)| view! { <TimelineRow role=role row_index=i /> })
                                 .collect_view()}
                         </div>
                     </div>
@@ -129,7 +142,7 @@ pub fn ResumePage() -> impl IntoView {
                                 .into_iter()
                                 .enumerate()
                                 .map(|(i, pub_)| {
-                                    view! { <PublicationRow publication=pub_ index=i /> }
+                                    view! { <PublicationRow publication=pub_ row_index=i /> }
                                 })
                                 .collect_view()}
                         </div>
@@ -146,7 +159,7 @@ pub fn ResumePage() -> impl IntoView {
                             {honours
                                 .into_iter()
                                 .enumerate()
-                                .map(|(i, h)| view! { <HonourRow honour=h index=i /> })
+                                .map(|(i, h)| view! { <HonourRow honour=h row_index=i /> })
                                 .collect_view()}
                         </div>
                     </div>

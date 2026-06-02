@@ -1,3 +1,6 @@
+//! Blog list page and supporting helpers.
+
+/// Individual blog post page.
 pub mod post;
 
 use leptos::prelude::*;
@@ -14,6 +17,7 @@ use crate::components::Masthead;
 
 import_style!(style, "blog.module.scss");
 
+/// Builds a `/blog` URL with optional `tag` and `year` query parameters.
 fn filter_url(tag: Option<&str>, year: Option<&str>) -> String {
     let mut parts: Vec<String> = Vec::new();
     if let Some(t) = tag {
@@ -23,12 +27,16 @@ fn filter_url(tag: Option<&str>, year: Option<&str>) -> String {
         parts.push(format!("year={y}"));
     }
     if parts.is_empty() {
-        "/blog".to_string()
+        "/blog".to_owned()
     } else {
         format!("/blog?{}", parts.join("&"))
     }
 }
 
+#[expect(
+    clippy::too_many_lines,
+    reason = "Leptos component with complex template"
+)]
 #[component]
 pub fn BlogListPage() -> impl IntoView {
     let filter_nav = NavigateOptions {
@@ -118,7 +126,7 @@ pub fn BlogListPage() -> impl IntoView {
                                                     let new_val = if active_tag.get().as_deref() == Some(tag) {
                                                         None
                                                     } else {
-                                                        Some(tag.to_string())
+                                                        Some(tag.to_owned())
                                                     };
                                                     set_active_tag.set(new_val);
                                                 }
@@ -168,7 +176,7 @@ pub fn BlogListPage() -> impl IntoView {
                                                     {
                                                         None
                                                     } else {
-                                                        Some(year.to_string())
+                                                        Some(year.to_owned())
                                                     };
                                                     set_active_year.set(new_val);
                                                 }
@@ -203,7 +211,7 @@ pub fn BlogListPage() -> impl IntoView {
                                         let source_info = post
                                             .source
                                             .and_then(|s| {
-                                                source_domain(s).map(|d| (d.to_string(), s))
+                                                source_domain(s).map(|d| (d.to_owned(), s))
                                             });
                                         view! {
                                             <div

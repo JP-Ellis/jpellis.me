@@ -12,13 +12,15 @@
 
 #![cfg(all(target_arch = "wasm32", feature = "ssr"))]
 
+use std::sync::Arc;
+
 use axum::Router;
 use axum::response::Redirect;
 use axum::routing::get;
 use leptos::prelude::provide_context;
-use leptos_axum::LeptosRoutes;
+use leptos_axum::LeptosRoutes as _;
 use leptos_axum::generate_route_list;
-use tower::util::ServiceExt;
+use tower::util::ServiceExt as _;
 use worker::Context;
 use worker::Env;
 use worker::HttpRequest;
@@ -63,11 +65,15 @@ pub async fn fetch_handler(
             None
         }
     };
-    let ctx = std::sync::Arc::new(ctx);
+    let arc_ctx = std::sync::Arc::new(ctx);
 
-    let stats_provider = StatsProvider::kv(env.kv("GITHUB_STATS"), ctx.clone(), token.as_deref());
+    let stats_provider = StatsProvider::kv(
+        env.kv("GITHUB_STATS"),
+        Arc::clone(&arc_ctx),
+        token.as_deref(),
+    );
     let projects_provider =
-        ProjectsStatsProvider::kv(env.kv("PROJECTS_STATS"), ctx, token.as_deref());
+        ProjectsStatsProvider::kv(env.kv("PROJECTS_STATS"), arc_ctx, token.as_deref());
 
     let leptos_options = leptos::config::LeptosOptions::builder()
         .output_name("jpellis-me")
@@ -113,6 +119,7 @@ pub async fn scheduled_handler(event: ScheduledEvent, env: Env, _ctx: ScheduleCo
     }
 }
 
+/// Fetches the latest GitHub contribution stats and writes them to the `GITHUB_STATS` KV namespace.
 async fn refresh_github_stats(env: Env, token: &str) {
     let kv = match env.kv("GITHUB_STATS") {
         Ok(k) => k,
@@ -139,6 +146,7 @@ async fn refresh_github_stats(env: Env, token: &str) {
     }
 }
 
+/// Fetches the latest per-repo projects stats and writes them to the `PROJECTS_STATS` KV namespace.
 async fn refresh_projects_stats(env: Env, token: &str) {
     let kv = match env.kv("PROJECTS_STATS") {
         Ok(k) => k,

@@ -1,3 +1,7 @@
+#![expect(
+    clippy::expect_used,
+    reason = "static LazyLock initializer and bounded arithmetic: corrupt embedded data should panic"
+)]
 use std::sync::LazyLock;
 
 use chrono::DateTime;
@@ -18,20 +22,30 @@ use crate::integration::github::stats::model::GitHubStats;
 /// Deserialization shape for `fallback.json`.
 #[derive(Deserialize)]
 struct FallbackData {
+    /// Total commit contributions in the last year.
     commit_contributions: u32,
+    /// Total pull request contributions in the last year.
     pr_contributions: u32,
+    /// Total issue contributions in the last year.
     issue_contributions: u32,
+    /// Number of public repositories.
     public_repos: u32,
+    /// Recent activity items to display in the activity feed.
     recent_activity: Vec<FallbackActivity>,
 }
 
 /// A single recent-activity entry as stored in `fallback.json`.
 #[derive(Deserialize)]
 struct FallbackActivity {
+    /// Type of activity (commit, PR, issue, etc.).
     kind: ActivityKind,
+    /// Repository slug (e.g. `"owner/repo"`).
     repo: String,
+    /// Human-readable title of the activity item.
     title: String,
+    /// URL linking to the activity item on GitHub.
     url: String,
+    /// State of the item, if applicable (e.g. open/closed/merged).
     state: Option<ActivityState>,
     /// Real timestamp from the GitHub API, written by `scripts/update-fallback-data.rs`.
     created_at: DateTime<Utc>,
@@ -63,9 +77,15 @@ static FALLBACK: LazyLock<FallbackData> = LazyLock::new(|| {
 /// assert_eq!(stats.public_repos, 14);
 /// assert_eq!(stats.contribution_weeks.len(), 53);
 /// ```
+#[must_use = "the fallback stats are discarded if not used"]
+#[inline]
 pub fn fallback_stats() -> GitHubStats {
     let now = Utc::now();
     let today = now.date_naive();
+    #[expect(
+        clippy::arithmetic_side_effects,
+        reason = "subtracting a fixed small duration from a real date cannot overflow NaiveDate"
+    )]
     let period_from = today - Duration::days(364);
     let period_to = today;
 
@@ -107,10 +127,25 @@ pub fn fallback_stats() -> GitHubStats {
 
 // ─── Grid generation ─────────────────────────────────────────────────────────
 
+/// Generates a deterministic 53-week contribution grid for fallback display.
 fn fallback_grid(start: NaiveDate) -> Vec<ContributionWeek> {
+    #[expect(
+        clippy::integer_division_remainder_used,
+        reason = "modulo is part of the LCG algorithm; intentional"
+    )]
+    #[expect(
+        clippy::float_arithmetic,
+        reason = "float division to normalise LCG output to [0.0, 1.0)"
+    )]
     fn lcg(s: &mut u64) -> f64 {
-        *s = s.wrapping_mul(9301).wrapping_add(49297) % 233280;
-        *s as f64 / 233280.0
+        *s = s.wrapping_mul(9301).wrapping_add(49297) % 233_280;
+        #[expect(
+            clippy::as_conversions,
+            clippy::cast_precision_loss,
+            reason = "seed is bounded to [0, 233_280) so precision loss is negligible"
+        )]
+        let result = *s as f64 / 233_280.0_f64;
+        result
     }
 
     let mut s: u64 = 11;
@@ -119,14 +154,31 @@ fn fallback_grid(start: NaiveDate) -> Vec<ContributionWeek> {
     for w in 0..53_usize {
         let mut days = Vec::with_capacity(7);
         for d in 0..7_usize {
-            let v = lcg(&mut s).powf(1.6);
-            let burst = if w > 32 && w < 44 && lcg(&mut s) > 0.4 {
+            let v = lcg(&mut s).powf(1.6_f64);
+            let burst = if w > 32_usize && w < 44_usize && lcg(&mut s) > 0.4_f64 {
                 0.3_f64
             } else {
                 0.0_f64
             };
-            let raw = ((v + burst).min(1.0) * 10.0) as u32;
-            let date = start + Duration::days((w * 7 + d) as i64);
+            #[expect(
+                clippy::as_conversions,
+                clippy::cast_possible_truncation,
+                clippy::cast_sign_loss,
+                clippy::float_arithmetic,
+                reason = "value is clamped to [0.0, 1.0] then scaled to [0.0, 10.0]; truncation to u32 is intentional"
+            )]
+            let raw = ((v + burst).min(1.0_f64) * 10.0_f64) as u32;
+            #[expect(
+                clippy::arithmetic_side_effects,
+                reason = "w and d are bounded by loop limits (53 and 7), so w * 7 + d cannot overflow usize"
+            )]
+            let offset = i64::try_from(w * 7_usize + d)
+                .expect("w*7+d is bounded by loop limits (max 52*7+6 = 370) and fits in i64");
+            #[expect(
+                clippy::arithmetic_side_effects,
+                reason = "offset is bounded by loop (max 370 days); adding small duration to a real date cannot overflow NaiveDate"
+            )]
+            let date = start + Duration::days(offset);
             days.push(ContributionDay { date, count: raw });
         }
         weeks.push(ContributionWeek { days });
@@ -143,7 +195,11 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_fallback_stats_determinism() {
+    #[expect(
+        clippy::indexing_slicing,
+        reason = "test assertions on known non-empty fallback data"
+    )]
+    fn fallback_stats_determinism() {
         let stats1 = fallback_stats();
         let stats2 = fallback_stats();
 
@@ -166,7 +222,7 @@ mod tests {
     }
 
     #[test]
-    fn test_fallback_grid_shape() {
+    fn fallback_grid_shape() {
         let stats = fallback_stats();
 
         assert_eq!(

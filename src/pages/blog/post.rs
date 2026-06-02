@@ -14,6 +14,7 @@ use crate::components::Masthead;
 use crate::pages::not_found::NotFoundPage;
 
 #[cfg(target_arch = "wasm32")]
+/// Bindings to the Prism.js syntax highlighter loaded via CDN.
 mod prism {
     use wasm_bindgen::prelude::wasm_bindgen;
     #[wasm_bindgen(

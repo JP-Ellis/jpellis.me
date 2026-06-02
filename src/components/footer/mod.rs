@@ -4,6 +4,10 @@ use stylance::import_style;
 import_style!(style, "footer.module.scss");
 
 /// Site-wide footer with copyright, social links, and licence.
+#[expect(
+    clippy::module_name_repetitions,
+    reason = "the full name is clearer in cross-module imports"
+)]
 #[component]
 pub fn Footer() -> impl IntoView {
     view! {

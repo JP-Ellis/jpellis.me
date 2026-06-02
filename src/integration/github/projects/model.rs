@@ -4,6 +4,7 @@ use serde::Deserialize;
 use serde::Serialize;
 
 /// Latest release info for a repository.
+#[non_exhaustive]
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ReleaseInfo {
     /// Release tag name, e.g. `"v3.1.0"`.
@@ -15,6 +16,7 @@ pub struct ReleaseInfo {
 }
 
 /// A single (non-bot) commit for a repository.
+#[non_exhaustive]
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct CommitInfo {
     /// 7-character short SHA.
@@ -30,6 +32,7 @@ pub struct CommitInfo {
 }
 
 /// Stars, forks, and activity for a single GitHub repository.
+#[non_exhaustive]
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct RepoStats {
     /// Repository slug, e.g. `"JP-Ellis/tikz-feynman"`.
@@ -56,6 +59,7 @@ pub struct RepoStats {
 }
 
 /// Cached per-repository stats.
+#[non_exhaustive]
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ProjectsStats {
     /// Timestamp when the stats were fetched.
@@ -66,7 +70,7 @@ pub struct ProjectsStats {
 
 #[cfg(test)]
 mod tests {
-    use chrono::TimeZone;
+    use chrono::TimeZone as _;
     use pretty_assertions::assert_eq;
 
     use super::*;
@@ -79,28 +83,28 @@ mod tests {
                 .expect("valid test date"),
             repos: vec![
                 RepoStats {
-                    slug: "JP-Ellis/tikz-feynman".to_string(),
+                    slug: "JP-Ellis/tikz-feynman".to_owned(),
                     stars: 158,
                     forks: 22,
                     open_issues: 5,
                     watchers: 12,
                     latest_release: Some(ReleaseInfo {
-                        tag: "v3.1.0".to_string(),
-                        date: "2025-01-14T10:00:00Z".to_string(),
+                        tag: "v3.1.0".to_owned(),
+                        date: "2025-01-14T10:00:00Z".to_owned(),
                         url: "https://github.com/JP-Ellis/tikz-feynman/releases/tag/v3.1.0"
-                            .to_string(),
+                            .to_owned(),
                     }),
                     recent_commits: vec![CommitInfo {
-                        sha: "a1b2c3d".to_string(),
-                        message: "Fix diagram spacing".to_string(),
-                        date: "2025-05-01T09:00:00Z".to_string(),
-                        author: "JP-Ellis".to_string(),
-                        url: "https://github.com/JP-Ellis/tikz-feynman/commit/a1b2c3d".to_string(),
+                        sha: "a1b2c3d".to_owned(),
+                        message: "Fix diagram spacing".to_owned(),
+                        date: "2025-05-01T09:00:00Z".to_owned(),
+                        author: "JP-Ellis".to_owned(),
+                        url: "https://github.com/JP-Ellis/tikz-feynman/commit/a1b2c3d".to_owned(),
                     }],
                     open_prs: 3,
                 },
                 RepoStats {
-                    slug: "pact-foundation/pact-python".to_string(),
+                    slug: "pact-foundation/pact-python".to_owned(),
                     stars: 664,
                     forks: 148,
                     open_issues: 12,
@@ -124,7 +128,7 @@ mod tests {
     #[test]
     fn repo_stats_preserves_zero_counts() {
         let repo = RepoStats {
-            slug: "JP-Ellis/dotfiles".to_string(),
+            slug: "JP-Ellis/dotfiles".to_owned(),
             stars: 2,
             forks: 0,
             open_issues: 0,
@@ -142,22 +146,22 @@ mod tests {
     #[test]
     fn repo_stats_round_trips_with_activity_fields() {
         let repo = RepoStats {
-            slug: "JP-Ellis/tikz-feynman".to_string(),
+            slug: "JP-Ellis/tikz-feynman".to_owned(),
             stars: 158,
             forks: 22,
             open_issues: 5,
             watchers: 12,
             latest_release: Some(ReleaseInfo {
-                tag: "v3.1.0".to_string(),
-                date: "2025-01-14T10:00:00Z".to_string(),
-                url: "https://github.com/JP-Ellis/tikz-feynman/releases/tag/v3.1.0".to_string(),
+                tag: "v3.1.0".to_owned(),
+                date: "2025-01-14T10:00:00Z".to_owned(),
+                url: "https://github.com/JP-Ellis/tikz-feynman/releases/tag/v3.1.0".to_owned(),
             }),
             recent_commits: vec![CommitInfo {
-                sha: "a1b2c3d".to_string(),
-                message: "Fix diagram spacing".to_string(),
-                date: "2025-05-01T09:00:00Z".to_string(),
-                author: "JP-Ellis".to_string(),
-                url: "https://github.com/JP-Ellis/tikz-feynman/commit/a1b2c3d".to_string(),
+                sha: "a1b2c3d".to_owned(),
+                message: "Fix diagram spacing".to_owned(),
+                date: "2025-05-01T09:00:00Z".to_owned(),
+                author: "JP-Ellis".to_owned(),
+                url: "https://github.com/JP-Ellis/tikz-feynman/commit/a1b2c3d".to_owned(),
             }],
             open_prs: 3,
         };
@@ -169,7 +173,7 @@ mod tests {
     #[test]
     fn repo_stats_no_release_round_trips() {
         let repo = RepoStats {
-            slug: "JP-Ellis/rust-skiplist".to_string(),
+            slug: "JP-Ellis/rust-skiplist".to_owned(),
             stars: 10,
             forks: 2,
             open_issues: 0,

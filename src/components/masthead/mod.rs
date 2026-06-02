@@ -1,12 +1,19 @@
+#![expect(
+    clippy::module_name_repetitions,
+    reason = "component names mirror their module for discoverability"
+)]
+
 use leptos::prelude::*;
 use leptos_router::hooks::use_location;
 use stylance::import_style;
 
+/// Roman-numeral clock, progressively enhanced from server-rendered date.
 mod clock;
 use clock::Clock;
 
 import_style!(style, "masthead.module.scss");
 
+/// Navigation links: `(label, path)` pairs rendered in the site header.
 const NAV: &[(&str, &str)] = &[
     ("Index", "/"),
     ("Projects", "/projects"),
@@ -41,7 +48,7 @@ pub fn Masthead() -> impl IntoView {
                                     if location.pathname.get() == path {
                                         format!("{} {}", style::nav_link, style::nav_link_active)
                                     } else {
-                                        style::nav_link.to_string()
+                                        style::nav_link.to_owned()
                                     }
                                 }
                             >

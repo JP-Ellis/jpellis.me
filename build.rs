@@ -1,5 +1,28 @@
+//! Build script: compiles blog posts and project pages from Markdown into
+//! static `&[BlogPost]` / `&[ProjectPage]` arrays that are `include!`-d by
+//! the main crate.
+#![expect(
+    clippy::expect_used,
+    reason = "build scripts should panic with a message on fatal errors"
+)]
+#![expect(
+    clippy::missing_docs_in_private_items,
+    reason = "build script internals do not need documentation"
+)]
+#![expect(
+    clippy::use_debug,
+    reason = "Debug-formatting string values to emit Rust string literals"
+)]
+#![expect(
+    clippy::string_slice,
+    reason = "all positions come from ASCII pattern matching, so they are valid char boundaries"
+)]
+#![expect(
+    clippy::arithmetic_side_effects,
+    reason = "arithmetic on byte offsets bounded by file size, which is bounded by memory"
+)]
 use std::env;
-use std::fmt::Write as FmtWrite;
+use std::fmt::Write as _;
 use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
@@ -15,7 +38,7 @@ fn main() {
 
     // MARK: Blog posts
     let blog_out_path = PathBuf::from(&out_dir).join("blog_posts.rs");
-    let mut tab_counter = 0usize;
+    let mut tab_counter = 0_usize;
     let mut posts: Vec<Post> = collect_posts(Path::new("content/blog"), &mut tab_counter);
     posts.sort_by(|a, b| b.date.cmp(&a.date));
     let code = generate_code(&posts);
@@ -44,8 +67,8 @@ struct Frontmatter {
     slug: Option<String>,
 }
 
-fn parse_frontmatter(content: &str) -> Option<(Frontmatter, &str)> {
-    let content = content.trim_start();
+fn parse_frontmatter(raw_content: &str) -> Option<(Frontmatter, &str)> {
+    let content = raw_content.trim_start();
     let after_open = content
         .strip_prefix("+++\n")
         .or_else(|| content.strip_prefix("+++\r\n"))?;
@@ -67,10 +90,10 @@ fn parse_frontmatter(content: &str) -> Option<(Frontmatter, &str)> {
 
 fn derive_slug(path: &Path, fm_slug: Option<&str>) -> String {
     if let Some(slug) = fm_slug {
-        return slug.to_string();
+        return slug.to_owned();
     }
     let stem = path.file_stem().and_then(|s| s.to_str()).unwrap_or("");
-    let stem = if stem.len() > 6
+    let short_stem = if stem.len() > 6
         && stem[..2].chars().all(|c| c.is_ascii_digit())
         && stem.chars().nth(2) == Some('-')
         && stem[3..5].chars().all(|c| c.is_ascii_digit())
@@ -80,7 +103,7 @@ fn derive_slug(path: &Path, fm_slug: Option<&str>) -> String {
     } else {
         stem
     };
-    let slug: String = stem
+    let slug: String = short_stem
         .chars()
         .map(|c| {
             if c.is_ascii_alphanumeric() {
@@ -116,7 +139,7 @@ fn render_markdown(content: &str) -> String {
 
 // ── PyMdown post-processing ──────────────────────────────────────────────
 
-/// Parse "tab | Title" or "details | Example" into (block_type, title).
+/// Parse "tab | Title" or "details | Example" into (`block_type`, title).
 ///
 /// # Arguments
 ///
@@ -148,8 +171,8 @@ fn parse_pymdownx_type_title(s: &str) -> (&str, &str) {
 fn find_block_content(html: &str) -> Option<(&str, &str)> {
     const CLOSER: &str = "<p>///</p>";
     let pos = html.find(CLOSER)?;
-    let after = &html[pos + CLOSER.len()..];
-    let after = after.strip_prefix('\n').unwrap_or(after);
+    let raw_after = &html[pos + CLOSER.len()..];
+    let after = raw_after.strip_prefix('\n').unwrap_or(raw_after);
     Some((&html[..pos], after))
 }
 
@@ -215,7 +238,7 @@ fn render_details_html(title: &str, content: &str) -> String {
     format!("<details>\n<summary>{summary}</summary>\n{inner}\n</details>\n")
 }
 
-/// Scan `pulldown-cmark`-rendered HTML for PyMdown extension markers and
+/// Scan `pulldown-cmark`-rendered HTML for `PyMdown` extension markers and
 /// replace them with proper tab-group or details HTML.
 ///
 /// pulldown-cmark renders `/// tab | Before` as `<p>/// tab | Before</p>` and
@@ -231,7 +254,7 @@ fn render_details_html(title: &str, content: &str) -> String {
 ///
 /// # Returns
 ///
-/// A new `String` with all PyMdown markers replaced by proper HTML.
+/// A new `String` with all `PyMdown` markers replaced by proper HTML.
 fn postprocess_pymdownx(html: &str, counter: &mut usize) -> String {
     let mut result = String::with_capacity(html.len());
     let mut remaining = html;
@@ -253,8 +276,10 @@ fn postprocess_pymdownx(html: &str, counter: &mut usize) -> String {
             continue;
         };
         let opener_text = &after_open[..close_pos]; // "/// tab | Before"
-        let after_close = &after_open[close_pos + 4..]; // after "</p>"
-        let after_close = after_close.strip_prefix('\n').unwrap_or(after_close);
+        let raw_after_close = &after_open[close_pos + 4..]; // after "</p>"
+        let after_close = raw_after_close
+            .strip_prefix('\n')
+            .unwrap_or(raw_after_close);
 
         let Some(type_and_title) = opener_text.strip_prefix("/// ") else {
             result.push_str(&remaining[..close_pos + 7]);
@@ -275,7 +300,7 @@ fn postprocess_pymdownx(html: &str, counter: &mut usize) -> String {
 
         match block_type {
             "tab" => {
-                let mut tabs = vec![(title.to_string(), inner_html.to_string())];
+                let mut tabs = vec![(title.to_owned(), inner_html.to_owned())];
                 let mut current = after_closer;
 
                 // Collect adjacent tab blocks into the same group
@@ -289,15 +314,18 @@ fn postprocess_pymdownx(html: &str, counter: &mut usize) -> String {
                         break;
                     };
                     let opener2 = &after_p[..ep];
-                    let after_close2 = &after_p[ep + 4..];
-                    let after_close2 = after_close2.strip_prefix('\n').unwrap_or(after_close2);
+                    let raw_after_tab_close = &after_p[ep + 4..];
+                    let after_tab_close = raw_after_tab_close
+                        .strip_prefix('\n')
+                        .unwrap_or(raw_after_tab_close);
                     let ta = opener2.strip_prefix("/// tab").unwrap_or("");
                     let title2 = ta.strip_prefix(" | ").unwrap_or("").trim();
-                    let Some((inner2, after_closer2)) = find_block_content(after_close2) else {
+                    let Some((inner2, after_tab_closer)) = find_block_content(after_tab_close)
+                    else {
                         break;
                     };
-                    tabs.push((title2.to_string(), inner2.to_string()));
-                    current = after_closer2;
+                    tabs.push((title2.to_owned(), inner2.to_owned()));
+                    current = after_tab_closer;
                 }
 
                 result.push_str(&render_tab_group(&tabs, counter));
@@ -323,8 +351,8 @@ fn postprocess_pymdownx(html: &str, counter: &mut usize) -> String {
 // ── Excerpt splitting ─────────────────────────────────────────────────────
 
 fn strip_headings(html: &str) -> String {
-    let mut result = html.to_string();
-    for n in 1u8..=6 {
+    let mut result = html.to_owned();
+    for n in 1_u8..=6 {
         let open = format!("<h{n}");
         let close = format!("</h{n}>");
         while let Some(start) = result.find(&open) {
@@ -335,8 +363,8 @@ fn strip_headings(html: &str) -> String {
             match result[start..].find(&close) {
                 Some(rel_end) => {
                     let end = start + rel_end + close.len();
-                    let prefix = result[..start].trim_end().to_string();
-                    let suffix = result[end..].trim_start().to_string();
+                    let prefix = result[..start].trim_end().to_owned();
+                    let suffix = result[end..].trim_start().to_owned();
                     result = match (prefix.is_empty(), suffix.is_empty()) {
                         (true, _) => suffix,
                         (_, true) => prefix,
@@ -347,7 +375,7 @@ fn strip_headings(html: &str) -> String {
             }
         }
     }
-    result.trim().to_string()
+    result.trim().to_owned()
 }
 
 fn split_excerpt(body_html: &str, description: Option<&str>) -> String {
@@ -361,9 +389,9 @@ fn split_excerpt(body_html: &str, description: Option<&str>) -> String {
     if let Some(start) = body_html.find("<p>")
         && let Some(rel_end) = body_html[start..].find("</p>")
     {
-        return body_html[start..start + rel_end + 4].to_string();
+        return body_html[start..start + rel_end + 4].to_owned();
     }
-    body_html.to_string()
+    body_html.to_owned()
 }
 
 // ── Post collection ───────────────────────────────────────────────────────
@@ -409,8 +437,8 @@ fn process_file(path: &Path, tab_counter: &mut usize) -> Option<Post> {
     let (fm, body_md) = parse_frontmatter(&content)?;
     let slug = derive_slug(path, fm.slug.as_deref());
     let date = fm.date.to_string();
-    let body_html = render_markdown(body_md);
-    let body_html = postprocess_pymdownx(&body_html, tab_counter);
+    let raw_html = render_markdown(body_md);
+    let body_html = postprocess_pymdownx(&raw_html, tab_counter);
     let excerpt_html = split_excerpt(&body_html, fm.description.as_deref());
     Some(Post {
         slug,
@@ -502,8 +530,8 @@ fn process_project_file(path: &Path) -> Option<ProjectPageData> {
     })
 }
 
-fn parse_project_frontmatter(content: &str) -> Option<(ProjectFrontmatter, &str)> {
-    let content = content.trim_start();
+fn parse_project_frontmatter(raw_content: &str) -> Option<(ProjectFrontmatter, &str)> {
+    let content = raw_content.trim_start();
     let after_open = content
         .strip_prefix("+++\n")
         .or_else(|| content.strip_prefix("+++\r\n"))?;
@@ -520,27 +548,40 @@ fn parse_project_frontmatter(content: &str) -> Option<(ProjectFrontmatter, &str)
 
 fn generate_project_pages_code(pages: &[ProjectPageData]) -> String {
     let mut code = String::new();
-    writeln!(code, "pub static PROJECT_PAGES: &[ProjectPage] = &[").unwrap();
+    writeln!(
+        code,
+        "/// Compiled project detail pages (generated by the build script from Markdown)."
+    )
+    .expect("writing to String is infallible");
+    writeln!(code, "pub static PROJECT_PAGES: &[ProjectPage] = &[")
+        .expect("writing to String is infallible");
     for page in pages {
-        writeln!(code, "    ProjectPage {{").unwrap();
-        writeln!(code, "        slug: {:?},", page.slug).unwrap();
-        writeln!(code, "        title: {:?},", page.title).unwrap();
-        writeln!(code, "        github: {:?},", page.github).unwrap();
-        writeln!(code, "        tagline: {:?},", page.tagline).unwrap();
-        writeln!(code, "        activity: ActivityConfig {{").unwrap();
-        writeln!(code, "            release: {:?},", page.activity_release).unwrap();
+        writeln!(code, "    ProjectPage {{").expect("writing to String is infallible");
+        writeln!(code, "        slug: {:?},", page.slug).expect("writing to String is infallible");
+        writeln!(code, "        title: {:?},", page.title)
+            .expect("writing to String is infallible");
+        writeln!(code, "        github: {:?},", page.github)
+            .expect("writing to String is infallible");
+        writeln!(code, "        tagline: {:?},", page.tagline)
+            .expect("writing to String is infallible");
+        writeln!(code, "        activity: ActivityConfig {{")
+            .expect("writing to String is infallible");
+        writeln!(code, "            release: {:?},", page.activity_release)
+            .expect("writing to String is infallible");
         writeln!(
             code,
             "            recent_commits: {:?},",
             page.activity_recent_commits
         )
-        .unwrap();
-        writeln!(code, "            open_prs: {:?},", page.activity_open_prs).unwrap();
-        writeln!(code, "        }},").unwrap();
-        writeln!(code, "        body_html: {:?},", page.body_html).unwrap();
-        writeln!(code, "    }},").unwrap();
+        .expect("writing to String is infallible");
+        writeln!(code, "            open_prs: {:?},", page.activity_open_prs)
+            .expect("writing to String is infallible");
+        writeln!(code, "        }},").expect("writing to String is infallible");
+        writeln!(code, "        body_html: {:?},", page.body_html)
+            .expect("writing to String is infallible");
+        writeln!(code, "    }},").expect("writing to String is infallible");
     }
-    writeln!(code, "];").unwrap();
+    writeln!(code, "];").expect("writing to String is infallible");
     code
 }
 
@@ -548,30 +589,43 @@ fn generate_project_pages_code(pages: &[ProjectPageData]) -> String {
 
 fn generate_code(posts: &[Post]) -> String {
     let mut code = String::new();
-    writeln!(code, "pub static POSTS: &[BlogPost] = &[").unwrap();
+    writeln!(
+        code,
+        "/// Compiled blog posts (generated by the build script from Markdown)."
+    )
+    .expect("writing to String is infallible");
+    writeln!(code, "pub static POSTS: &[BlogPost] = &[").expect("writing to String is infallible");
     for post in posts {
-        writeln!(code, "    BlogPost {{").unwrap();
-        writeln!(code, "        slug: {:?},", post.slug).unwrap();
-        writeln!(code, "        title: {:?},", post.title).unwrap();
-        writeln!(code, "        date: {:?},", post.date).unwrap();
+        writeln!(code, "    BlogPost {{").expect("writing to String is infallible");
+        writeln!(code, "        slug: {:?},", post.slug).expect("writing to String is infallible");
+        writeln!(code, "        title: {:?},", post.title)
+            .expect("writing to String is infallible");
+        writeln!(code, "        date: {:?},", post.date).expect("writing to String is infallible");
         match &post.description {
-            Some(d) => writeln!(code, "        description: Some({d:?}),").unwrap(),
-            None => writeln!(code, "        description: None,").unwrap(),
+            Some(d) => writeln!(code, "        description: Some({d:?}),")
+                .expect("writing to String is infallible"),
+            None => writeln!(code, "        description: None,")
+                .expect("writing to String is infallible"),
         }
         match &post.source {
-            Some(s) => writeln!(code, "        source: Some({s:?}),").unwrap(),
-            None => writeln!(code, "        source: None,").unwrap(),
+            Some(s) => writeln!(code, "        source: Some({s:?}),")
+                .expect("writing to String is infallible"),
+            None => {
+                writeln!(code, "        source: None,").expect("writing to String is infallible");
+            }
         }
-        write!(code, "        tags: &[").unwrap();
+        write!(code, "        tags: &[").expect("writing to String is infallible");
         for tag in &post.tags {
-            write!(code, "{tag:?}, ").unwrap();
+            write!(code, "{tag:?}, ").expect("writing to String is infallible");
         }
-        writeln!(code, "],").unwrap();
-        writeln!(code, "        excerpt_html: {:?},", post.excerpt_html).unwrap();
-        writeln!(code, "        body_html: {:?},", post.body_html).unwrap();
-        writeln!(code, "    }},").unwrap();
+        writeln!(code, "],").expect("writing to String is infallible");
+        writeln!(code, "        excerpt_html: {:?},", post.excerpt_html)
+            .expect("writing to String is infallible");
+        writeln!(code, "        body_html: {:?},", post.body_html)
+            .expect("writing to String is infallible");
+        writeln!(code, "    }},").expect("writing to String is infallible");
     }
-    writeln!(code, "];").unwrap();
+    writeln!(code, "];").expect("writing to String is infallible");
     code
 }
 

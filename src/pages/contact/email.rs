@@ -9,6 +9,11 @@ import_style!(style, "contact_email.module.scss");
 pub struct EmailAddress(pub &'static str);
 
 impl EmailAddress {
+    /// Renders the email address as a styled view with separate spans for each part.
+    #[expect(
+        clippy::panic,
+        reason = "EmailAddress is a static constant — an invalid value is a compile-time programmer error"
+    )]
     pub fn display_view(&self) -> impl IntoView {
         if let Some((local, domain)) = self.0.split_once('@') {
             let (domain_name, tld) = domain.split_once('.').unwrap_or((domain, ""));
@@ -17,7 +22,7 @@ impl EmailAddress {
                     <span class=style::local>{local}</span>
                     <span class=style::at>"@"</span>
                     <span class=style::domain>{domain_name}</span>
-                    <span class=style::tld>{format!(".{}", tld)}</span>
+                    <span class=style::tld>{format!(".{tld}")}</span>
                 </span>
             }
         } else {

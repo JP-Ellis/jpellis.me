@@ -1,3 +1,8 @@
+#![expect(
+    clippy::shadow_reuse,
+    reason = "Leptos #[component] macro internally re-binds function parameters"
+)]
+
 use chrono::DateTime;
 use chrono::Utc;
 use leptos::prelude::*;
@@ -23,6 +28,7 @@ import_style!(style, "detail.module.scss");
 // ── Prism.js (WASM only) ──────────────────────────────────────────────────────
 
 #[cfg(target_arch = "wasm32")]
+/// Bindings to the Prism.js syntax highlighter loaded via CDN.
 mod prism {
     use wasm_bindgen::prelude::wasm_bindgen;
     #[wasm_bindgen(
@@ -39,15 +45,21 @@ mod prism {
 ///
 /// Examples: `"3d ago"`, `"2w ago"`, `"4mo ago"`, `"1y ago"`.
 /// Falls back to the raw string if parsing fails.
+#[expect(
+    clippy::arithmetic_side_effects,
+    clippy::integer_division,
+    clippy::integer_division_remainder_used,
+    reason = "divisions are by non-zero constants; chrono subtraction is saturating; truncating division for display formatting is intentional"
+)]
 fn format_relative_date(iso: &str) -> String {
     let Ok(dt) = iso.parse::<DateTime<Utc>>() else {
-        return iso.to_string();
+        return iso.to_owned();
     };
     let secs = (Utc::now() - dt).num_seconds().max(0);
     if secs < 3600 {
         let mins = secs / 60;
         return if mins <= 1 {
-            "just now".to_string()
+            "just now".to_owned()
         } else {
             format!("{mins}m ago")
         };
@@ -72,11 +84,15 @@ fn format_relative_date(iso: &str) -> String {
 }
 
 /// Formats an ISO 8601 date string as `"14 Jan 2025"`.
+#[expect(
+    clippy::indexing_slicing,
+    reason = "parts.len() is checked to be >= 3 before any indexing"
+)]
 fn format_short_date(iso: &str) -> String {
     let date_part = iso.split('T').next().unwrap_or(iso);
     let parts: Vec<&str> = date_part.split('-').collect();
     if parts.len() < 3 {
-        return iso.to_string();
+        return iso.to_owned();
     }
     let month = match parts[1] {
         "01" => "Jan",
@@ -175,7 +191,7 @@ pub fn ProjectDetailPage() -> impl IntoView {
                             {move || {
                                 let stats: Option<ProjectsStats> = projects_res
                                     .get()
-                                    .and_then(|r| r.ok());
+                                    .and_then(Result::ok);
                                 let repo = stats
                                     .as_ref()
                                     .and_then(|s| {
@@ -204,7 +220,12 @@ pub fn ProjectDetailPage() -> impl IntoView {
 // ── StatsPanel ────────────────────────────────────────────────────────────────
 
 #[component]
-fn StatsPanel(repo: Option<RepoStats>, activity: ActivityConfig) -> impl IntoView {
+fn StatsPanel(
+    /// Fetched stats for this project's repo; `None` renders skeleton chips.
+    repo: Option<RepoStats>,
+    /// Controls which activity panels (releases, commits, open PRs) are shown.
+    activity: ActivityConfig,
+) -> impl IntoView {
     let show_commits =
         activity.recent_commits && repo.as_ref().is_some_and(|r| !r.recent_commits.is_empty());
 
@@ -220,11 +241,15 @@ fn StatsPanel(repo: Option<RepoStats>, activity: ActivityConfig) -> impl IntoVie
                             value=repo
                                 .as_ref()
                                 .map(|r| format_stars(r.stars))
-                                .map(|v| view! { {v} }.into_any())
-                                .unwrap_or_else(|| {
-                                    view! { <span class=style::chip_skeleton aria-hidden="true" /> }
-                                        .into_any()
-                                })
+                                .map_or_else(
+                                    || {
+                                        view! {
+                                            <span class=style::chip_skeleton aria-hidden="true" />
+                                        }
+                                            .into_any()
+                                    },
+                                    |v| view! { {v} }.into_any(),
+                                )
                             link=None
                         />
                         <StatChip
@@ -232,11 +257,15 @@ fn StatsPanel(repo: Option<RepoStats>, activity: ActivityConfig) -> impl IntoVie
                             value=repo
                                 .as_ref()
                                 .map(|r| r.forks.to_string())
-                                .map(|v| view! { {v} }.into_any())
-                                .unwrap_or_else(|| {
-                                    view! { <span class=style::chip_skeleton aria-hidden="true" /> }
-                                        .into_any()
-                                })
+                                .map_or_else(
+                                    || {
+                                        view! {
+                                            <span class=style::chip_skeleton aria-hidden="true" />
+                                        }
+                                            .into_any()
+                                    },
+                                    |v| view! { {v} }.into_any(),
+                                )
                             link=None
                         />
                         <StatChip
@@ -244,11 +273,15 @@ fn StatsPanel(repo: Option<RepoStats>, activity: ActivityConfig) -> impl IntoVie
                             value=repo
                                 .as_ref()
                                 .map(|r| r.watchers.to_string())
-                                .map(|v| view! { {v} }.into_any())
-                                .unwrap_or_else(|| {
-                                    view! { <span class=style::chip_skeleton aria-hidden="true" /> }
-                                        .into_any()
-                                })
+                                .map_or_else(
+                                    || {
+                                        view! {
+                                            <span class=style::chip_skeleton aria-hidden="true" />
+                                        }
+                                            .into_any()
+                                    },
+                                    |v| view! { {v} }.into_any(),
+                                )
                             link=None
                         />
                         <StatChip
@@ -256,11 +289,15 @@ fn StatsPanel(repo: Option<RepoStats>, activity: ActivityConfig) -> impl IntoVie
                             value=repo
                                 .as_ref()
                                 .map(|r| r.open_issues.to_string())
-                                .map(|v| view! { {v} }.into_any())
-                                .unwrap_or_else(|| {
-                                    view! { <span class=style::chip_skeleton aria-hidden="true" /> }
-                                        .into_any()
-                                })
+                                .map_or_else(
+                                    || {
+                                        view! {
+                                            <span class=style::chip_skeleton aria-hidden="true" />
+                                        }
+                                            .into_any()
+                                    },
+                                    |v| view! { {v} }.into_any(),
+                                )
                             link=None
                         />
                         {activity
@@ -326,7 +363,7 @@ fn StatsPanel(repo: Option<RepoStats>, activity: ActivityConfig) -> impl IntoVie
                                             None
                                         } else {
                                             let label = if count == 1 {
-                                                "1 open PR".to_string()
+                                                "1 open PR".to_owned()
                                             } else {
                                                 format!("{count} open PRs")
                                             };
@@ -364,7 +401,14 @@ fn StatsPanel(repo: Option<RepoStats>, activity: ActivityConfig) -> impl IntoVie
 // ── StatChip ──────────────────────────────────────────────────────────────────
 
 #[component]
-fn StatChip(label: &'static str, value: AnyView, link: Option<String>) -> impl IntoView {
+fn StatChip(
+    /// Short label displayed above the value (e.g. `"stars"`, `"forks"`).
+    label: &'static str,
+    /// Rendered value node; may be a skeleton placeholder when data is loading.
+    value: AnyView,
+    /// Optional URL; when set, wraps the value in an external link.
+    link: Option<String>,
+) -> impl IntoView {
     let value_node: AnyView = match link {
         Some(url) => view! {
             <a href=url target="_blank" rel="noopener noreferrer" class=style::chip_value_link>
@@ -386,7 +430,10 @@ fn StatChip(label: &'static str, value: AnyView, link: Option<String>) -> impl I
 // ── CommitsList ───────────────────────────────────────────────────────────────
 
 #[component]
-fn CommitsList(commits: Vec<CommitInfo>) -> impl IntoView {
+fn CommitsList(
+    /// Recent commits to display; each entry renders as a linked SHA + message row.
+    commits: Vec<CommitInfo>,
+) -> impl IntoView {
     view! {
         <div class=style::commits>
             <p class=style::commits_heading>"Recent commits"</p>
