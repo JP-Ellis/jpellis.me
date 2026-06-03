@@ -1,0 +1,2 @@
+# Preserve legacy /static/* asset URLs from the old website.
+/static/* /:splat 301
