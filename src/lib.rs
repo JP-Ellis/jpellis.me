@@ -1,4 +1,5 @@
 //! Personal website built with Leptos.
+
 #![recursion_limit = "256"]
 // The #[component] macro generates exhaustive structs for props types; we have
 // no control over the generated code so must suppress the lint crate-wide.
@@ -6,8 +7,14 @@
     clippy::exhaustive_structs,
     clippy::must_use_candidate,
     clippy::missing_inline_in_public_items,
+    clippy::same_name_method,
     reason = "Leptos #[component] macro generates exhaustive prop structs and public functions that cannot easily carry these attributes"
 )]
+#![expect(
+    clippy::absolute_paths,
+    reason = "Leptos `view!` macro expands HTML element names to absolute-path Leptos builder calls; user code cannot add `use` imports for these generated paths"
+)]
+
 use leptos::prelude::*;
 #[cfg(feature = "ssr")]
 use leptos_meta::MetaTags;
