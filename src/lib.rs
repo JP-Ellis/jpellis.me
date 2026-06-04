@@ -21,6 +21,7 @@ use leptos_meta::MetaTags;
 use leptos_meta::Stylesheet;
 use leptos_meta::Title;
 use leptos_meta::provide_meta_context;
+use leptos_router::MatchNestedRoutes;
 use leptos_router::components::Route;
 use leptos_router::components::Router;
 use leptos_router::components::Routes;
@@ -73,7 +74,15 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
     }
 }
 
-#[cfg(not(debug_assertions))]
+/// Debug-only routes, or an empty route set in release builds.
+#[component(transparent)]
+fn DebugRoutes() -> impl MatchNestedRoutes + Clone + Send + 'static {
+    cfg_select! {
+        debug_assertions => { test_pages::TestRoutes() }
+        _ => { () }
+    }
+}
+
 /// Root Leptos application component.
 #[component]
 pub fn App() -> impl IntoView {
@@ -91,64 +100,18 @@ pub fn App() -> impl IntoView {
                 <Route path=path!("projects/:slug") view=pages::ProjectDetailPage />
                 <Route path=path!("blog") view=pages::BlogListPage />
                 <Route path=path!("blog/:slug") view=pages::BlogPostPage />
+                <DebugRoutes />
                 <Route path=path!("*any") view=|| view! { <pages::NotFoundPage /> } />
             </Routes>
         </Router>
     }
 }
 
-#[cfg(debug_assertions)]
-/// Root Leptos application component (debug build with test routes).
-#[component]
-pub fn App() -> impl IntoView {
-    use leptos_router::components::ParentRoute;
-
-    provide_meta_context();
-
-    view! {
-        <Stylesheet id="leptos" href="/pkg/jpellis-me.css" />
-        <Title text="Joshua Ellis" />
-        <Router>
-            <Routes fallback=|| view! { <pages::NotFoundPage /> }>
-                <Route path=path!("") view=pages::HomePage />
-                <Route path=path!("contact") view=pages::ContactPage />
-                <Route path=path!("resume") view=pages::ResumePage />
-                <Route path=path!("projects") view=pages::ProjectsPage />
-                <Route path=path!("projects/:slug") view=pages::ProjectDetailPage />
-                <Route path=path!("blog") view=pages::BlogListPage />
-                <Route path=path!("blog/:slug") view=pages::BlogPostPage />
-                <ParentRoute path=path!("__test") view=test_pages::TestLayout>
-                    <Route path=path!("") view=test_pages::TestIndex />
-                    <Route path=path!("masthead") view=test_pages::MastheadPage />
-                    <Route path=path!("footer") view=test_pages::FooterPage />
-                    <Route path=path!("band") view=test_pages::BandPage />
-                    <Route path=path!("css-foundation") view=test_pages::CssFoundationPage />
-                </ParentRoute>
-                <Route path=path!("*any") view=|| view! { <pages::NotFoundPage /> } />
-            </Routes>
-        </Router>
-    }
-}
-
+/// Client-side hydration entry point.
 #[cfg(feature = "hydrate")]
 #[wasm_bindgen::prelude::wasm_bindgen]
-/// Client-side hydration entry point.
 pub fn hydrate() {
     use leptos::mount::hydrate_body;
     console_error_panic_hook::set_once();
     hydrate_body(App);
-}
-
-#[cfg(test)]
-mod tests {
-    #![expect(
-        clippy::default_numeric_fallback,
-        reason = "trivial test; integer types are unambiguous"
-    )]
-    use pretty_assertions::assert_eq;
-
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
 }
