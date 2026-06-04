@@ -47,8 +47,8 @@ run = [
 [tasks.lint]
 run = [
   "cargo clippy --all-targets --features ssr",
-  "cargo clippy --target wasm32-unknown-unknown --features hydrate",
-  "cargo clippy --target wasm32-unknown-unknown --features ssr",
+  "cargo clippy --all-targets --target wasm32-unknown-unknown --features hydrate",
+  "cargo clippy --all-targets --target wasm32-unknown-unknown --features ssr",
   "biome lint .",
   "tombi lint .",
 ]
@@ -56,8 +56,8 @@ run = [
 [tasks."lint:fix"]
 run = [
   "cargo clippy --all-targets --features ssr --fix",
-  "cargo clippy --target wasm32-unknown-unknown --features hydrate --fix",
-  "cargo clippy --target wasm32-unknown-unknown --features ssr --fix",
+  "cargo clippy --all-targets --target wasm32-unknown-unknown --features hydrate --fix",
+  "cargo clippy --all-targets --target wasm32-unknown-unknown --features ssr --fix",
   "biome lint --write .",
 ]
 
@@ -74,10 +74,10 @@ run = [
 depends = ["test:nextest", "e2e:test"]
 
 [tasks."test:nextest"]
-run = "cargo nextest run"
+run = "cargo nextest run --features ssr"
 
 [tasks.coverage]
-run = "cargo llvm-cov nextest"
+run = "cargo llvm-cov nextest --features ssr"
 
 [tasks.machete]
 run = "cargo machete"

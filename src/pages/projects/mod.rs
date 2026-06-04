@@ -639,6 +639,7 @@ mod tests {
         assert_eq!(PROJECTS.len(), 14);
     }
 
+    #[cfg(feature = "ssr")]
     #[test]
     fn all_github_project_slugs_are_tracked_in_config() {
         let tracked: std::collections::HashSet<&str> = crate::config::projects::projects_config()

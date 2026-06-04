@@ -54,17 +54,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
-      - uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151  # v4.0.1
-      - run: cargo clippy --all-targets --all-features -- -D warnings
+      - uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6  # v1.16.1
+        with:
+          components: clippy
+          target: wasm32-unknown-unknown
+      - name: Clippy (native + SSR)
+        run: cargo clippy --all-targets --features ssr
+      - name: Clippy (WebAssembly + hydrate)
+        run: cargo clippy --all-targets --features hydrate --target wasm32-unknown-unknown
+      - name: Clippy (WebAssembly + SSR)
+        run: cargo clippy --all-targets --features ssr --target wasm32-unknown-unknown
 
   format:
     name: Format
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
-      - uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151  # v4.0.1
-      - run: rustup component add rustfmt --toolchain nightly
-      - run: cargo +nightly fmt --all --check
+      - uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6  # v1.16.1
+        with:
+          toolchain: nightly
+          components: rustfmt
+      - run: cargo fmt --all --check
 
   machete:
     name: Machete
@@ -79,6 +89,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
+      - uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6  # v1.16.1
       - uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151  # v4.0.1
       - name: Run unit tests
         run: mise run test:nextest

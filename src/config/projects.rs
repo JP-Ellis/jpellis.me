@@ -10,10 +10,7 @@ static CACHE: OnceLock<ProjectsConfig> = OnceLock::new();
 pub struct ProjectsConfig {
     /// GitHub slugs to track for star/fork counts.
     /// Must cover every `ProjectLink::GitHub` entry in `pages::projects::PROJECTS`.
-    #[cfg_attr(
-        all(target_arch = "wasm32", not(feature = "ssr")),
-        expect(dead_code, reason = "only read by SSR and native build paths")
-    )]
+    #[cfg(feature = "ssr")]
     pub tracked_slugs: Vec<String>,
     /// Misc OSS contributions shown at the bottom of the projects page.
     #[serde(default)]
@@ -50,6 +47,7 @@ pub fn projects_config() -> &'static ProjectsConfig {
 mod tests {
     use super::*;
 
+    #[cfg(feature = "ssr")]
     #[test]
     fn tracked_slugs_are_valid_format() {
         for slug in &projects_config().tracked_slugs {
