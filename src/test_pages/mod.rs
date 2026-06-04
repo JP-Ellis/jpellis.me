@@ -16,8 +16,29 @@ pub use band::BandPage;
 pub use css_foundation::CssFoundationPage;
 pub use footer::FooterPage;
 use leptos::prelude::*;
+use leptos_router::MatchNestedRoutes;
+use leptos_router::any_nested_route::IntoAnyNestedRoute as _;
 use leptos_router::components::Outlet;
+use leptos_router::components::ParentRoute;
+use leptos_router::components::Route;
+use leptos_router::path;
 pub use masthead::MastheadPage;
+
+/// All debug routes, rooted at `/__test`.
+#[component(transparent)]
+pub fn TestRoutes() -> impl MatchNestedRoutes + Clone + Send + 'static {
+    view! {
+        <ParentRoute path=path!("__test") view=TestLayout>
+            <Route path=path!("") view=TestIndex />
+            <Route path=path!("masthead") view=MastheadPage />
+            <Route path=path!("footer") view=FooterPage />
+            <Route path=path!("band") view=BandPage />
+            <Route path=path!("css-foundation") view=CssFoundationPage />
+        </ParentRoute>
+    }
+    .into_inner()
+    .into_any_nested_route()
+}
 
 #[component]
 pub fn TestLayout() -> impl IntoView {
