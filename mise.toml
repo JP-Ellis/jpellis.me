@@ -23,6 +23,7 @@
 "cargo:prek" = "0.4"
 "cargo:stylance-cli" = "0.8"
 "cargo:typos-cli" = "1"
+"cargo:wasm-bindgen-cli" = "0.2"
 "npm:wrangler" = "4"
 "pipx:yamlfix" = "1"
 
@@ -71,10 +72,17 @@ run = [
 ]
 
 [tasks.test]
-depends = ["test:nextest", "e2e:test"]
+depends = ["test:nextest", "test:wasm", "e2e:test"]
 
 [tasks."test:nextest"]
 run = "cargo nextest run --features ssr"
+
+[tasks."test:wasm"]
+description = "Run tests for wasm32 targets via wasm-bindgen-test-runner (Node.js)"
+run = [
+  "cargo test --target wasm32-unknown-unknown --features hydrate --tests",
+  "cargo test --target wasm32-unknown-unknown --features ssr --tests",
+]
 
 [tasks.coverage]
 run = "cargo llvm-cov nextest --features ssr"

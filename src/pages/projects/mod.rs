@@ -581,21 +581,24 @@ mod tests {
 
     use super::*;
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn format_stars_below_1000() {
         assert_eq!(format_stars(0), "0");
         assert_eq!(format_stars(158), "158");
         assert_eq!(format_stars(999), "999");
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn format_stars_at_and_above_1000() {
         assert_eq!(format_stars(1000), "1.0k");
         assert_eq!(format_stars(1400), "1.4k");
         assert_eq!(format_stars(664), "664");
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn github_slug_returns_slug_for_github_link() {
         let entry = ProjectEntry {
             name: "test",
@@ -608,7 +611,8 @@ mod tests {
         assert_eq!(github_slug(&entry), Some("owner/repo"));
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn github_slug_returns_none_for_external_link() {
         let entry = ProjectEntry {
             name: "test",
@@ -621,7 +625,8 @@ mod tests {
         assert_eq!(github_slug(&entry), None);
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn github_slug_returns_none_for_no_link() {
         let entry = ProjectEntry {
             name: "test",
@@ -634,13 +639,15 @@ mod tests {
         assert_eq!(github_slug(&entry), None);
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn projects_list_has_expected_length() {
         assert_eq!(PROJECTS.len(), 14);
     }
 
     #[cfg(feature = "ssr")]
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn all_github_project_slugs_are_tracked_in_config() {
         let tracked: std::collections::HashSet<&str> = crate::config::projects::projects_config()
             .tracked_slugs
@@ -659,19 +666,22 @@ mod tests {
         }
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn find_project_page_returns_none_for_unknown_slug() {
         assert!(find_project_page("no-such-project-xyz").is_none());
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn project_pages_count_matches_content_files() {
         // If this fails, a content/projects/*.md file has malformed frontmatter
         // and build.rs silently skipped it.
         assert_eq!(PROJECT_PAGES.len(), 4);
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn projects_row_slug_matches_entry_name_for_all_detail_pages() {
         // For every detail page, entry.name must match page.slug exactly.
         // ProjectsRow uses entry.name for the URL; find_project_page matches slug.
@@ -687,7 +697,8 @@ mod tests {
         }
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn all_github_projects_have_slash_in_slug() {
         for p in PROJECTS {
             if let Some(ProjectLink::GitHub(slug)) = p.link {

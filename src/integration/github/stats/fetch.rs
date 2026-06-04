@@ -623,7 +623,8 @@ mod tests {
     /// The GraphQL query must request `restrictedContributionsCount` so that
     /// contributions to private orgs and repos are counted even when the token
     /// cannot read their content.
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn build_graphql_query_includes_restricted_contributions_count() {
         let query = build_graphql_query("2025-01-01T00:00:00Z", "2026-01-01T23:59:59Z");
         assert!(
@@ -635,7 +636,8 @@ mod tests {
     /// `parse_contribution_totals` adds `restrictedContributionsCount` into the
     /// returned total so that private-org contributions are reflected in the
     /// displayed count even when the token cannot read their content.
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn parse_contribution_totals_sums_restricted_contributions() {
         let contributions = serde_json::json!({
             "contributionCalendar": { "totalContributions": 2133 },
@@ -654,7 +656,8 @@ mod tests {
         assert_eq!(issues, 29);
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn parse_contribution_weeks_parses_counts() {
         let weeks = serde_json::json!([
             {
@@ -673,7 +676,8 @@ mod tests {
     /// Verifies that the commit search response shape is correctly mapped to
     /// [`ActivityItem`] values, with the title extracted from the first line of
     /// the commit message and the date parsed from RFC 3339 with a tz offset.
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn parse_commit_search_item_extracts_fields() {
         // Simulate a single item from the commit search response.
         let item = serde_json::json!({
@@ -718,7 +722,8 @@ mod tests {
         assert_eq!(created_at.format("%H:%M:%S").to_string(), "05:58:14");
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn parse_activity_item_pr_merged() {
         let item = serde_json::json!({
             "title": "feat: merge me",
@@ -744,7 +749,8 @@ mod tests {
         assert_eq!(state, ActivityState::Merged);
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn parse_activity_item_pr_closed_not_merged() {
         let item = serde_json::json!({
             "title": "feat: abandoned",
@@ -768,7 +774,8 @@ mod tests {
         assert_eq!(state, ActivityState::Closed);
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn parse_activity_item_issue_detection() {
         let issue_item = serde_json::json!({
             "title": "Bug report",
@@ -788,7 +795,8 @@ mod tests {
 
     /// `parse_activity_items` maps a PR search response body into [`ActivityItem`]
     /// values with correct `kind`, `state`, `repo`, `title`, `url`, and `created_at`.
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn parse_activity_items_parses_pr_search_response() {
         let body = serde_json::json!({
             "total_count": 2,
@@ -824,7 +832,8 @@ mod tests {
     }
 
     /// `parse_activity_items` correctly maps issue items (no `pull_request` field).
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn parse_activity_items_parses_issue_search_response() {
         let body = serde_json::json!({
             "total_count": 1,
@@ -848,7 +857,8 @@ mod tests {
     }
 
     /// `merge_and_sort_activity` interleaves two lists in descending `created_at` order.
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn merge_and_sort_activity_interleaves_by_date() {
         let make = |kind: ActivityKind, state: ActivityState, ts: &str| ActivityItem {
             kind,
@@ -909,7 +919,8 @@ mod tests {
     }
 
     /// `merge_and_sort_activity` truncates to the requested limit.
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn merge_and_sort_activity_truncates_to_limit() {
         let make = |ts: &str| ActivityItem {
             kind: ActivityKind::Issue,

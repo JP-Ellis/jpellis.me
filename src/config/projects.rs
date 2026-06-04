@@ -48,7 +48,8 @@ mod tests {
     use super::*;
 
     #[cfg(feature = "ssr")]
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn tracked_slugs_are_valid_format() {
         for slug in &projects_config().tracked_slugs {
             assert!(!slug.is_empty(), "empty tracked slug");
@@ -56,7 +57,8 @@ mod tests {
         }
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn oss_contribs_slugs_are_valid_format() {
         for c in &projects_config().oss_contribs {
             assert!(!c.slug.is_empty(), "empty oss_contrib slug");
