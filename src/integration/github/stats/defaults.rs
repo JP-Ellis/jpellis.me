@@ -194,7 +194,8 @@ mod tests {
 
     use super::*;
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     #[expect(
         clippy::indexing_slicing,
         reason = "test assertions on known non-empty fallback data"
@@ -221,7 +222,8 @@ mod tests {
         );
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn fallback_grid_shape() {
         let stats = fallback_stats();
 

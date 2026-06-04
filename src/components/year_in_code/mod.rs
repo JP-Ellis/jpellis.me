@@ -385,7 +385,8 @@ mod tests {
 
     use super::*;
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn cell_level_from_count_edge_cases() {
         assert_eq!(cell_level_from_count(0, 0), 0);
         assert_eq!(cell_level_from_count(0, 10), 0);
@@ -396,7 +397,8 @@ mod tests {
         assert_eq!(cell_level_from_count(8, 10), 4); // ratio 0.80 → level 4
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     #[expect(
         clippy::indexing_slicing,
         reason = "test assertions on known-size grid; expect on infallible date construction"
@@ -438,7 +440,15 @@ mod tests {
         assert_eq!(grid[0][1], 4); // count 10/10 = max → level 4
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
+    #[cfg_attr(
+        target_arch = "wasm32",
+        expect(
+            clippy::arithmetic_side_effects,
+            reason = "DateTime - Duration in test fixtures won't overflow"
+        )
+    )]
     fn time_ago_boundaries() {
         let now = Utc::now();
         // 30 seconds ago → "1m" (floor to 1 minute minimum)
@@ -466,7 +476,8 @@ mod tests {
         }
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn dedup_removes_commit_when_pr_has_same_title() {
         let activity = vec![
             make_item(ActivityKind::Commit, "feat: add thing"),
@@ -487,7 +498,8 @@ mod tests {
         );
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn dedup_keeps_commit_when_no_matching_pr() {
         let activity = vec![
             make_item(ActivityKind::Commit, "feat: standalone commit"),
@@ -497,7 +509,8 @@ mod tests {
         assert_eq!(result.len(), 2);
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn dedup_keeps_issue_even_when_title_matches_commit() {
         let activity = vec![
             make_item(ActivityKind::Commit, "fix: bug"),

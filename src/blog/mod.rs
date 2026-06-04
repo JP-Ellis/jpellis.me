@@ -81,7 +81,8 @@ mod tests {
 
     use super::*;
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn posts_sorted_by_date_descending() {
         for window in POSTS.windows(2) {
             assert!(
@@ -95,7 +96,8 @@ mod tests {
         }
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn all_required_fields_non_empty() {
         for post in POSTS {
             assert!(!post.slug.is_empty(), "empty slug");
@@ -110,7 +112,8 @@ mod tests {
         }
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn slugs_are_unique() {
         let mut slugs: Vec<&str> = POSTS.iter().map(|p| p.slug).collect();
         slugs.sort_unstable();
@@ -119,7 +122,8 @@ mod tests {
         pretty_assertions::assert_eq!(slugs.len(), before, "duplicate slugs in POSTS");
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn dates_are_iso_format() {
         for post in POSTS {
             assert!(
@@ -133,19 +137,22 @@ mod tests {
         }
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn find_post_returns_correct_post() {
         let first = POSTS.first().expect("POSTS must contain at least one post");
         let found = find_post(first.slug).expect("find_post failed for first post");
         pretty_assertions::assert_eq!(found.slug, first.slug);
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn find_post_returns_none_for_missing_slug() {
         assert!(find_post("this-slug-does-not-exist-xyz").is_none());
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn pymdownx_tabs_render_correctly() {
         let post = find_post("functional-arguments").expect("functional-arguments post not found");
         let preview = post
@@ -162,7 +169,8 @@ mod tests {
         );
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn pymdownx_details_render_correctly() {
         let post = find_post("functional-arguments").expect("functional-arguments post not found");
         assert!(

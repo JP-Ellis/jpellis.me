@@ -365,7 +365,8 @@ mod tests {
 
     use super::*;
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn parse_repo_response_extracts_all_four_fields() {
         let body = serde_json::json!({
             "stargazers_count": 158_i64,
@@ -381,7 +382,8 @@ mod tests {
         assert_eq!(watchers, 12_u32);
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     #[expect(
         clippy::unwrap_used,
         reason = "test assertion on expected error variant"
@@ -397,7 +399,8 @@ mod tests {
         assert!(result.unwrap_err().to_string().contains("stargazers_count"));
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     #[expect(
         clippy::unwrap_used,
         reason = "test assertion on expected error variant"
@@ -413,7 +416,8 @@ mod tests {
         assert!(result.unwrap_err().to_string().contains("forks_count"));
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn parse_release_response_extracts_release_info() {
         let body = serde_json::json!({
             "tag_name": "v3.1.0",
@@ -429,13 +433,15 @@ mod tests {
         );
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn parse_release_response_returns_none_on_missing_fields() {
         let body = serde_json::json!({ "message": "Not Found" });
         assert!(parse_release_response(&body).is_none());
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn parse_commit_skips_bot_by_type() {
         let commit = serde_json::json!({
             "sha": "abc1234567890",
@@ -449,7 +455,8 @@ mod tests {
         assert!(parse_commit(&commit).is_none());
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn parse_commit_accepts_null_author_as_human() {
         // Commits not associated with a GitHub account have null author
         let commit = serde_json::json!({
@@ -466,7 +473,8 @@ mod tests {
         assert_eq!(info.author, "Someone");
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn parse_commit_returns_commit_info_for_human() {
         let commit = serde_json::json!({
             "sha": "a1b2c3d4e5f6",
@@ -484,7 +492,8 @@ mod tests {
         assert_eq!(info.date, "2025-05-01T09:00:00Z");
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn parse_commit_truncates_long_message() {
         // Use multi-byte characters to verify char-based (not byte-based) truncation
         let long_msg = format!("{}\nSecond line", "🚀".repeat(80));
@@ -505,7 +514,8 @@ mod tests {
         assert_eq!(info.message.chars().count(), 73);
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn parse_commits_response_filters_bots_and_caps_at_five() {
         // 7 commits: 2 bots + 5 humans → should return 5 humans
         let mut commits = Vec::new();
@@ -537,7 +547,8 @@ mod tests {
         assert!(result.iter().all(|c| !c.author.contains("bot")));
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn parse_prs_count_counts_array_length() {
         let body = serde_json::json!([
             { "number": 1_i64 },
@@ -547,7 +558,8 @@ mod tests {
         assert_eq!(parse_prs_count(&body), 3_u32);
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn parse_prs_count_returns_zero_for_empty() {
         let body = serde_json::json!([]);
         assert_eq!(parse_prs_count(&body), 0);

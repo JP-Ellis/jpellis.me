@@ -181,7 +181,8 @@ mod tests {
             .expect("content/resume.toml should be valid TOML")
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn resume_toml_parses() {
         let data = parse_resume();
         assert!(!data.roles.is_empty(), "should have at least one role");
@@ -189,14 +190,16 @@ mod tests {
         assert!(!data.honours.is_empty(), "should have honours");
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn exactly_one_featured_role() {
         let data = parse_resume();
         let count = data.roles.iter().filter(|r| r.featured).count();
         assert_eq!(count, 1, "exactly one role must have featured = true");
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn all_roles_have_required_fields() {
         let data = parse_resume();
         for role in &data.roles {
@@ -208,7 +211,8 @@ mod tests {
         }
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn all_publications_have_required_fields() {
         let data = parse_resume();
         for pub_ in &data.publications {

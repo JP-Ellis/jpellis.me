@@ -132,7 +132,8 @@ mod tests {
         }
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     #[expect(clippy::unwrap_used, reason = "test helper — panicking is acceptable")]
     fn round_trips_through_json() {
         let stats = sample_stats();
@@ -141,7 +142,8 @@ mod tests {
         assert_eq!(decoded, stats);
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     #[expect(clippy::unwrap_used, reason = "test helper — panicking is acceptable")]
     fn activity_state_serialises_to_snake_case() {
         let item = ActivityItem {

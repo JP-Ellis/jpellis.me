@@ -117,7 +117,8 @@ mod tests {
         }
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn round_trips_through_json() {
         let original = sample();
         let json = serde_json::to_string(&original).expect("serialize");
@@ -125,7 +126,8 @@ mod tests {
         assert_eq!(decoded, original);
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn repo_stats_preserves_zero_counts() {
         let repo = RepoStats {
             slug: "JP-Ellis/dotfiles".to_owned(),
@@ -143,7 +145,8 @@ mod tests {
         assert_eq!(decoded.latest_release, None);
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn repo_stats_round_trips_with_activity_fields() {
         let repo = RepoStats {
             slug: "JP-Ellis/tikz-feynman".to_owned(),
@@ -170,7 +173,8 @@ mod tests {
         assert_eq!(decoded, repo);
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn repo_stats_no_release_round_trips() {
         let repo = RepoStats {
             slug: "JP-Ellis/rust-skiplist".to_owned(),

@@ -137,12 +137,14 @@ mod tests {
 
     use super::*;
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn zero_returns_circle() {
         assert_eq!(to_roman(0), "○");
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn additive_sequences() {
         assert_eq!(to_roman(1), "i");
         assert_eq!(to_roman(2), "ii");
@@ -150,7 +152,8 @@ mod tests {
         assert_eq!(to_roman(8), "viii");
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn subtractive_pairs() {
         assert_eq!(to_roman(4), "iv");
         assert_eq!(to_roman(9), "ix");
@@ -160,21 +163,24 @@ mod tests {
         assert_eq!(to_roman(900), "cm");
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn clock_boundary_values() {
         assert_eq!(to_roman(12), "xii");
         assert_eq!(to_roman(23), "xxiii"); // max 24h hour
         assert_eq!(to_roman(59), "lix"); // max minute / second
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     fn date_values() {
         assert_eq!(to_roman(31), "xxxi"); // max day
         assert_eq!(to_roman(2026), "mmxxvi"); // current year
         assert_eq!(to_roman(3999), "mmmcmxcix"); // upper bound
     }
 
-    #[test]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
     #[should_panic(expected = "out of range")]
     fn four_thousand_panics() {
         to_roman(4000);
