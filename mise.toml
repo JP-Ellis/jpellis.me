@@ -4,7 +4,7 @@
 [tools]
 "core:node" = "24"
 "core:rust" = {
-  version = "stable",
+  version = "1.96",
   components = ["rustfmt", "clippy", "llvm-tools"],
   targets = ["wasm32-unknown-unknown"],
 }
@@ -20,7 +20,7 @@
 "cargo:cargo-nextest" = "0.9"
 "cargo:committed" = "1"
 "cargo:leptosfmt" = "0.1"
-"cargo:prek" = "0.3"
+"cargo:prek" = "0.4"
 "cargo:stylance-cli" = "0.8"
 "cargo:typos-cli" = "1"
 "npm:wrangler" = "4"
