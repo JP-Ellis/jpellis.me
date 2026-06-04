@@ -65,15 +65,6 @@ members = ["."]
     std_instead_of_core = "allow"
     unreachable = "allow"  # `unreachable!()` is used to mark logically impossible branches
 
-    # Leptos `view!` macro expands HTML element names to absolute-path Leptos
-    # builder calls; user code cannot add `use` imports for these generated paths.
-    absolute-paths = "allow"
-
-    # Leptos `#[component]` emits a `TypedBuilder` derive whose generated methods
-    # (e.g. `build`) share names with existing trait methods.  This is not
-    # fixable in user code.
-    same-name-method = "allow"
-
     # Known upstream issues; revisit when fixed
     # https://github.com/rust-lang/rust-clippy/issues/14056
     panic_in_result_fn = "allow"
