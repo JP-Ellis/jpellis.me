@@ -130,7 +130,7 @@ toml = { version = "1.0", default-features = false, features = [
   tokio = { version = "1", features = ["macros", "net", "rt-multi-thread"] }
 
   [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
-  wasm-bindgen-test = "0.3"
+  wasm-bindgen-test = "=0.3.72"
 
   [target.'cfg(target_arch = "wasm32")'.dependencies]
   axum = { version = "0.8", default-features = false, optional = true }
