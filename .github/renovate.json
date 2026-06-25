@@ -18,6 +18,12 @@
     {
       "matchPackageNames": ["taiki-e/install-action"],
       "schedule": "* 0-4 * * 1"
+    },
+    {
+      "description": "Pinned to =0.8.3 in Cargo.toml: worker >=0.8.4 pulls wasm-streams 0.6, which collides with leptos server_fn's 0.5 (duplicate wasm-bindgen symbols, breaking the wasm32 SSR link). Re-enable once server_fn moves to wasm-streams 0.6.",
+      "matchManagers": ["cargo"],
+      "matchPackageNames": ["worker"],
+      "enabled": false
     }
   ]
 }

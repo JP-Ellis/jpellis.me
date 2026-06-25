@@ -130,7 +130,7 @@ toml = { version = "1.0", default-features = false, features = [
   tokio = { version = "1", features = ["macros", "net", "rt-multi-thread"] }
 
   [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
-  wasm-bindgen-test = "=0.3.73"
+  wasm-bindgen-test = "=0.3.76"
 
   [target.'cfg(target_arch = "wasm32")'.dependencies]
   axum = { version = "0.8", default-features = false, optional = true }
@@ -144,7 +144,11 @@ toml = { version = "1.0", default-features = false, features = [
   # SSR-only: not needed for hydrate/browser builds (prevents wasm-streams duplicate
   # symbol errors — reqwest and worker each bring a different version).
   web-sys = { version = "0.3", features = ["Clipboard", "Navigator", "Window"] }
-  worker = { version = "0.8", features = ["axum", "http"], optional = true }
+  # Pinned: worker >=0.8.4 upgrades its wasm-streams dependency to 0.6, while
+  # leptos' server_fn still requires 0.5. Both export the same (un-namespaced)
+  # wasm-bindgen symbols, so linking the wasm32 SSR binary fails with duplicate
+  # symbol errors. Unpin once server_fn moves to wasm-streams 0.6.
+  worker = { version = "=0.8.3", features = ["axum", "http"], optional = true }
 
 [features]
 hydrate = ["dep:console_error_panic_hook", "leptos/hydrate"]
