@@ -13,7 +13,7 @@ test.describe("Masthead", () => {
 
   test("all five nav links are present", async ({ page }) => {
     const nav = page.locator("header nav[aria-label='Site']");
-    for (const label of ["Index", "Work", "Résumé", "Elsewhere", "Contact"]) {
+    for (const label of ["Index", "Projects", "Résumé", "Blog", "Contact"]) {
       await expect(nav.getByRole("link", { name: label })).toBeVisible();
     }
   });
@@ -27,7 +27,7 @@ test.describe("Masthead", () => {
 
   test("non-home nav links do not have aria-current", async ({ page }) => {
     const nav = page.locator("header nav[aria-label='Site']");
-    for (const label of ["Work", "Résumé", "Elsewhere", "Contact"]) {
+    for (const label of ["Projects", "Résumé", "Blog", "Contact"]) {
       await expect(nav.getByRole("link", { name: label })).not.toHaveAttribute(
         "aria-current",
         "page",

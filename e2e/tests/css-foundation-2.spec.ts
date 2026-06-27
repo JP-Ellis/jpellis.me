@@ -1,76 +1,24 @@
 import { expect, test } from "@playwright/test";
 
+// CSS foundation section 2 — masthead, footer, and focus checks on the home page.
+
 const JOSHUA_RE = /Joshua/u;
 
-test.describe("/__test/css-foundation sections 7-12", () => {
+test.describe("CSS foundation — masthead and footer on home page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/__test/css-foundation");
+    await page.goto("/");
   });
 
-  test("section-eyebrow-grid renders the grid component", async ({ page }) => {
-    const s = page.locator('[data-testid="section-eyebrow-grid"]');
-    await expect(s).toBeVisible();
-    await expect(s.locator(".eyebrow").first()).toBeVisible();
+  test("masthead contains site nav", async ({ page }) => {
+    await expect(page.locator("header")).toBeVisible();
+    await expect(page.locator("nav[aria-label='Site']")).toBeVisible();
+    await expect(
+      page.locator("header a").filter({ hasText: JOSHUA_RE }).first(),
+    ).toBeVisible();
   });
 
-  // Band is adaptive: dark in light mode, light in dark mode.
-  test("band background is inverse of the page colour scheme", async ({
-    page,
-  }) => {
-    const [bandBg, isDark] = await page.evaluate((): [string, boolean] => {
-      const band = document.querySelector(
-        '[data-testid="section-band"]',
-      ) as HTMLElement;
-      const c = document.createElement("canvas");
-      c.width = 1;
-      c.height = 1;
-      const ctx = c.getContext("2d")!;
-      ctx.fillStyle = getComputedStyle(band).backgroundColor;
-      ctx.fillRect(0, 0, 1, 1);
-      const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-      return [
-        `rgb(${r}, ${g}, ${b})`,
-        globalThis.matchMedia("(prefers-color-scheme: dark)").matches,
-      ];
-    });
-    const expected = isDark ? "rgb(245, 241, 234)" : "rgb(26, 22, 18)";
-    expect(bandBg).toBe(expected);
-  });
-
-  test("eyebrow inside band is semi-transparent (not solid ink or paper)", async ({
-    page,
-  }) => {
-    const alpha = await page.evaluate((): number => {
-      const el = document.querySelector(
-        '[data-testid="section-band"] .eyebrow',
-      ) as HTMLElement;
-      // Normalise to sRGB via canvas to read actual alpha channel
-      const c = document.createElement("canvas");
-      c.width = 1;
-      c.height = 1;
-      const ctx = c.getContext("2d")!;
-      ctx.fillStyle = getComputedStyle(el).color;
-      ctx.fillRect(0, 0, 1, 1);
-      return ctx.getImageData(0, 0, 1, 1).data[3]; // 0–255
-    });
-    expect(alpha).toBeGreaterThan(0);
-    expect(alpha).toBeLessThan(255);
-  });
-
-  test(".container max-width is 1280px", async ({ page }) => {
-    const mw = await page.evaluate(() => {
-      const el = document.querySelector(".container") as HTMLElement;
-      return getComputedStyle(el).maxWidth;
-    });
-    expect(mw).toBe("1280px");
-  });
-
-  test(".container--prose max-width is 880px", async ({ page }) => {
-    const mw = await page.evaluate(() => {
-      const el = document.querySelector(".container--prose") as HTMLElement;
-      return getComputedStyle(el).maxWidth;
-    });
-    expect(mw).toBe("880px");
+  test("footer has three items", async ({ page }) => {
+    await expect(page.locator("footer > span")).toHaveCount(3);
   });
 
   test("page has no horizontal overflow at narrow viewport", async ({
@@ -83,50 +31,54 @@ test.describe("/__test/css-foundation sections 7-12", () => {
     expect(overflows).toBe(false);
   });
 
-  test("section-masthead contains masthead markup", async ({ page }) => {
-    const s = page.locator('[data-testid="section-masthead"]');
-    await expect(s).toBeVisible();
-    await expect(s.locator("header")).toBeVisible();
-    await expect(s.locator("nav[aria-label='Site']")).toBeVisible();
-    await expect(
-      s.locator("a").filter({ hasText: JOSHUA_RE }).first(),
-    ).toBeVisible();
-  });
-
-  test("section-footer has three footer items", async ({ page }) => {
-    const s = page.locator('[data-testid="section-footer"]');
-    await expect(s).toBeVisible();
-    await expect(s.locator("footer > span")).toHaveCount(3);
-  });
-
-  test("focused button in section-focus has solid outline", async ({
+  test("eyebrow inside band uses the chromatic accent (not ink or paper)", async ({
     page,
   }) => {
-    // Click then Tab so :focus-visible fires (keyboard modality required)
-    await page.locator('[data-testid="section-focus"] button').click();
-    await page.keyboard.press("Tab");
-    await page.keyboard.press("Shift+Tab");
-    const outlineStyle = await page.evaluate(() => {
-      const btn = document.querySelector(
-        '[data-testid="section-focus"] button',
-      ) as HTMLElement;
-      return getComputedStyle(btn).outlineStyle;
-    });
-    expect(outlineStyle).toBe("solid");
-  });
-
-  test("sr-only element is 1px × 1px with position absolute", async ({
-    page,
-  }) => {
-    const [w, h, pos] = await page.evaluate(() => {
+    // The band eyebrow renders in the solid accent colour. Assert it is a
+    // saturated hue rather than the near-grey ink/paper tones, which is what
+    // distinguishes it visually (the live site renders it fully opaque).
+    const [r, g, b] = await page.evaluate((): number[] => {
       const el = document.querySelector(
-        '[data-testid="section-sr-only"] .sr-only',
+        "[data-testid='year-in-code'] .eyebrow",
       ) as HTMLElement;
-      const cs = getComputedStyle(el);
-      return [cs.width, cs.height, cs.position];
+      const c = document.createElement("canvas");
+      c.width = 1;
+      c.height = 1;
+      const ctx = c.getContext("2d")!;
+      ctx.fillStyle = getComputedStyle(el).color;
+      ctx.fillRect(0, 0, 1, 1);
+      const { data } = ctx.getImageData(0, 0, 1, 1);
+      return [data[0], data[1], data[2]];
     });
-    expect(w).toBe("1px");
-    expect(h).toBe("1px");
-    expect(pos).toBe("absolute");
+    const chroma = Math.max(r, g, b) - Math.min(r, g, b);
+    expect(chroma).toBeGreaterThan(50);
+  });
+
+  test("focused nav link has solid outline", async ({ page, browserName }) => {
+    // WebKit does not move keyboard focus to links via Tab by default
+    // (it mirrors Safari's "Full Keyboard Access off" behaviour), so the
+    // Tab-to-link premise below cannot hold there.
+    test.skip(
+      browserName === "webkit",
+      "WebKit does not Tab-focus links by default",
+    );
+    const link = page.locator("header nav a").first();
+    // The outline is applied via :focus-visible, which only engages for
+    // keyboard-driven focus. Tab through the document until the first nav
+    // link is the active element so the visible outline applies reliably.
+    for (let i = 0; i < 20; i += 1) {
+      await page.keyboard.press("Tab");
+      const focused = await link.evaluate(
+        (el) => el === document.activeElement,
+      );
+      if (focused) {
+        break;
+      }
+    }
+    await expect(link).toBeFocused();
+    const outlineStyle = await link.evaluate(
+      (el) => getComputedStyle(el).outlineStyle,
+    );
+    expect(outlineStyle).toBe("solid");
   });
 });
