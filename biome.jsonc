@@ -1,58 +1,120 @@
 {
-  "assist": {
-    "enabled": true,
-    "actions": {
-      "source": {
-        "organizeImports": "on"
-      }
-    }
-  },
-  "formatter": {
-    "useEditorconfig": true
-  },
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true
-  },
+  "$schema": "https://biomejs.dev/schemas/2.5.1/schema.json",
+  "assist": { "actions": { "recommended": true } },
+  "formatter": { "useEditorconfig": true },
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
   "linter": {
-    "enabled": true,
-    "domains": { "test": "all" },
     "rules": {
-      "recommended": true,
-      "a11y": "error",
-      "complexity": "error",
-      "correctness": "error",
-      "nursery": "warn",
-      "performance": "error",
-      "security": "error",
-      "style": "error",
-      "suspicious": "error"
+      "preset": "all",
+      "correctness": {
+        // Qwik-specific rule; this project is Astro + Svelte.
+        "useQwikValidLexicalScope": "off",
+        // Biome cannot resolve modules in aube's package store or Astro's
+        // virtual modules (astro:content, cloudflare:workers, …), so this
+        // rule only produces false positives in this toolchain.
+        "noUnresolvedImports": "off"
+      },
+      "style": {
+        // Ternaries are idiomatic throughout the codebase.
+        "noTernary": "off"
+      }
     }
   },
   "overrides": [
     {
-      "includes": ["e2e/**/*"],
+      // Biome parses only the frontmatter of .astro files, not the template,
+      // so it cannot see which imports/variables the markup uses, resolve
+      // .astro component imports, or treat a template-only file as non-empty.
+      "includes": ["**/*.astro"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedImports": "off",
+            "noUnusedVariables": "off",
+            "noUnresolvedImports": "off"
+          },
+          "style": {
+            // Astro convention puts `export const prerender` /
+            // `export function getStaticPaths` at the top of the frontmatter.
+            "useExportsLast": "off"
+          },
+          "suspicious": {
+            "noEmptySource": "off"
+          }
+        }
+      }
+    },
+    {
+      // Config files export a default config object by design.
+      "includes": ["**/*.config.ts", "**/*.config.mts", "**/*.config.mjs"],
+      "linter": {
+        "rules": {
+          "complexity": {
+            "noRedundantDefaultExport": "off",
+            "useLiteralKeys": "off"
+          },
+          "correctness": {
+            "noNodejsModules": "off"
+          },
+          "style": {
+            "noDefaultExport": "off",
+            "noMagicNumbers": "off",
+            "noProcessEnv": "off"
+          }
+        }
+      }
+    },
+    {
+      // Test idioms: literal expected values, non-null assertions on known
+      // fixtures, node: imports, console output, high-entropy fixture strings,
+      // and conditional skips are all normal in tests.
+      "includes": ["**/*.test.ts", "**/*.spec.ts"],
+      "linter": {
+        "rules": {
+          "complexity": {
+            // Scenario tests assert many related expectations in one body.
+            "noExcessiveLinesPerFunction": "off"
+          },
+          "correctness": {
+            "noNodejsModules": "off"
+          },
+          "performance": {
+            // UI tests drive steps sequentially; awaits in loops are intended.
+            "noAwaitInLoops": "off"
+          },
+          "style": {
+            "noMagicNumbers": "off",
+            "noNonNullAssertion": "off",
+            "noExcessiveLinesPerFile": "off"
+          },
+          "security": {
+            "noSecrets": "off"
+          },
+          "suspicious": {
+            "noConsole": "off",
+            "noSkippedTests": "off"
+          }
+        }
+      }
+    },
+    {
+      // CLI maintenance scripts: console output and process.env are the
+      // interface, node: built-ins and sequential awaits are expected.
+      "includes": ["scripts/**"],
       "linter": {
         "rules": {
           "correctness": {
             "noNodejsModules": "off"
-          },
-          "complexity": {
-            "noExcessiveLinesPerFunction": "off"
           },
           "performance": {
             "noAwaitInLoops": "off"
           },
           "style": {
             "noMagicNumbers": "off",
-            "noNonNullAssertion": "off"
+            "noProcessEnv": "off"
           },
-          "nursery": {
-            "noConditionalExpect": "off",
-            "noTernary": "off",
-            "useAwaitThenable": "off",
-            "useConsistentTestIt": "off"
+          "suspicious": {
+            "noConsole": "off"
           }
         }
       }
