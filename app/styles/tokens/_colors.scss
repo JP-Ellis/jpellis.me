@@ -18,11 +18,11 @@
 // Only the hue and chroma are shared across themes. Lightness is set
 // inline inside each mixin below so it can be tuned independently
 // per theme without any coupling.
-$paper-ch:   0.0103 81.8;
-$ink-ch:     0.0101 67.21;
-$accent-ch:  0.1497 34.55;
-$warning-ch: 0.14   75;
-$good-ch:    0.14   148; // green; used for positive/success states
+$paper-ch: 0.0103 81.8;
+$ink-ch: 0.0101 67.21;
+$accent-ch: 0.1497 34.55;
+$warning-ch: 0.14 75;
+$good-ch: 0.14 148; // green; used for positive/success states
 
 // ── Derived tokens ─────────────────────────────────────────────────────
 // Always called at the end of each theme mixin. Sets all tokens derived
@@ -30,48 +30,58 @@ $good-ch:    0.14   148; // green; used for positive/success states
 // they recompute automatically because each theme mixin sets the primary
 // tokens before calling this mixin.
 @mixin derived-tokens {
-    // Tinted paper variants
-    --color-paper-deep: oklch(from var(--color-paper) calc(l - 0.04) c h); // #ece7db
-    --color-panel:      oklch(from var(--color-paper) calc(l + 0.025) c h); // slightly lighter/raised surface
+  // Tinted paper variants
+  --color-paper-deep: oklch(from var(--color-paper) calc(l - 0.04) c h); // #ece7db
+  --color-panel: oklch(from var(--color-paper) calc(l + 0.025) c h); // slightly lighter/raised surface
 
-    // Ink at opacity
-    --color-muted: oklch(from var(--color-ink) l c h / 55%); // rgba(26,22,18,0.55)
-    --color-faint: oklch(from var(--color-ink) l c h / 10%); // rgba(26,22,18,0.10)
-    --color-rule:  oklch(from var(--color-ink) l c h / 18%); // rgba(26,22,18,0.18)
+  // Ink at opacity
+  --color-muted: oklch(from var(--color-ink) l c h / 55%); // rgba(26,22,18,0.55)
+  --color-faint: oklch(from var(--color-ink) l c h / 10%); // rgba(26,22,18,0.10)
+  --color-rule: oklch(from var(--color-ink) l c h / 18%); // rgba(26,22,18,0.18)
 
-    // Accent variant
-    --color-accent-soft: oklch(
-        from var(--color-accent) calc(l + 0.23) calc(c * 0.56) h
-    ); // #e8a78f
+  // Accent variant
+  --color-accent-soft: oklch(
+    from var(--color-accent) calc(l + 0.23) calc(c * 0.56) h
+  ); // #e8a78f
 }
 
 // ── Theme mixins ───────────────────────────────────────────────────────
 @mixin theme-light {
-    --color-paper:   oklch(0.9593 #{$paper-ch});   // #f5f1ea
-    --color-ink:     oklch(0.2035 #{$ink-ch});     // #1a1612
-    --color-accent:  oklch(0.5497 #{$accent-ch});  // #b8492f
-    --color-warning: oklch(0.57   #{$warning-ch}); // #a16207
-    --color-good:    oklch(0.55   #{$good-ch});    // oklch(0.55 0.14 148)
-    @include derived-tokens;
+  --color-paper: oklch(0.9593 #{$paper-ch}); // #f5f1ea
+  --color-ink: oklch(0.2035 #{$ink-ch}); // #1a1612
+  --color-accent: oklch(0.5497 #{$accent-ch}); // #b8492f
+  --color-warning: oklch(0.57 #{$warning-ch}); // #a16207
+  --color-good: oklch(0.55 #{$good-ch}); // oklch(0.55 0.14 148)
+  @include derived-tokens;
 }
 
 // Dark mode inverts the palette: paper takes the ink chroma/hue, ink takes the paper chroma/hue.
 // Lightness values are tuned independently.
 @mixin theme-dark {
-    --color-paper:   oklch(0.20   #{$ink-ch});     // near-#1a1612 — tuned independently
-    --color-ink:     oklch(0.95   #{$paper-ch});   // near-#f5f1ea — tuned independently
-    --color-accent:  oklch(0.6205 #{$accent-ch});  // #d05f47
-    --color-warning: oklch(0.78   #{$warning-ch}); // lighter amber on dark bg
-    --color-good:    oklch(0.70   #{$good-ch});    // lightened for legibility on dark paper
-    @include derived-tokens;
+  --color-paper: oklch(0.2 #{$ink-ch}); // near-#1a1612 — tuned independently
+  --color-ink: oklch(0.95 #{$paper-ch}); // near-#f5f1ea — tuned independently
+  --color-accent: oklch(0.6205 #{$accent-ch}); // #d05f47
+  --color-warning: oklch(0.78 #{$warning-ch}); // lighter amber on dark bg
+  --color-good: oklch(0.7 #{$good-ch}); // lightened for legibility on dark paper
+  @include derived-tokens;
 }
 
 // ── Apply to :root ─────────────────────────────────────────────────────
 // [data-theme] is set on <html> by the ThemeToggle component from a
 // server-read cookie, preventing any flash on load.
 @layer tokens {
-    :root                                   { @include theme-light; }
-    @media (prefers-color-scheme: dark)     { :root { @include theme-dark; } }
-    [data-theme="light"]                    { @include theme-light; }
-    [data-theme="dark"]                     { @include theme-dark; }
+  :root {
+    @include theme-light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      @include theme-dark;
+    }
+  }
+  [data-theme="light"] {
+    @include theme-light;
+  }
+  [data-theme="dark"] {
+    @include theme-dark;
+  }
 }

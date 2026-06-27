@@ -8,16 +8,16 @@
 //     <span class="eyebrow">№ 01 / Intro</span>
 //     <div><!-- content --></div>
 //   </div>
-@use '../tokens/breakpoints' as *;
+@use "../tokens/breakpoints" as *;
 
 @layer components {
-    .eyebrow-grid {
-        display: grid;
-        gap: var(--space-6);
-        grid-template-columns: 1fr; // mobile: single column
+  .eyebrow-grid {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: 1fr; // mobile: single column
 
-        @media (min-width: $bp-md) {
-            grid-template-columns: var(--gutter-eyebrow) 1fr;
-        }
+    @media (min-width: $bp-md) {
+      grid-template-columns: var(--gutter-eyebrow) 1fr;
     }
+  }
 }

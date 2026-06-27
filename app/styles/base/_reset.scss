@@ -1,0 +1,77 @@
+/* biome-ignore-all lint/complexity/noImportantStyles: !important is required to override author animations for prefers-reduced-motion (accessibility) */
+// Modern CSS reset.
+// Sets sensible defaults so components can assume box-sizing: border-box,
+// no default margin/padding, and consistent font inheritance.
+// prefers-reduced-motion lives here (not in tokens) because it is a
+// behavioural override, not a token definition.
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    // Prevent font size inflation on mobile
+    -moz-text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+    // Smooth scrolling — disabled if reduced motion is preferred
+    scroll-behavior: smooth;
+    // Clip horizontal overflow without creating a scroll container
+    // (overflow: hidden would break position: sticky; clip does not)
+    overflow-x: clip;
+  }
+
+  body {
+    min-height: 100svh;
+    line-height: 1.5;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    overflow-wrap: break-word;
+  }
+
+  // Honour reduced motion preference.
+  // The !important is intentional here — the reset layer has the lowest
+  // priority of all layers, so !important is needed to override
+  // transition values set in higher layers.
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

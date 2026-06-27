@@ -3,7 +3,7 @@
 //   @use '../tokens/breakpoints' as bp;  → bp.$bp-md
 //   @use '../tokens/breakpoints' as *;   → $bp-md directly
 
-$bp-sm: 480px;   // large phones, landscape
-$bp-md: 768px;   // tablets — eyebrow grid activates
-$bp-lg: 1024px;  // desktop — full gutters activate
-$bp-xl: 1280px;  // full index / résumé width
+$bp-sm: 480px; // large phones, landscape
+$bp-md: 768px; // tablets — eyebrow grid activates
+$bp-lg: 1024px; // desktop — full gutters activate
+$bp-xl: 1280px; // full index / résumé width

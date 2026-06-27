@@ -1,0 +1,43 @@
+// Font-family tokens and type ramp.
+// Fraunces (display), Newsreader (body), Fira Code (mono).
+// clamp() on display and section means no per-breakpoint overrides are needed.
+@layer tokens {
+  :root {
+    // Font families
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "Newsreader", Georgia, serif;
+    --font-mono: "Fira Code", ui-monospace, monospace;
+
+    // Display — Fraunces 300, large headings (h1)  spec: display/96
+    --text-display-size: clamp(64px, 8vw, 96px);
+    --text-display-leading: 1.02;
+    --text-display-tracking: -0.025em;
+    --text-display-opsz: 144;
+
+    // Section — Fraunces 400, section headings (h2)  spec: title/40, user: slightly larger
+    --text-section-size: clamp(32px, 4vw, 46px);
+    --text-section-leading: 1.1;
+    --text-section-tracking: -0.015em;
+
+    // Title — Newsreader 500, sub-section headings (h3)  spec: 26px
+    --text-title-size: 26px;
+    --text-title-leading: 1.2;
+    --text-title-tracking: -0.005em;
+
+    // Lead — introductory prose
+    --text-lead-size: 19px;
+    --text-lead-leading: 1.55;
+
+    // Body — running text  spec: body/17
+    --text-body-size: clamp(15px, 1.1vw, 17px);
+    --text-body-leading: 1.55;
+
+    // Meta — Fira Code, timestamps / read-time / captions  spec: meta/12
+    --text-meta-size: 12px;
+    --text-meta-tracking: 0.04em;
+
+    // Eyebrow — Fira Code uppercase, section labels  spec: eyebrow/11
+    --text-eyebrow-size: 11px;
+    --text-eyebrow-tracking: 0.16em;
+  }
+}
