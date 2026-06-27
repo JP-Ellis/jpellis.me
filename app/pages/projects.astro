@@ -1,0 +1,500 @@
+---
+import { getCollection } from "astro:content";
+import Band from "../components/band.astro";
+import { OSS_CONTRIBS } from "../data/oss-contribs.ts";
+import { PROJECTS } from "../data/projects.ts";
+import Base from "../layouts/base.astro";
+import {
+  fallbackProjectStats,
+  fetchProjectStats,
+} from "../lib/github-projects.ts";
+import { formatStars } from "../lib/projects.ts";
+import { readWithSWR } from "../lib/stats-cache.ts";
+
+export const prerender = false;
+
+const PROJECTS_STATS_MAX_AGE_MS = 604_800_000;
+
+const trackedSlugs = PROJECTS.filter((e) => e.link?.kind === "github").map(
+  (e) => (e.link as { kind: "github"; slug: string }).slug,
+);
+
+async function loadProjectStats() {
+  try {
+    const { env } = await import("cloudflare:workers");
+    if (!env?.PROJECTS_STATS) {
+      return fallbackProjectStats();
+    }
+    const ctx = Astro.locals?.cfContext;
+    const waitUntil = ctx?.waitUntil?.bind(ctx) ?? (() => undefined);
+    const { data } = await readWithSWR({
+      kv: env.PROJECTS_STATS,
+      key: "github/projects",
+      maxAgeMs: PROJECTS_STATS_MAX_AGE_MS,
+      refresh: () => fetchProjectStats(env.GITHUB_TOKEN, trackedSlugs),
+      waitUntil,
+    });
+    return data && data.repos.length > 0 ? data : fallbackProjectStats();
+  } catch {
+    return fallbackProjectStats();
+  }
+}
+
+const projectStats = await loadProjectStats();
+const repoMap = new Map(projectStats.repos.map((r) => [r.slug, r]));
+
+const totalStars = projectStats.repos.reduce((sum, r) => sum + r.stars, 0);
+const totalForks = projectStats.repos.reduce((sum, r) => sum + r.forks, 0);
+
+const projectPages = await getCollection("projects");
+const detailSlugs = new Set(projectPages.map((p) => p.id));
+
+const statusClass: Record<string, string> = {
+  active: "row_status_active",
+  maintained: "row_status_maintained",
+  archived: "row_status_archived",
+  shipped: "row_status_shipped",
+  wip: "row_status_wip",
+};
+
+const OSS_CONTRIBS_LIMIT = 20;
+const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
+---
+
+<Base title="Projects">
+  <main>
+    <section class="hero">
+      <div class="container">
+        <p class="eyebrow">Projects</p>
+        <h1>Things I've <em>built</em>, still standing.</h1>
+        <p class="lead">
+          A small index. Each item links to a write-up, the README, or — for
+          the academic ones — the paper.
+        </p>
+      </div>
+    </section>
+
+    <Band testId="projects-band">
+      <div class="container band_inner">
+        <div class="stats_row">
+          <dl class="stat_item">
+            <dt class="stat_value">{formatStars(totalStars)}</dt>
+            <dd class="stat_label">
+              <span class="sr-only">Total </span>stars
+            </dd>
+          </dl>
+          <dl class="stat_item">
+            <dt class="stat_value">{String(totalForks)}</dt>
+            <dd class="stat_label">forks</dd>
+          </dl>
+          <dl class="stat_item">
+            <dt class="stat_value">400+</dt>
+            <dd class="stat_label">citations</dd>
+          </dl>
+          <dl class="stat_item">
+            <dt class="stat_value">2015</dt>
+            <dd class="stat_label">open source since</dd>
+          </dl>
+        </div>
+
+        <div class="eyebrow-grid fingerprint_row">
+          <span class="eyebrow eyebrow--muted">The stack</span>
+          <div class="fingerprint_tags">
+            <span class="tag tag--pill">rust</span>
+            <span class="tag tag--pill">python</span>
+            <span class="tag tag--pill">latex</span>
+            <span class="tag tag--pill">tikz</span>
+            <span class="tag tag--pill">nix</span>
+            <span class="tag tag--pill">shell</span>
+          </div>
+        </div>
+      </div>
+    </Band>
+
+    <section class="index_section">
+      <div class="container">
+        <div class="eyebrow-grid">
+          <span class="eyebrow">Index</span>
+          <div>
+            <div class="index_header rule-section">
+              <span>repo</span>
+              <span>kind</span>
+              <span>summary</span>
+              <span class="row_stars">★</span>
+              <span>status</span>
+            </div>
+            {
+              PROJECTS.map((entry) => {
+                const hasDetail = detailSlugs.has(entry.name);
+                const isGithub = entry.link?.kind === "github";
+                const isExternal = entry.link?.kind === "external";
+
+                let nameCell;
+                if (hasDetail) {
+                  nameCell = (
+                    <a
+                      href={`/projects/${entry.name}`}
+                      class="row_name row_name_link"
+                    >
+                      {entry.name}
+                    </a>
+                  );
+                } else if (isGithub) {
+                  nameCell = (
+                    <a
+                      href={`https://github.com/${(entry.link as { kind: "github"; slug: string }).slug}`}
+                      class="row_name row_name_link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {entry.name}
+                    </a>
+                  );
+                } else if (isExternal) {
+                  nameCell = (
+                    <a
+                      href={(entry.link as { kind: "external"; url: string }).url}
+                      class="row_name row_name_link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {entry.name}
+                    </a>
+                  );
+                } else {
+                  nameCell = <span class="row_name">{entry.name}</span>;
+                }
+
+                let starsCell: string;
+                if (isGithub) {
+                  const slug = (entry.link as { kind: "github"; slug: string }).slug;
+                  const repo = repoMap.get(slug);
+                  starsCell = repo !== undefined ? formatStars(repo.stars) : "—";
+                } else {
+                  starsCell = "—";
+                }
+
+                return (
+                  <div
+                    class="index_row rule-list"
+                    data-testid="projects-row"
+                  >
+                    {nameCell}
+                    <span class="row_kind">{entry.kind}</span>
+                    <div>
+                      <span class="row_summary">{entry.summary}</span>
+                      <span class="row_stack">{entry.stack}</span>
+                    </div>
+                    <span class="row_stars">{starsCell}</span>
+                    <span
+                      class={`row_status ${statusClass[entry.status]}`}
+                    >
+                      ● {entry.status}
+                    </span>
+                  </div>
+                );
+              })
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contrib_section">
+      <div class="container">
+        <div class="eyebrow-grid">
+          <span class="eyebrow">Open source</span>
+          <div class="contrib_body">
+            <p class="contrib_prose">
+              Beyond named projects, I make regular contributions across the
+              open-source ecosystem — bug fixes, small features, and
+              documentation wherever I use the tools.
+            </p>
+            <p class="contrib_links">
+              {
+                ossFirst20.map((c, i) => (
+                  <>
+                    {i > 0 && " · "}
+                    <a
+                      href={`https://github.com/${c.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {c.name}
+                    </a>{" "}
+                    <span
+                      class="contrib_stars"
+                      aria-label={`${c.stars} stars`}
+                    >
+                      {formatStars(c.stars)}★
+                    </span>
+                  </>
+                ))
+              }
+               · and others
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<style lang="scss">
+  @use "../styles/tokens/breakpoints" as *;
+  @use "../styles/mixins/focus" as *;
+
+  // MARK: Hero
+  .hero {
+    padding-block: var(--space-8) var(--space-7);
+  }
+
+  .lead {
+    font-size: var(--text-lead-size);
+    line-height: var(--text-lead-leading);
+    color: var(--color-muted);
+    max-width: 52ch;
+    margin-top: var(--space-4);
+  }
+
+  // MARK: Band
+  .band_inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
+    padding: var(--space-8) 0;
+  }
+
+  .stats_row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-7);
+  }
+
+  .stat_item {
+    margin: 0;
+  }
+
+  .stat_value {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-style: italic;
+    font-size: var(--text-section-size);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    margin: 0;
+  }
+
+  .stat_label {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin: var(--space-1) 0 0;
+  }
+
+  .fingerprint_row {
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-rule);
+  }
+
+  .fingerprint_tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  // MARK: Index
+  .index_section {
+    padding: var(--space-6) 0 var(--space-8);
+  }
+
+  .index_header {
+    display: grid;
+    grid-template-columns: minmax(0, 20ch) 140px 1fr 60px 100px;
+    gap: var(--space-5);
+    padding: var(--space-3) 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    align-items: baseline;
+  }
+
+  .index_row {
+    display: grid;
+    grid-template-columns: minmax(0, 20ch) 140px 1fr 60px 100px;
+    gap: var(--space-5);
+    padding: var(--space-5) 0;
+    align-items: baseline;
+
+    @media (max-width: $bp-sm) {
+      grid-template-columns: 1fr auto;
+      grid-template-areas:
+        "name   status"
+        "kind   stars"
+        "summary summary"
+        "stack  stack";
+    }
+  }
+
+  .row_name {
+    font-family: var(--font-mono);
+    font-size: var(--text-body-size);
+    color: var(--color-accent);
+    overflow-wrap: break-word;
+
+    @media (max-width: $bp-sm) {
+      grid-area: name;
+    }
+  }
+
+  .row_name_link {
+    text-decoration: none;
+    min-height: var(--touch-target);
+    display: inline-flex;
+    align-items: center;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+  }
+
+  .row_kind {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    color: var(--color-muted);
+
+    @media (max-width: $bp-sm) {
+      grid-area: kind;
+    }
+  }
+
+  .row_summary {
+    font-family: var(--font-body);
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-leading);
+    display: block;
+
+    @media (max-width: $bp-sm) {
+      grid-area: summary;
+    }
+  }
+
+  .row_stack {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    color: var(--color-muted);
+    margin-top: var(--space-1);
+    display: block;
+
+    @media (max-width: $bp-sm) {
+      grid-area: stack;
+    }
+  }
+
+  .row_stars {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    text-align: right;
+
+    @media (max-width: $bp-sm) {
+      grid-area: stars;
+      text-align: left;
+    }
+  }
+
+  .row_stars_skeleton {
+    display: inline-block;
+    width: 3ch;
+    height: 1em;
+    background: var(--color-faint);
+    border-radius: var(--radius-sm);
+    vertical-align: middle;
+  }
+
+  .row_status {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    letter-spacing: 0.04em;
+    min-height: var(--touch-target);
+    display: inline-flex;
+    align-items: center;
+
+    @media (max-width: $bp-sm) {
+      grid-area: status;
+      min-height: unset;
+    }
+  }
+
+  .row_status_active {
+    color: var(--color-accent);
+  }
+  .row_status_maintained {
+    color: var(--color-muted);
+  }
+  .row_status_archived {
+    color: var(--color-muted);
+  }
+  .row_status_shipped {
+    color: var(--color-ink);
+  }
+  .row_status_wip {
+    color: var(--color-warning);
+  }
+
+  // MARK: Open contributions
+  .contrib_section {
+    padding: var(--space-6) 0 var(--space-8);
+  }
+
+  .contrib_body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .contrib_prose {
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-leading);
+    color: var(--color-muted);
+    max-width: 60ch;
+    margin: 0 auto;
+  }
+
+  .contrib_links {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    color: var(--color-muted);
+    margin: 0;
+    max-width: none;
+    line-height: var(--text-body-leading);
+
+    a {
+      color: var(--color-accent);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      &:focus-visible {
+        @include focus-ring;
+      }
+    }
+  }
+
+  .contrib_stars {
+    font-size: 0.85em;
+    opacity: 0.6;
+  }
+</style>

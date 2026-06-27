@@ -1,0 +1,337 @@
+---
+import { getCollection } from "astro:content";
+import Band from "../../components/band.astro";
+import Base from "../../layouts/base.astro";
+import { formatDate, sourceDomain, splitExcerpt } from "../../lib/blog.ts";
+
+export const prerender = false;
+
+const YEAR_LENGTH = 4;
+const ISO_DATE_LENGTH = 10;
+
+const tag = Astro.url.searchParams.get("tag");
+const year = Astro.url.searchParams.get("year");
+
+const allPosts = await getCollection("blog");
+allPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))].sort();
+const allYears = [
+  ...new Set(
+    allPosts.map((p) => p.data.date.toISOString().slice(0, YEAR_LENGTH)),
+  ),
+].sort((a, b) => b.localeCompare(a));
+
+const filtered = allPosts.filter((p) => {
+  const tagOk = !tag || p.data.tags.includes(tag);
+  const postYear = p.data.date.toISOString().slice(0, YEAR_LENGTH);
+  const yearOk = !year || postYear === year;
+  return tagOk && yearOk;
+});
+
+function filterUrl(
+  filterTag: string | null,
+  filterYear: string | null,
+): string {
+  const params = new URLSearchParams();
+  if (filterTag) {
+    params.set("tag", filterTag);
+  }
+  if (filterYear) {
+    params.set("year", filterYear);
+  }
+  const qs = params.toString();
+  if (qs) {
+    return `/blog?${qs}`;
+  }
+  return "/blog";
+}
+
+const excerpts = await Promise.all(
+  filtered.map((p) => splitExcerpt(p.body ?? "", p.data.description)),
+);
+---
+
+<Base title="Writing">
+  <main>
+    <section class="hero">
+      <div class="container">
+        <p class="eyebrow">Blog</p>
+        <h1>Writing</h1>
+      </div>
+    </section>
+
+    <Band>
+      <div class="container">
+        <div class="filter_band">
+          <div class="eyebrow-grid filter_row">
+            <span class="eyebrow eyebrow--muted">Tag</span>
+            <div class="filter_tags">
+              {
+                allTags.map((t) => {
+                  const isActive = tag === t;
+                  const href = filterUrl(isActive ? null : t, year);
+                  return (
+                    <a
+                      href={href}
+                      class={
+                        isActive ? "tag tag--pill tag--accent" : "tag tag--pill"
+                      }
+                      role="button"
+                      aria-pressed={isActive ? "true" : "false"}
+                      data-filter-tag={t}
+                    >
+                      {t}
+                    </a>
+                  );
+                })
+              }
+            </div>
+          </div>
+          <hr class="rule-list" />
+          <div class="eyebrow-grid filter_row">
+            <span class="eyebrow eyebrow--muted">Year</span>
+            <div class="filter_tags">
+              {
+                allYears.map((y) => {
+                  const isActive = year === y;
+                  const href = filterUrl(tag, isActive ? null : y);
+                  return (
+                    <a
+                      href={href}
+                      class={
+                        isActive ? "tag tag--pill tag--accent" : "tag tag--pill"
+                      }
+                      role="button"
+                      aria-pressed={isActive ? "true" : "false"}
+                      data-filter-year={y}
+                    >
+                      {y}
+                    </a>
+                  );
+                })
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </Band>
+
+    <section class="posts_section">
+      <div class="container">
+        <div class="eyebrow-grid">
+          <span class="eyebrow">Posts</span>
+          <div>
+            {
+              filtered.map((post, i) => {
+                const isoDate = post.data.date.toISOString().slice(0, ISO_DATE_LENGTH);
+                const postYear = post.data.date.toISOString().slice(0, YEAR_LENGTH);
+                const border = i === 0 ? "rule-section" : "rule-list";
+                const excerptHtml = excerpts[i];
+                const source = post.data.source;
+                const tags = post.data.tags;
+                return (
+                  <div
+                    class={`post_row ${border}`}
+                    data-testid="post-row"
+                    data-tags={tags.join(" ")}
+                    data-year={postYear}
+                  >
+                    <a href={`/blog/${post.id}`} class="post_title">
+                      {post.data.title}
+                    </a>
+                    <span class="post_date">{formatDate(isoDate)}</span>
+                    {excerptHtml && (
+                      <div class="post_excerpt" set:html={excerptHtml} />
+                    )}
+                    {source && (
+                      <a
+                        href={source}
+                        class="crosspost_source"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        ↗ originally on {sourceDomain(source)}
+                      </a>
+                    )}
+                    {tags.length > 0 && (
+                      <div class="post_tags">
+                        {tags.map((t) => (
+                          <span class="tag tag--hash">{t}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<script>
+  function applyFilter(tag: string | null, year: string | null) {
+    const rows = document.querySelectorAll<HTMLElement>('[data-testid="post-row"]');
+    const tagPills = document.querySelectorAll<HTMLElement>("[data-filter-tag]");
+    const yearPills = document.querySelectorAll<HTMLElement>("[data-filter-year]");
+
+    if (!rows.length && !tagPills.length && !yearPills.length) return;
+
+    for (const row of rows) {
+      const rowTags = row.dataset.tags?.split(" ") ?? [];
+      const rowYear = row.dataset.year ?? "";
+      const tagMatch = !tag || rowTags.includes(tag);
+      const yearMatch = !year || rowYear === year;
+      row.hidden = !(tagMatch && yearMatch);
+    }
+
+    for (const pill of tagPills) {
+      const pillTag = pill.dataset.filterTag ?? "";
+      const active = pillTag === tag;
+      pill.classList.toggle("tag--accent", active);
+      pill.setAttribute("aria-pressed", active ? "true" : "false");
+    }
+
+    for (const pill of yearPills) {
+      const pillYear = pill.dataset.filterYear ?? "";
+      const active = pillYear === year;
+      pill.classList.toggle("tag--accent", active);
+      pill.setAttribute("aria-pressed", active ? "true" : "false");
+    }
+
+    const params = new URLSearchParams();
+    if (tag) params.set("tag", tag);
+    if (year) params.set("year", year);
+    const qs = params.toString();
+    const url = qs ? `/blog?${qs}` : "/blog";
+    history.pushState({ tag, year }, "", url);
+  }
+
+  function readParams(): { tag: string | null; year: string | null } {
+    const sp = new URLSearchParams(location.search);
+    return { tag: sp.get("tag"), year: sp.get("year") };
+  }
+
+  document.addEventListener("click", (e) => {
+    const target = (e.target as Element).closest<HTMLElement>(
+      "[data-filter-tag], [data-filter-year]",
+    );
+    if (!target) return;
+
+    e.preventDefault();
+    const { tag: currentTag, year: currentYear } = readParams();
+
+    if ("filterTag" in target.dataset) {
+      const clicked = target.dataset.filterTag ?? "";
+      applyFilter(currentTag === clicked ? null : clicked, currentYear);
+    } else {
+      const clicked = target.dataset.filterYear ?? "";
+      applyFilter(currentTag, currentYear === clicked ? null : clicked);
+    }
+  });
+
+  window.addEventListener("popstate", () => {
+    const { tag, year } = readParams();
+    applyFilter(tag, year);
+  });
+</script>
+
+<style lang="scss">
+  @use "../../styles/mixins/focus" as *;
+
+  .hero {
+    padding-block: var(--space-8) var(--space-7);
+  }
+
+  .filter_band {
+    padding-block: var(--space-3);
+  }
+
+  .filter_row {
+    padding-block: var(--space-4);
+  }
+
+  .filter_tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: center;
+  }
+
+  .posts_section {
+    padding-block: var(--space-7) var(--space-8);
+  }
+
+  .post_row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-2) var(--space-8);
+    padding-block: var(--space-4);
+  }
+
+  .post_title {
+    font-size: var(--text-lead-size);
+    color: var(--color-ink);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+      color: var(--color-accent);
+    }
+
+    &:focus-visible {
+      @include focus-ring(var(--space-half));
+    }
+  }
+
+  .post_date {
+    font-size: var(--text-meta-size);
+    color: var(--color-muted);
+    white-space: nowrap;
+    align-self: start;
+  }
+
+  .post_excerpt {
+    grid-column: 1 / -1;
+    color: var(--color-muted);
+
+    :global(p) {
+      margin: 0;
+    }
+
+    :global(h1),
+    :global(h2),
+    :global(h3),
+    :global(h4),
+    :global(h5),
+    :global(h6) {
+      display: none;
+    }
+  }
+
+  .post_tags {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .crosspost_source {
+    grid-column: 1 / -1;
+    font-size: var(--text-meta-size);
+    color: var(--color-muted);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--color-accent);
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      @include focus-ring(var(--space-half));
+    }
+  }
+</style>

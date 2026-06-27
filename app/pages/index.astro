@@ -1,0 +1,289 @@
+---
+import { getCollection } from "astro:content";
+import YearInCode from "../components/year-in-code.astro";
+import { PROJECTS } from "../data/projects.ts";
+import Base from "../layouts/base.astro";
+import { formatDate, sourceDomain } from "../lib/blog.ts";
+import { fallbackGithubStats, fetchGithubStats } from "../lib/github-stats.ts";
+import { readWithSWR } from "../lib/stats-cache.ts";
+
+export const prerender = false;
+
+const ISO_DATE_LENGTH = 10;
+const HOME_SECTION_COUNT = 3;
+const STATS_MAX_AGE_MS = 86_400_000;
+
+const allPosts = await getCollection("blog");
+allPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const recentPosts = allPosts.slice(0, HOME_SECTION_COUNT);
+
+const selectedProjects = PROJECTS.slice(0, HOME_SECTION_COUNT);
+
+async function loadStats() {
+  try {
+    const { env } = await import("cloudflare:workers");
+    if (!env?.GITHUB_STATS) {
+      return fallbackGithubStats();
+    }
+    const ctx = Astro.locals?.cfContext;
+    const waitUntil = ctx?.waitUntil?.bind(ctx) ?? (() => undefined);
+    const { data } = await readWithSWR({
+      kv: env.GITHUB_STATS,
+      key: "github/stats",
+      maxAgeMs: STATS_MAX_AGE_MS,
+      refresh: () => fetchGithubStats(env.GITHUB_TOKEN),
+      waitUntil,
+    });
+    return data ?? fallbackGithubStats();
+  } catch {
+    return fallbackGithubStats();
+  }
+}
+
+const stats = await loadStats();
+---
+
+<Base title="JP Ellis">
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container">
+        <p class="eyebrow">Hello, again</p>
+        <h1>
+          I codify <em>contracts</em> between systems for a living, in{" "}
+          <span class="accent">Rust</span> and{" "}
+          <span class="accent-python">Python</span>;
+          and once spent a decade chasing where the{" "}
+          <em class="antimatter">antimatter</em> went.
+        </h1>
+        <p class="lead">
+          Senior software engineer at <strong>PactFlow (SmartBear)</strong>.
+          Open source contributor to <code>pact-python</code>,
+          <code>tikz-feynman</code>, <code>rust-skiplist</code>, and more.
+        </p>
+        <p class="lead">
+          Previously: data and cloud engineering at KPMG,
+          and a PhD in theoretical particle physics.
+        </p>
+      </div>
+    </section>
+
+    <YearInCode stats={stats} />
+
+    <!-- Selected Projects -->
+    <section class="projects-section">
+      <div class="container">
+        <div class="eyebrow-grid">
+          <span class="eyebrow">Selected projects</span>
+          <div>
+            {selectedProjects.map((entry, i) => {
+              const border = i === 0 ? "rule-section" : "rule-list";
+              return (
+                <div class={`projects-row ${border}`} data-testid="projects-row">
+                  <span class="projects-name">{entry.name}</span>
+                  <span class="projects-kind">{entry.kind}</span>
+                  <span class="projects-summary">{entry.summary}</span>
+                  {entry.link?.kind === "github" && (
+                    <a
+                      href={`https://github.com/${entry.link.slug}`}
+                      class="projects-link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      ↗ github
+                    </a>
+                  )}
+                  {entry.link?.kind === "external" && (
+                    <a
+                      href={entry.link.url}
+                      class="projects-link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      ↗ site
+                    </a>
+                  )}
+                </div>
+              );
+            })}
+            <a href="/projects" class="projects-all-link">↗ All projects</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Writing -->
+    <section class="elsewhere-section">
+      <div class="container">
+        <div class="eyebrow-grid">
+          <span class="eyebrow">Recent writing</span>
+          <div>
+            {recentPosts.map((post, i) => {
+              const border = i === 0 ? "rule-section" : "rule-list";
+              const isoDate = post.data.date.toISOString().slice(0, ISO_DATE_LENGTH);
+              const source = post.data.source;
+              const domain = source ? sourceDomain(source) : undefined;
+              return (
+                <div class={`cross-post-row ${border}`} data-testid="cross-post-row">
+                  <div>
+                    <a href={`/blog/${post.id}`} class="cross-post-title">
+                      {post.data.title}
+                    </a>
+                    {source && domain && (
+                      <a
+                        href={source}
+                        class="cross-post-source"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        ↗ {domain}
+                      </a>
+                    )}
+                  </div>
+                  <span class="cross-post-date">{formatDate(isoDate)}</span>
+                </div>
+              );
+            })}
+            <a href="/blog" class="projects-all-link">↗ All posts</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<style lang="scss">
+  @use "../styles/tokens/breakpoints" as *;
+
+  // MARK: Hero
+
+  .hero {
+    padding-block: var(--space-8) var(--space-7);
+  }
+
+  .accent {
+    color: var(--color-accent);
+  }
+
+  .accent-python {
+    color: var(--color-good);
+  }
+
+  .antimatter {
+    color: var(--color-paper);
+    text-shadow:
+      0 0 0.1ex var(--color-ink),
+      0 0 0.25ex var(--color-ink),
+      0 0 0.5ex var(--color-ink);
+  }
+
+  .lead {
+    font-size: var(--text-lead-size);
+    line-height: var(--text-lead-leading);
+    color: var(--color-muted);
+    max-width: var(--width-narrow);
+    margin-top: var(--space-5);
+
+    strong { color: var(--color-ink); }
+
+    code {
+      font-family: var(--font-mono);
+      color: var(--color-ink);
+      font-size: 0.9em;
+    }
+  }
+
+  // MARK: Selected Work
+
+  .projects-section {
+    padding-block: var(--space-7) 0;
+  }
+
+  .projects-row {
+    display: grid;
+    grid-template-columns: 220px 200px 1fr 80px;
+    gap: var(--space-5);
+    padding-block: var(--space-4);
+    align-items: baseline;
+
+    @media (max-width: $bp-md) {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3);
+    }
+  }
+
+  .projects-name {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--color-accent);
+  }
+
+  .projects-kind {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    color: var(--color-muted);
+  }
+
+  .projects-summary {
+    font-size: 18px;
+  }
+
+  .projects-link {
+    font-family: var(--font-mono);
+    font-size: var(--text-eyebrow-size);
+    color: var(--color-muted);
+    text-align: right;
+    text-decoration: none;
+  }
+
+  .projects-all-link {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-eyebrow-size);
+    color: var(--color-accent);
+    margin-top: var(--space-3);
+    text-decoration: none;
+  }
+
+  // MARK: Elsewhere
+
+  .elsewhere-section {
+    padding-block: var(--space-7);
+  }
+
+  .cross-post-row {
+    display: grid;
+    grid-template-columns: 1fr var(--gutter-eyebrow);
+    gap: var(--space-5);
+    padding-block: var(--space-3);
+    align-items: baseline;
+
+    @media (max-width: $bp-md) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .cross-post-title {
+    font-size: 22px;
+    font-style: italic;
+    line-height: 1.2;
+  }
+
+  .cross-post-source {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-eyebrow-size);
+    color: var(--color-muted);
+    margin-top: var(--space-2);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .cross-post-date {
+    font-family: var(--font-mono);
+    font-size: var(--text-eyebrow-size);
+    color: var(--color-muted);
+    text-align: right;
+  }
+</style>
