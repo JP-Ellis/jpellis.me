@@ -1,9 +1,9 @@
-+++
-github = "JP-Ellis/tikz-feynman"
-slug = "tikz-feynman"
-tagline = "Feynman diagrams with human-readable code"
-title = "TikZ-Feynman"
-+++
+---
+github: JP-Ellis/tikz-feynman
+slug: tikz-feynman
+tagline: Feynman diagrams with human-readable code
+title: TikZ-Feynman
+---
 
 Ti*k*Z-Feynman is a LaTeX package for typesetting Feynman diagrams
 directly in LaTeX, without external tools. It leverages Ti*k*Z's graph

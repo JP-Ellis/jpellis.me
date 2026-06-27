@@ -1,9 +1,12 @@
-+++
-date = 2025-12-04
-source = "https://pact-foundation.github.io/pact-python/blog/2025/12/04/pact-python-v3-release/"
-tags = ["pact", "python", "rust"]
-title = "Announcing: Pact Python v3"
-+++
+---
+date: 2025-12-04
+source: https://pact-foundation.github.io/pact-python/blog/2025/12/04/pact-python-v3-release/
+tags:
+  - pact
+  - python
+  - rust
+title: "Announcing: Pact Python v3"
+---
 
 It's been a couple of months since we released Pact Python v3, and after ironing out a couple of early issues, I think it's finally time to reflect on this milestone and its implications. This post is a look back at the journey, some of the challenges, the people, and the future of this project within the Pact ecosystem.
 

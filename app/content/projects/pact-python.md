@@ -1,9 +1,9 @@
-+++
-github = "pact-foundation/pact-python"
-slug = "pact-python"
-tagline = "Contract testing for Python services, built on a Rust FFI core"
-title = "pact-python"
-+++
+---
+github: pact-foundation/pact-python
+slug: pact-python
+tagline: Contract testing for Python services, built on a Rust FFI core
+title: pact-python
+---
 
 [Pact](https://pact.io) is a contract testing framework: rather than spinning up a full integration environment, each consumer records the interactions it expects from a provider into a _pact file_. The provider then verifies it can satisfy those interactions independently. This eliminates an entire class of integration test failures without the cost of a shared environment.
 

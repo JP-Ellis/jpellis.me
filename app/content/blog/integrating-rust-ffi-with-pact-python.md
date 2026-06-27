@@ -1,9 +1,12 @@
-+++
-date = 2024-05-02
-source = "https://pact-foundation.github.io/pact-python/blog/2024/05/02/integrating-rust-ffi-with-pact-python/"
-tags = ["pact", "python", "rust"]
-title = "Integrating Rust FFI with Pact Python"
-+++
+---
+date: 2024-05-02
+source: https://pact-foundation.github.io/pact-python/blog/2024/05/02/integrating-rust-ffi-with-pact-python/
+tags:
+  - pact
+  - python
+  - rust
+title: Integrating Rust FFI with Pact Python
+---
 
 In the [forthcoming release of Pact Python version 3](/blog/a-sneak-peek-into-the-pact-python-future), we're excited to be integrating our library with the ['Rust core'](https://github.com/pact-foundation/pact-reference), a Rust-based library that encapsulates Pact's fundamental operations for both consumers and providers. Known for its high performance and safety guarantees, [Rust](https://rust-lang.org) enables us to enhance the robustness and efficiency of our implementation. This move also promises simplified maintenance and scalability for future iterations of both the Pact Python library, and the [broader Pact ecosystem](https://docs.pact.io/diagrams/ecosystem).
 

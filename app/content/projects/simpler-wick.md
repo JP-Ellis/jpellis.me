@@ -1,12 +1,11 @@
-+++
-github = "JP-Ellis/simpler-wick"
-slug = "simpler-wick"
-tagline = "Wick contractions for quantum field theory, made readable"
-title = "simpler-wick"
-
-[activity]
-recent_commits = false
-+++
+---
+activity:
+  recentCommits: false
+github: JP-Ellis/simpler-wick
+slug: simpler-wick
+tagline: Wick contractions for quantum field theory, made readable
+title: simpler-wick
+---
 
 Wick contractions appear in quantum field theory calculations where they connect field operators in time-ordered products to recover propagators. Writing them in LaTeX is tedious with the standard `simplewick` package, which requires manual bracket matching and is sensitive to spacing.
 
