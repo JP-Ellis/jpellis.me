@@ -6,16 +6,16 @@
 //   .eyebrow           — accent colour (default, e.g. "№ 01 / Intro")
 //   .eyebrow--muted    — muted colour (e.g. dates, locations)
 @layer components {
-    .eyebrow {
-        font-family: var(--font-mono);
-        font-size: var(--text-eyebrow-size);
-        letter-spacing: var(--text-eyebrow-tracking);
-        text-transform: uppercase;
-        color: var(--color-accent);
-        line-height: 1.4;
-    }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-eyebrow-size);
+    letter-spacing: var(--text-eyebrow-tracking);
+    text-transform: uppercase;
+    color: var(--color-accent);
+    line-height: 1.4;
+  }
 
-    .eyebrow--muted {
-        color: var(--color-muted);
-    }
+  .eyebrow--muted {
+    color: var(--color-muted);
+  }
 }

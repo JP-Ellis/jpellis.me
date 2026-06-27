@@ -1,9 +1,0 @@
-// Motion tokens — duration and easing custom properties.
-// The prefers-reduced-motion reset lives in base/_reset.scss, not here.
-@layer tokens {
-    :root {
-        --ease-default: cubic-bezier(0.2, 0.7, 0.3, 1);
-        --duration-default: 200ms;
-        --duration-fast: 160ms; // page crossfades
-    }
-}

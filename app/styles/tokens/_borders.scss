@@ -2,8 +2,8 @@
 // --border-width-thick — UI chrome: focus rings, tab indicators, accent borders
 // --radius-sm          — tight corners: inline code, chips, skeletons, focus ring
 @layer tokens {
-    :root {
-        --border-width-thick: 2px; // UI chrome accents; 3px sites consolidated to this value
-        --radius-sm:          2px; // tight corners; 3px sites consolidated to this value
-    }
+  :root {
+    --border-width-thick: 2px; // UI chrome accents; 3px sites consolidated to this value
+    --radius-sm: 2px; // tight corners; 3px sites consolidated to this value
+  }
 }

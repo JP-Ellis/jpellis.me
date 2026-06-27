@@ -1,36 +1,32 @@
 // SCSS @use rules must precede all other rules. The cascade layer ordering
 // declaration lives in _layer-order.scss so it is @used first, ensuring it
 // compiles to the very top of the CSS output before any layer content.
-@use 'layer-order';
+@use "layer-order";
 
 // ── Tokens ────────────────────────────────────────────────────────────
 // _breakpoints.scss contains only SCSS variables (not CSS custom
 // properties) so it is @used by individual component files that need
 // $bp-* values; it produces no CSS output here.
-@use 'tokens/motion';
-@use 'tokens/spacing';
-@use 'tokens/borders';
-@use 'tokens/layout';
-@use 'tokens/typography';
-@use 'tokens/colors';
+@use "tokens/motion";
+@use "tokens/spacing";
+@use "tokens/borders";
+@use "tokens/layout";
+@use "tokens/typography";
+@use "tokens/colors";
 
 // ── Base ──────────────────────────────────────────────────────────────
-@use 'base/reset';
-@use 'base/root';
-@use 'base/typography' as base-type;
+@use "base/reset";
+@use "base/root";
+@use "base/typography" as base-type;
 
 // ── Components ────────────────────────────────────────────────────────
-@use 'components/container';
-@use 'components/eyebrow-grid';
-@use 'components/hairlines';
-@use 'components/eyebrow';
-@use 'components/tags';
-@use 'components/buttons';
-@use 'components/prose';
-@use 'components/prism';
+@use "components/container";
+@use "components/eyebrow-grid";
+@use "components/hairlines";
+@use "components/eyebrow";
+@use "components/tags";
+@use "components/buttons";
+@use "components/prose";
 
 // ── Utilities ─────────────────────────────────────────────────────────
-@use 'utilities/sr-only';
-
-// ── Stylance-generated ─────────────────────────────────────────────────
-@use 'stylance/_index';
+@use "utilities/sr-only";

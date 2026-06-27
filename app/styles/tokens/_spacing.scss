@@ -1,0 +1,16 @@
+// 4px base scale. All padding, margin, and gap values in the codebase
+// must use one of these tokens. When a gap feels wrong for a step,
+// reconsider the layout rather than adding a new value.
+@layer tokens {
+  :root {
+    --space-half: 2px; // micro-spacing for tight adjacent elements
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-7: 56px;
+    --space-8: 96px;
+  }
+}
