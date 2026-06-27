@@ -12,7 +12,7 @@
 "cargo:prek" = "0.4"
 "cargo:typos-cli" = "1"
 "npm:wrangler" = "4"
-"pipx:yamlfix" = "1"
+"pipx:yamlfix" = "1.19.1"
 
 [tasks.format]
 description = "Check formatting (biome, tombi, yamlfix)"
