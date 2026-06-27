@@ -1,0 +1,294 @@
+---
+import type { ActivityItem, GitHubStats } from "../lib/github-stats.ts";
+import {
+  buildGridLevels,
+  dedupCommitsAgainstPrs,
+  timeAgo,
+} from "../lib/year-in-code.ts";
+import Band from "./band.astro";
+import LiveStats from "./live-stats.svelte";
+
+interface Props {
+  stats: GitHubStats;
+}
+
+const MAX_RECENT_COMMITS = 6;
+const MAX_RECENT_ACTIVITY = 4;
+
+const { stats } = Astro.props;
+
+const now = new Date();
+const grid = buildGridLevels(stats);
+
+const dateRange = `${formatPeriod(stats.periodFrom)} — ${formatPeriod(stats.periodTo)}`;
+
+const deduped = dedupCommitsAgainstPrs(stats.recentActivity);
+const commits = deduped
+  .filter((item) => item.kind === "commit")
+  .slice(0, MAX_RECENT_COMMITS);
+const issuesPrs = deduped
+  .filter((item) => item.kind !== "commit")
+  .slice(0, MAX_RECENT_ACTIVITY);
+
+function formatPeriod(dateStr: string): string {
+  const d = new Date(`${dateStr}T00:00:00Z`);
+  return d.toLocaleDateString("en-US", {
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+}
+
+function kindLabel(item: ActivityItem): string {
+  if (item.kind === "pull_request") {
+    return "PR";
+  }
+  if (item.kind === "issue") {
+    return "issue";
+  }
+  return "commit";
+}
+
+function badge(item: ActivityItem): string {
+  const kind = kindLabel(item);
+  if (item.state) {
+    return `[${kind} · ${item.state}]`;
+  }
+  return `[${kind}]`;
+}
+---
+
+<Band testId="year-in-code">
+  <div class="container band-inner">
+    <div class="band-header">
+      <div>
+        <p class="eyebrow">The year in code</p>
+        <LiveStats
+          initial={{
+            commitContributions: stats.commitContributions,
+            prContributions: stats.prContributions,
+            issueContributions: stats.issueContributions,
+            publicRepos: stats.publicRepos,
+          }}
+          client:idle
+        />
+      </div>
+      <span class="date-range">{dateRange}</span>
+    </div>
+
+    <div class="band-intro">
+      Most of what I make is open. The grid below is the truthful version of a
+      résumé — public, dated, and dense in the parts where I was paying
+      attention.
+    </div>
+
+    <div class="commit-grid">
+      {
+        grid.map((col) => (
+          <div class="commit-col" data-testid="commit-col">
+            {col.map((level) => (
+              <span class="commit-cell" data-commit-level={String(level)} />
+            ))}
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="band-latest">
+      <div>
+        <p class="eyebrow latest-label">Latest commits</p>
+        {
+          commits.length === 0 ? (
+            <p class="no-activity">No recent commits.</p>
+          ) : (
+            commits.map((item) => (
+              <div class="commit-row" data-testid="commit-row">
+                <span class="commit-repo">{item.repo}</span>
+                <span class="commit-msg">{item.title}</span>
+                <span class="commit-age">{timeAgo(item.createdAt, now)}</span>
+              </div>
+            ))
+          )
+        }
+      </div>
+      <div>
+        <p class="eyebrow latest-label">Latest issues & PRs</p>
+        {
+          issuesPrs.length === 0 ? (
+            <p class="no-activity">No recent issues or PRs.</p>
+          ) : (
+            issuesPrs.map((item) => (
+              <div class="activity-row" data-testid="activity-row">
+                <div class="activity-repo-wrap">
+                  <span class="commit-repo">{item.repo}</span>
+                  <span class="activity-kind">{badge(item)}</span>
+                </div>
+                <span class="commit-msg">{item.title}</span>
+                <span class="commit-age">{timeAgo(item.createdAt, now)}</span>
+              </div>
+            ))
+          )
+        }
+      </div>
+    </div>
+  </div>
+</Band>
+
+<style lang="scss">
+  @use "../styles/tokens/breakpoints" as *;
+
+  .band-inner {
+    padding-block: var(--space-7);
+  }
+
+  .band-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--space-4);
+
+    @media (max-width: $bp-md) {
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+  }
+
+  .date-range {
+    font-family: var(--font-mono);
+    font-size: var(--text-eyebrow-size);
+    color: var(--color-muted);
+  }
+
+  .band-intro {
+    margin-bottom: var(--space-5);
+    max-width: 65ch;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-leading);
+    color: color-mix(in oklch, var(--color-ink) 85%, transparent);
+  }
+
+  .commit-grid {
+    display: flex;
+    gap: var(--space-half);
+    overflow-x: auto;
+    justify-content: center;
+  }
+
+  .commit-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-half);
+    flex-shrink: 0;
+  }
+
+  .commit-cell {
+    width: 13px;
+    height: 13px;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+
+    &[data-commit-level="0"] {
+      background: var(--color-faint);
+    }
+    &[data-commit-level="1"] {
+      background: color-mix(in oklch, var(--color-accent-soft) 28%, transparent);
+    }
+    &[data-commit-level="2"] {
+      background: color-mix(in oklch, var(--color-accent-soft) 55%, transparent);
+    }
+    &[data-commit-level="3"] {
+      background: color-mix(in oklch, var(--color-accent-soft) 80%, transparent);
+    }
+    &[data-commit-level="4"] {
+      background: var(--color-accent-soft);
+    }
+  }
+
+  .band-latest {
+    margin-top: var(--space-6);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-7);
+
+    @media (max-width: $bp-md) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .latest-label {
+    margin-bottom: var(--space-3);
+  }
+
+  .commit-row {
+    display: grid;
+    grid-template-columns: minmax(0, 160px) 1fr 40px;
+    gap: var(--space-3);
+    padding-block: var(--space-3);
+    border-top: 1px solid var(--color-faint);
+    align-items: baseline;
+
+    @media (max-width: $bp-md) {
+      grid-template-columns: 1fr 40px;
+      gap: var(--space-2);
+    }
+  }
+
+  .activity-row {
+    display: grid;
+    grid-template-columns: minmax(0, 160px) 1fr 40px;
+    gap: var(--space-3);
+    padding-block: var(--space-3);
+    border-top: 1px solid var(--color-faint);
+    align-items: start;
+
+    @media (max-width: $bp-md) {
+      grid-template-columns: 1fr 40px;
+      gap: var(--space-2);
+    }
+  }
+
+  .activity-repo-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-half);
+    overflow: hidden;
+  }
+
+  .commit-repo {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    color: var(--color-accent-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .activity-kind {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    color: var(--color-accent-soft);
+    opacity: 0.75;
+  }
+
+  .commit-msg {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .commit-age {
+    font-family: var(--font-mono);
+    font-size: var(--text-eyebrow-size);
+    color: var(--color-muted);
+    text-align: right;
+  }
+
+  .no-activity {
+    padding-block: var(--space-3);
+    border-top: 1px solid var(--color-faint);
+    font-size: var(--text-body-size);
+    color: var(--color-muted);
+  }
+</style>

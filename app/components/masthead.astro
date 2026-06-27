@@ -1,0 +1,152 @@
+---
+import { toRoman } from "../lib/roman.ts";
+
+const NAV = [
+  { label: "Index", path: "/" },
+  { label: "Projects", path: "/projects" },
+  { label: "Résumé", path: "/resume" },
+  { label: "Blog", path: "/blog" },
+  { label: "Contact", path: "/contact" },
+] as const;
+
+const { pathname } = Astro.url;
+
+const now = new Date();
+const clockText = [
+  toRoman(now.getDate()),
+  toRoman(now.getMonth() + 1),
+  toRoman(now.getFullYear()),
+].join(" · ");
+---
+<header class="masthead">
+  <a href="/" class="logo">Joshua <em>Ellis</em></a>
+  <nav class="nav" aria-label="Site">
+    {NAV.map(({ label, path }) => {
+      const isActive = pathname === path;
+      return (
+        <a
+          href={path}
+          class:list={["nav-link", { "nav-link-active": isActive }]}
+          aria-current={isActive ? "page" : undefined}
+        >
+          {label}
+        </a>
+      );
+    })}
+  </nav>
+  <span class="volume" data-clock>{clockText}</span>
+</header>
+
+<style lang="scss">
+  @use '../styles/tokens/breakpoints' as *;
+  @use '../styles/mixins/focus';
+
+  .masthead {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-top);
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: var(--space-3);
+    justify-content: space-between;
+    align-items: baseline;
+    padding-block: var(--space-5) var(--space-4);
+    padding-inline: var(--gutter-page-mobile);
+    background-color: var(--color-paper);
+    border-bottom: 1px solid var(--color-ink);
+
+    @media (min-width: $bp-lg) {
+      padding-inline: var(--gutter-page);
+    }
+  }
+
+  .logo {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    text-decoration: none;
+    color: var(--color-ink);
+
+    em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--color-muted);
+    }
+  }
+
+  .nav {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+
+    @media (min-width: $bp-md) {
+      gap: var(--space-6);
+      flex-wrap: nowrap;
+    }
+  }
+
+  .nav-link {
+    font-family: var(--font-body);
+    font-size: var(--text-body-size);
+    color: var(--color-muted);
+    text-decoration: none;
+    padding-bottom: var(--space-half);
+
+    &:hover {
+      color: var(--color-ink);
+    }
+
+    &:focus-visible {
+      @include focus.focus-ring;
+    }
+  }
+
+  .nav-link-active {
+    color: var(--color-ink);
+    border-bottom: 1px solid var(--color-accent);
+  }
+
+  .volume {
+    font-family: var(--font-mono);
+    font-size: var(--text-eyebrow-size);
+    color: var(--color-muted);
+    letter-spacing: var(--text-eyebrow-tracking);
+
+    @media (max-width: $bp-md) {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import { toRoman } from "../lib/roman";
+
+  function formatTime(): string {
+    const now = new Date();
+    const h = now.getHours();
+    const m = now.getMinutes();
+    const s = now.getSeconds();
+
+    const secRoman = toRoman(s);
+    const padding = " ".repeat(Math.max(0, 7 - [...secRoman].length));
+
+    return `${toRoman(h)} · ${toRoman(m)} · ${secRoman}${padding}`;
+  }
+
+  let clockTimer: ReturnType<typeof setInterval> | undefined;
+
+  function startClock() {
+    const clockEl = document.querySelector("[data-clock]");
+    if (!clockEl) {
+      return;
+    }
+    clockEl.textContent = formatTime();
+    clearInterval(clockTimer);
+    clockTimer = setInterval(() => {
+      clockEl.textContent = formatTime();
+    }, 1000);
+  }
+
+  document.addEventListener("astro:page-load", startClock);
+</script>
