@@ -1,3 +1,6 @@
+[files]
+extend-exclude = ["aube-lock.yaml"]
+
 [default]
 extend-ignore-re = [
   # Ignore lines that end with `# spellchecker:ignore`

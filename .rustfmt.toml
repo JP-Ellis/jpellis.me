@@ -1,6 +1,0 @@
-#:schema https://json.schemastore.org/rustfmt.json
-
-unstable_features = true
-group_imports = "StdExternalCrate"
-imports_granularity = "Item"
-reorder_imports = true

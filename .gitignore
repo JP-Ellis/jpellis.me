@@ -1,26 +1,17 @@
-# Rust / Cargo
-/target/
-Cargo.lock
-
-# cargo-leptos output
-/pkg/
-
 # Cloudflare Workers
 /.wrangler/
 /dist/
 /.dev.vars
 
-# Stylance generated
-/style/stylance/
-
-# Leptos
-.leptos_*
-
-# Node (e2e)
+# Node
+node_modules/
 e2e/node_modules/
 e2e/playwright-report/
 e2e/test-results/
 e2e/.auth/
+
+# Astro
+.astro/
 
 # mise
 .mise.local.toml
@@ -41,12 +32,3 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
-
-# MARK: Generated favicons (run ./scripts/generate-favicons.rs to regenerate)
-/public/favicon.ico
-/public/favicon-16x16.png
-/public/favicon-32x32.png
-/public/apple-touch-icon.png
-/public/android-chrome-192x192.png
-/public/android-chrome-512x512.png
-/public/mstile-150x150.png

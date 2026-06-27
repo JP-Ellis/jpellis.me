@@ -17,7 +17,7 @@ rev = "v6.0.0"
 hooks = [
   { id = "check-added-large-files" },
   { id = "check-case-conflict" },
-  { id = "check-shebang-scripts-are-executable", exclude = "\\.rs$" },
+  { id = "check-shebang-scripts-are-executable" },
   { id = "check-symlinks" },
   { id = "check-toml" },
   { id = "check-xml" },
@@ -37,7 +37,7 @@ hooks = [
 
 [[repos]]
 repo = "https://github.com/biomejs/pre-commit"
-rev = "v2.4.12"
+rev = "v2.5.1"
 hooks = [
   { id = "biome-check" },
 ]
@@ -85,31 +85,3 @@ rev = "v1.1.11"
 hooks = [
   { id = "committed" },
 ]
-
-[[repos]]
-repo = "local"
-
-  [[repos.hooks]]
-  id = "cargo-fmt"
-  name = "cargo fmt + leptosfmt"
-  entry = "mise run format:fix"
-  language = "system"
-  types = ["rust"]
-  pass_filenames = false
-
-  [[repos.hooks]]
-  id = "cargo-clippy"
-  name = "cargo clippy"
-  entry = "mise run lint"
-  language = "system"
-  types = ["rust"]
-  pass_filenames = false
-
-  [[repos.hooks]]
-  id = "cargo-machete"
-  name = "cargo machete"
-  entry = "mise run machete"
-  language = "system"
-  types = ["rust"]
-  pass_filenames = false
-  stages = ["pre-push"]
