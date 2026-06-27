@@ -1,0 +1,15 @@
+<!--
+  Google Analytics (gtag.js). Progressive enhancement only — analytics never
+  gates content. Scripts are `is:inline` so Astro emits the standard snippet
+  verbatim instead of bundling it as a module.
+-->
+<link rel="preconnect" href="https://www.googletagmanager.com" />
+<script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-61L6SG44K6"></script>
+<script is:inline>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+  gtag("config", "G-61L6SG44K6");
+</script>

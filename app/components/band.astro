@@ -1,0 +1,34 @@
+---
+interface Props {
+  testId?: string;
+}
+
+const { testId } = Astro.props;
+---
+<section class="band" data-testid={testId || undefined}>
+  <slot />
+</section>
+
+<style lang="scss">
+  @use '../styles/tokens/colors' as *;
+
+  .band {
+    @include theme-dark;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .band {
+      @include theme-light;
+    }
+  }
+
+  :global([data-theme="light"]) .band {
+    @include theme-dark;
+  }
+
+  :global([data-theme="dark"]) .band {
+    @include theme-light;
+  }
+</style>
