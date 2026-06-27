@@ -1,0 +1,136 @@
+{
+  "commitContributions": 1762,
+  "prContributions": 465,
+  "issueContributions": 74,
+  "publicRepos": 32,
+  "recentActivity": [
+    {
+      "kind": "commit",
+      "repo": "pactflow/example-consumer-webhookless",
+      "title": "refactor: resolve Biome lints under preset:all without blanket overrides",
+      "url": "https://github.com/pactflow/example-consumer-webhookless/commit/552b7c112bed44e6c612fd70583ae9a2a03d5e5e",
+      "state": null,
+      "createdAt": "2026-06-26T11:40:33.000Z"
+    },
+    {
+      "kind": "pull_request",
+      "repo": "pact-foundation/pact-cli",
+      "title": "chore(ci): fix docker publish script",
+      "url": "https://github.com/pact-foundation/pact-cli/pull/93",
+      "state": "merged",
+      "createdAt": "2026-06-26T11:38:13Z"
+    },
+    {
+      "kind": "commit",
+      "repo": "pact-foundation/pact-cli",
+      "title": "chore(ci): fix docker publish script",
+      "url": "https://github.com/pact-foundation/pact-cli/commit/d6a70552f931c17c3e277652c3302aa22e4c38be",
+      "state": null,
+      "createdAt": "2026-06-26T11:36:50.000Z"
+    },
+    {
+      "kind": "pull_request",
+      "repo": "pact-foundation/pact-broker-cli",
+      "title": "chore(ci): fix docker publish script",
+      "url": "https://github.com/pact-foundation/pact-broker-cli/pull/112",
+      "state": "merged",
+      "createdAt": "2026-06-26T11:35:46Z"
+    },
+    {
+      "kind": "commit",
+      "repo": "pact-foundation/pact-broker-cli",
+      "title": "chore(ci): fix docker publish script",
+      "url": "https://github.com/pact-foundation/pact-broker-cli/commit/7bba6f7d80d66fe842fe45c9fe28b422c087c0cb",
+      "state": null,
+      "createdAt": "2026-06-26T11:35:07.000Z"
+    },
+    {
+      "kind": "pull_request",
+      "repo": "pact-foundation/pact-cli",
+      "title": "chore(ci): fix container job permissions",
+      "url": "https://github.com/pact-foundation/pact-cli/pull/92",
+      "state": "merged",
+      "createdAt": "2026-06-26T09:36:35Z"
+    },
+    {
+      "kind": "commit",
+      "repo": "pact-foundation/pact-cli",
+      "title": "chore(ci): fix container job permissions",
+      "url": "https://github.com/pact-foundation/pact-cli/commit/cb56189ebe6b49ba5ae043c60efdf59e583a3607",
+      "state": null,
+      "createdAt": "2026-06-26T09:36:03.000Z"
+    },
+    {
+      "kind": "pull_request",
+      "repo": "pact-foundation/pact-broker-cli",
+      "title": "chore(ci): fix container job permissions",
+      "url": "https://github.com/pact-foundation/pact-broker-cli/pull/110",
+      "state": "merged",
+      "createdAt": "2026-06-26T09:30:43Z"
+    },
+    {
+      "kind": "commit",
+      "repo": "pact-foundation/pact-broker-cli",
+      "title": "chore(ci): fix container job permissions",
+      "url": "https://github.com/pact-foundation/pact-broker-cli/commit/9098cd09bd1b0f35ade45a8bb0eb761124f4109a",
+      "state": null,
+      "createdAt": "2026-06-26T09:30:06.000Z"
+    },
+    {
+      "kind": "commit",
+      "repo": "JP-Ellis/jpellis.me",
+      "title": "fix(deps): unblock wasm32 SSR build",
+      "url": "https://github.com/JP-Ellis/jpellis.me/commit/bc1c7dd5891c1c67e30343d0e29b4e4db8536f6f",
+      "state": null,
+      "createdAt": "2026-06-25T09:14:16.000Z"
+    },
+    {
+      "kind": "commit",
+      "repo": "pact-foundation/pact-cli",
+      "title": "chore(ci): remove release-gate",
+      "url": "https://github.com/pact-foundation/pact-cli/commit/b5cd4837ecdd80476d563563748eb8bd05bb3b92",
+      "state": null,
+      "createdAt": "2026-06-25T03:20:21.000Z"
+    },
+    {
+      "kind": "commit",
+      "repo": "pact-foundation/pact-cli",
+      "title": "docs: use tags for pact-cli action",
+      "url": "https://github.com/pact-foundation/pact-cli/commit/21372931a56cea625200c2d49acaf36aaabb03e3",
+      "state": null,
+      "createdAt": "2026-06-24T22:03:38.000Z"
+    },
+    {
+      "kind": "commit",
+      "repo": "pact-foundation/pact-cli",
+      "title": "fix(ci): use relative path for local action",
+      "url": "https://github.com/pact-foundation/pact-cli/commit/c3e259b675081b84c71aa05e4f04cc4cf9311e3a",
+      "state": null,
+      "createdAt": "2026-06-24T22:02:39.000Z"
+    },
+    {
+      "kind": "commit",
+      "repo": "pact-foundation/pact-cli",
+      "title": "chore(deps): update actions/checkout action to v7",
+      "url": "https://github.com/pact-foundation/pact-cli/commit/bc95b59508b3a6cb8403476c23e06f929bffd93e",
+      "state": null,
+      "createdAt": "2026-06-24T07:37:16.000Z"
+    },
+    {
+      "kind": "commit",
+      "repo": "pact-foundation/pact-cli",
+      "title": "chore(ci): ignore generated release.yml file",
+      "url": "https://github.com/pact-foundation/pact-cli/commit/d6452a8737bc6b22f8d8236b64130670c1bff168",
+      "state": null,
+      "createdAt": "2026-06-24T07:27:41.000Z"
+    },
+    {
+      "kind": "commit",
+      "repo": "pact-foundation/pact-cli",
+      "title": "docs: rewrite the installation section",
+      "url": "https://github.com/pact-foundation/pact-cli/commit/d6da2cc85fa025d5cb93027274e933697d0a9bbb",
+      "state": null,
+      "createdAt": "2026-06-23T02:08:35.000Z"
+    }
+  ]
+}
