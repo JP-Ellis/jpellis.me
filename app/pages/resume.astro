@@ -1,0 +1,367 @@
+---
+import Band from "../components/band.astro";
+import Base from "../layouts/base.astro";
+import { loadResume } from "../lib/resume.ts";
+
+export const prerender = true;
+
+const { roles, publications, honours } = loadResume();
+const featuredRole = roles.find((r) => r.featured === true) ?? roles[0];
+const rest = roles.filter((r) => r.featured !== true);
+---
+
+<Base title="Résumé">
+  <main>
+    <!-- MARK: Hero -->
+    <section class="hero">
+      <div class="container">
+        <p class="eyebrow">Résumé</p>
+        <h1>
+          A working <em>history</em> — fifteen years between <span
+            class="hero_accent">physics</span
+          > and software.
+        </h1>
+        <p class="hero_lead">Reverse-chronological.</p>
+      </div>
+    </section>
+
+    <!-- MARK: Featured role -->
+    <Band>
+      <div class="container">
+        <div class="band_inner">
+          <div class="band_header">
+            <div>
+              <span class="eyebrow">Now</span>
+              <p class="band_title">
+                {featuredRole.title} at <em>{featuredRole.org}</em>.
+              </p>
+            </div>
+            <span class="band_date"
+              >{featuredRole.from} — {featuredRole.to}</span
+            >
+          </div>
+          <div class="featured_inner">
+            <p class="featured_body">{featuredRole.body}</p>
+            <div class="featured_tags">
+              {featuredRole.tags.map((tag) => <span class="tag tag--pill">{tag}</span>)}
+            </div>
+          </div>
+        </div>
+      </div>
+    </Band>
+
+    <!-- MARK: Timeline -->
+    <section class="timeline_section">
+      <div class="container">
+        <div class="eyebrow-grid">
+          <span class="eyebrow">Earlier</span>
+          <div>
+            {
+              rest.map((role, i) => (
+                <div class={`timeline_row ${i === 0 ? "rule-section" : "rule-list"}`}>
+                  <div class="date_col">
+                    <div class="date_from">{role.from}</div>
+                    <div class="date_arrow" aria-hidden="true">↓</div>
+                    <div class="date_to">{role.to}</div>
+                    <div class="date_loc">{role.loc}</div>
+                  </div>
+                  <div>
+                    <div class="role_org eyebrow--muted">{role.org}</div>
+                    <h3>{role.title}</h3>
+                    <p class="role_sub">{role.sub}</p>
+                  </div>
+                  <div>
+                    <p class="role_body">{role.body}</p>
+                    <div class="role_tags">
+                      {role.tags.map((tag) => (
+                        <span class="tag tag--hash">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MARK: Publications -->
+    <section class="publications_section">
+      <div class="container">
+        <div class="eyebrow-grid">
+          <span class="eyebrow">Publications</span>
+          <div>
+            {
+              publications.map((pub, i) => (
+                <div class={`publication_row ${i === 0 ? "rule-section" : "rule-list"}`}>
+                  <span class="pub_year">{pub.year}</span>
+                  <div>
+                    <p class="pub_authors">{pub.authors}</p>
+                    <p class="pub_title">{pub.title}</p>
+                    <p class="pub_journal">{pub.journal}</p>
+                    <div class="pub_links">
+                      {pub.doi && (
+                        <a
+                          href={`https://doi.org/${pub.doi}`}
+                          class="btn"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          ↗ doi
+                        </a>
+                      )}
+                      {pub.arxiv && (
+                        <a
+                          href={`https://arxiv.org/abs/${pub.arxiv}`}
+                          class="btn"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          ↗ arXiv
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MARK: Honours -->
+    <section class="honours_section">
+      <div class="container">
+        <div class="eyebrow-grid">
+          <span class="eyebrow">Honours &amp; Awards</span>
+          <div>
+            {
+              honours.map((h, i) => (
+                <div class={`honour_row ${i === 0 ? "rule-section" : "rule-list"}`}>
+                  <span class="eyebrow--muted">{h.year}</span>
+                  <span>{h.award}</span>
+                  <span class="eyebrow--muted">{h.org}</span>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<style lang="scss">
+  @use "../styles/tokens/breakpoints" as *;
+
+  // MARK: Hero
+  .hero {
+    padding-block: var(--space-8) var(--space-7);
+  }
+
+  .hero_lead {
+    font-size: var(--text-lead-size);
+    line-height: var(--text-lead-leading);
+    color: var(--color-muted);
+    max-width: 760px;
+    margin-top: var(--space-5);
+  }
+
+  .hero_accent {
+    color: var(--color-accent);
+  }
+
+  // MARK: Band
+  .band_inner {
+    padding-block: var(--space-7);
+  }
+
+  .band_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--space-5);
+    margin-bottom: var(--space-3);
+  }
+
+  .band_title {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: var(--text-section-size);
+    letter-spacing: var(--text-section-tracking);
+    line-height: var(--text-section-leading);
+    margin: var(--space-2) 0 0;
+  }
+
+  .band_date {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    letter-spacing: var(--text-meta-tracking);
+    color: var(--color-muted);
+    white-space: nowrap;
+  }
+
+  // MARK: Featured role
+  .featured_inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    margin-top: var(--space-5);
+
+    @media (min-width: $bp-md) {
+      grid-template-columns: 3fr 2fr;
+    }
+  }
+
+  .featured_body {
+    font-size: var(--text-lead-size);
+    line-height: var(--text-lead-leading);
+    margin: 0;
+  }
+
+  .featured_tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-content: flex-start;
+  }
+
+  // MARK: Timeline
+  .timeline_section {
+    padding-block: var(--space-7) 0;
+  }
+
+  .timeline_row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    padding-block: var(--space-5);
+    align-items: baseline;
+
+    @media (min-width: $bp-md) {
+      grid-template-columns: 160px 1.2fr 1.6fr;
+      gap: var(--space-6);
+    }
+  }
+
+  .date_col {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    line-height: 1.6;
+  }
+
+  .date_from,
+  .date_to {
+    color: var(--color-ink);
+  }
+
+  .date_arrow,
+  .date_loc {
+    color: var(--color-muted);
+  }
+
+  .date_loc {
+    margin-top: var(--space-3);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: var(--text-eyebrow-size);
+  }
+
+  .role_org {
+    margin-bottom: var(--space-2);
+  }
+
+  .role_sub {
+    font-style: italic;
+    color: var(--color-muted);
+    margin: var(--space-1) 0 0;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-leading);
+  }
+
+  .role_body {
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-leading);
+    margin: 0 0 var(--space-3);
+  }
+
+  .role_tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  // MARK: Publications
+  .publications_section {
+    padding-block: var(--space-7);
+  }
+
+  .publication_row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    padding-block: var(--space-4);
+    align-items: baseline;
+
+    @media (min-width: $bp-md) {
+      grid-template-columns: 64px 1fr;
+      gap: var(--space-5);
+    }
+  }
+
+  .pub_year {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    letter-spacing: var(--text-meta-tracking);
+    color: var(--color-muted);
+  }
+
+  .pub_authors {
+    font-family: var(--font-mono);
+    font-size: var(--text-eyebrow-size);
+    letter-spacing: var(--text-eyebrow-tracking);
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin: 0 0 var(--space-2);
+  }
+
+  .pub_title {
+    font-style: italic;
+    margin: 0 0 var(--space-2);
+  }
+
+  .pub_journal {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    letter-spacing: var(--text-meta-tracking);
+    color: var(--color-muted);
+    margin: 0 0 var(--space-3);
+  }
+
+  .pub_links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  // MARK: Honours
+  .honours_section {
+    padding-block: var(--space-7);
+  }
+
+  .honour_row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    padding-block: var(--space-3);
+    align-items: baseline;
+
+    @media (min-width: $bp-md) {
+      grid-template-columns: 64px 1fr 1fr;
+      gap: var(--space-5);
+    }
+  }
+</style>

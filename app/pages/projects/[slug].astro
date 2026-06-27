@@ -1,0 +1,361 @@
+---
+import { getEntry, render } from "astro:content";
+import { PROJECTS } from "../../data/projects.ts";
+import Base from "../../layouts/base.astro";
+import {
+  fallbackProjectStats,
+  fetchProjectStats,
+} from "../../lib/github-projects.ts";
+import {
+  formatRelativeDate,
+  formatShortDate,
+  formatStars,
+} from "../../lib/projects.ts";
+import { readWithSWR } from "../../lib/stats-cache.ts";
+
+export const prerender = false;
+
+const PROJECTS_STATS_MAX_AGE_MS = 604_800_000;
+
+const { slug } = Astro.params;
+const entry = await getEntry("projects", slug ?? "");
+
+if (!entry) {
+  return Astro.redirect("/404");
+}
+
+const { title, tagline, github, activity } = entry.data;
+const { Content } = await render(entry);
+
+const trackedSlugs = PROJECTS.filter((e) => e.link?.kind === "github").map(
+  (e) => (e.link as { kind: "github"; slug: string }).slug,
+);
+
+async function loadProjectStats() {
+  try {
+    const { env } = await import("cloudflare:workers");
+    if (!env?.PROJECTS_STATS) {
+      return fallbackProjectStats();
+    }
+    const ctx = Astro.locals?.cfContext;
+    const waitUntil = ctx?.waitUntil?.bind(ctx) ?? (() => undefined);
+    const { data } = await readWithSWR({
+      kv: env.PROJECTS_STATS,
+      key: "github/projects",
+      maxAgeMs: PROJECTS_STATS_MAX_AGE_MS,
+      refresh: () => fetchProjectStats(env.GITHUB_TOKEN, trackedSlugs),
+      waitUntil,
+    });
+    return data && data.repos.length > 0 ? data : fallbackProjectStats();
+  } catch {
+    return fallbackProjectStats();
+  }
+}
+
+const projectStats = await loadProjectStats();
+const repo = projectStats.repos.find((r) => r.slug === github);
+
+const now = new Date();
+
+const showRelease =
+  activity.release && repo !== undefined && repo.latestRelease !== null;
+const showPrs =
+  activity.openPrs && repo !== undefined && (repo.openPrs ?? 0) > 0;
+const showCommits =
+  activity.recentCommits &&
+  repo !== undefined &&
+  (repo.recentCommits?.length ?? 0) > 0;
+
+const prLabel =
+  repo?.openPrs === 1 ? "1 open PR" : `${repo?.openPrs ?? 0} open PRs`;
+---
+
+<Base title={title} description={tagline}>
+  <main>
+    <section class="hero">
+      <div class="container">
+        <p class="eyebrow">Projects</p>
+        <h1>{title}</h1>
+        <p class="tagline">{tagline}</p>
+        <a
+          href={`https://github.com/${github}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="github_link"
+        >
+          View on GitHub ↗
+        </a>
+      </div>
+    </section>
+
+    <section class="stats_section">
+      <div class="container">
+        <div class="stats_grid">
+          <div class="chips">
+            <dl class="chip">
+              <dt class="chip_label">stars</dt>
+              <dd class="chip_value">{formatStars(repo?.stars ?? 0)}</dd>
+            </dl>
+            <dl class="chip">
+              <dt class="chip_label">forks</dt>
+              <dd class="chip_value">{repo?.forks ?? "—"}</dd>
+            </dl>
+            <dl class="chip">
+              <dt class="chip_label">watchers</dt>
+              <dd class="chip_value">{repo?.watchers ?? "—"}</dd>
+            </dl>
+            <dl class="chip">
+              <dt class="chip_label">open issues</dt>
+              <dd class="chip_value">{repo?.openIssues ?? "—"}</dd>
+            </dl>
+            {showRelease && repo?.latestRelease && (
+              <dl class="chip">
+                <dt class="chip_label">latest release</dt>
+                <dd class="chip_value">
+                  <a
+                    href={repo.latestRelease.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="chip_value_link"
+                  >
+                    {repo.latestRelease.tag} · {formatShortDate(repo.latestRelease.date)}
+                  </a>
+                </dd>
+              </dl>
+            )}
+            {showPrs && (
+              <dl class="chip">
+                <dt class="chip_label">pull requests</dt>
+                <dd class="chip_value">{prLabel}</dd>
+              </dl>
+            )}
+          </div>
+
+          {showCommits && repo?.recentCommits && (
+            <div class="commits">
+              <p class="commits_heading">Recent commits</p>
+              <ul class="commit_list">
+                {repo.recentCommits.map((c) => (
+                  <li class="commit_item">
+                    <a
+                      href={c.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="commit_sha"
+                      title={c.message}
+                    >
+                      {c.sha}
+                    </a>
+                    <span class="commit_message">{c.message}</span>
+                    <span class="commit_meta">
+                      {c.author} · {formatRelativeDate(c.date, now)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+
+    <section class="prose_section">
+      <div class="container container--prose">
+        <div class="prose">
+          <Content />
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<style lang="scss">
+  @use "../../styles/tokens/breakpoints" as *;
+  @use "../../styles/mixins/focus" as *;
+
+  // MARK: Hero
+  .hero {
+    padding: var(--space-7) 0 var(--space-6);
+  }
+
+  .tagline {
+    font-size: var(--text-lead-size);
+    line-height: var(--text-lead-leading);
+    color: var(--color-muted);
+    max-width: 52ch;
+    margin-top: var(--space-3);
+  }
+
+  .github_link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+    font-size: var(--text-body-size);
+    font-weight: 500;
+    color: var(--color-accent);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+  }
+
+  // MARK: Stats section
+  .stats_section {
+    border-top: 1px solid var(--color-rule);
+    border-bottom: 1px solid var(--color-rule);
+    padding: var(--space-6) 0;
+  }
+
+  .stats_grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+
+    @media (min-width: $bp-md) {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+  }
+
+  // MARK: Stat chips
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-5);
+    align-content: start;
+  }
+
+  .chip {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 4rem;
+    margin: 0;
+  }
+
+  .chip_value {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-style: italic;
+    font-size: var(--text-lead-size);
+    line-height: 1;
+    color: var(--color-ink);
+    margin: 0;
+  }
+
+  .chip_value_link {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-style: italic;
+    font-size: var(--text-lead-size);
+    line-height: 1;
+    color: var(--color-accent);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+  }
+
+  .chip_label {
+    font-size: var(--text-meta-size);
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  // MARK: Commits
+  .commits {
+    display: none;
+
+    @media (min-width: $bp-md) {
+      display: block;
+    }
+  }
+
+  .commits_heading {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-muted);
+    margin: 0 0 var(--space-4);
+  }
+
+  .commit_list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .commit_item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    column-gap: var(--space-3);
+    row-gap: var(--space-1);
+  }
+
+  .commit_sha {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    color: var(--color-accent);
+    text-decoration: none;
+    grid-row: 1;
+    grid-column: 1;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+  }
+
+  .commit_message {
+    font-size: var(--text-meta-size);
+    color: var(--color-ink);
+    grid-row: 1;
+    grid-column: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .commit_meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    color: var(--color-muted);
+    grid-row: 2;
+    grid-column: 1 / -1;
+  }
+
+  // MARK: Prose section
+  .prose_section {
+    padding: var(--space-8) 0;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :global(.invert-dark) {
+      filter: invert(1);
+    }
+  }
+
+  [data-theme="dark"] :global(.invert-dark) {
+    filter: invert(1);
+  }
+</style>

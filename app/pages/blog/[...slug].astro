@@ -1,0 +1,109 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getCollection, render } from "astro:content";
+import type { GetStaticPathsResult } from "astro";
+import Base from "../../layouts/base.astro";
+import { formatDate, sourceDomain } from "../../lib/blog.ts";
+
+export async function getStaticPaths(): Promise<GetStaticPathsResult> {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { entry: post },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<"blog">;
+}
+
+const { entry } = Astro.props as Props;
+const { title, description, source, tags, date } = entry.data;
+const { Content } = await render(entry);
+
+const isoDate = date.toISOString().slice(0, 10);
+---
+
+<Base title={title} description={description ?? ""}>
+  {source && <link slot="head" rel="canonical" href={source} />}
+  <main>
+    <article class="article">
+      <div class="container container--prose">
+        <a href="/blog" class="back_link">← All posts</a>
+        {
+          source && (
+            <p class="crosspost_banner">
+              Originally published on{" "}
+              <a href={source} target="_blank" rel="noopener noreferrer">
+                {sourceDomain(source) ?? source}
+              </a>
+            </p>
+          )
+        }
+        <header class="post_header">
+          <h1 class="post_heading">{title}</h1>
+          <div class="post_meta">
+            <time datetime={isoDate}>{formatDate(isoDate)}</time>
+            {
+              tags.length > 0 && (
+                <>
+                  <span>·</span>
+                  {tags.map((tag: string) => (
+                    <span class="tag tag--hash">{tag}</span>
+                  ))}
+                </>
+              )
+            }
+          </div>
+        </header>
+        <div class="prose">
+          <Content />
+        </div>
+      </div>
+    </article>
+  </main>
+</Base>
+
+<style lang="scss">
+  @use "../../styles/mixins/focus" as *;
+
+  .article {
+    padding-block: var(--space-7) var(--space-8);
+  }
+
+  .back_link {
+    display: inline-block;
+    margin-bottom: var(--space-5);
+    font-size: var(--text-meta-size);
+
+    &:focus-visible {
+      @include focus-ring(var(--space-half));
+    }
+  }
+
+  .crosspost_banner {
+    font-size: var(--text-meta-size);
+    color: var(--color-muted);
+    margin-bottom: var(--space-5);
+    padding: var(--space-3) var(--space-4);
+    border-left: var(--border-width-thick) solid var(--color-accent);
+  }
+
+  .post_header {
+    margin-bottom: var(--space-6);
+  }
+
+  .post_heading {
+    font-size: var(--text-section-size);
+    margin-bottom: var(--space-2);
+  }
+
+  .post_meta {
+    font-size: var(--text-meta-size);
+    color: var(--color-muted);
+    display: flex;
+    gap: var(--space-4);
+    align-items: center;
+    flex-wrap: wrap;
+  }
+</style>

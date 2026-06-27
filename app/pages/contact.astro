@@ -1,0 +1,227 @@
+---
+import Band from "../components/band.astro";
+import Base from "../layouts/base.astro";
+
+export const prerender = true;
+
+const EMAIL = "website@jpellis.me";
+// biome-ignore lint/security/noSecrets: public PGP fingerprint, not a secret
+const PGP_FINGERPRINT = "AA152D8F537EE25D3AC2FADCF162288C8BA20FCE";
+
+const pgpUrl = `https://keys.openpgp.org/vks/v1/by-fingerprint/${PGP_FINGERPRINT}`;
+const PGP_GROUP_SIZE = 4;
+const pgpDisplay = PGP_FINGERPRINT.split("")
+  .map((c, i) => {
+    if (i % PGP_GROUP_SIZE === 0 && i !== 0) {
+      return ` ${c}`;
+    }
+    return c;
+  })
+  .join("");
+---
+
+<Base title="Contact · JP Ellis">
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container">
+        <p class="eyebrow">Contact</p>
+        <h1>The best way to reach me is <em class="hero_accent">email</em></h1>
+        <p class="hero_lead">
+          I read everything that lands in my inbox; I don't always reply quickly, but I do usually reply.
+        </p>
+      </div>
+    </section>
+
+    <!-- Email band -->
+    <Band>
+      <div class="container">
+        <div class="band_inner">
+          <span class="eyebrow">Write to</span>
+          <p class="email_display">
+            <span>
+              <span class="local">website</span><span class="at">@</span><span class="domain">jpellis</span><span class="tld">.me</span>
+            </span>
+          </p>
+          <div class="band_actions">
+            <a href={`mailto:${EMAIL}`} class="btn">↗ open in mail client</a>
+            <noscript><style>.copy-btn { display: none; }</style></noscript>
+            <button class="btn copy-btn" data-email={EMAIL}>copy address</button>
+            <a href={pgpUrl} class="pgp" target="_blank" rel="noopener noreferrer">
+              pgp · {pgpDisplay}
+            </a>
+          </div>
+        </div>
+      </div>
+    </Band>
+
+    <!-- Elsewhere -->
+    <section class="elsewhere_section">
+      <div class="container">
+        <span class="eyebrow">Or, elsewhere</span>
+        <div class="channel_grid">
+          <div class="channel_card">
+            <span class="eyebrow--muted">Email</span>
+            <a href="mailto:website@jpellis.me" class="channel_handle">website@jpellis.me</a>
+            <p class="channel_desc">preferred</p>
+          </div>
+          <div class="channel_card">
+            <span class="eyebrow--muted">GitHub</span>
+            <a href="https://github.com/JP-Ellis" class="channel_handle" target="_blank" rel="noopener noreferrer">github.com/JP-Ellis</a>
+            <p class="channel_desc">where most of the work lives</p>
+          </div>
+          <div class="channel_card">
+            <span class="eyebrow--muted">LinkedIn</span>
+            <a href="https://linkedin.com/in/joshuapellis" class="channel_handle" target="_blank" rel="noopener noreferrer">linkedin.com/in/joshuapellis</a>
+            <p class="channel_desc">for recruiting conversations</p>
+          </div>
+          <div class="channel_card">
+            <span class="eyebrow--muted">ORCID</span>
+            <a href="https://orcid.org/0000-0003-2556-1536" class="channel_handle" target="_blank" rel="noopener noreferrer">0000-0003-2556-1536</a>
+            <p class="channel_desc">for the academic side</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- A note -->
+    <section class="note_section">
+      <div class="container">
+        <div class="eyebrow-grid">
+          <span class="eyebrow">A note</span>
+          <div>
+            <p>
+              If you're filing a bug report or feature request in one of my open-source projects — TikZ-Feynman, the Pact Rust implementation, or anything else on GitHub — please open an issue in the relevant repository rather than emailing me. It's easier to track, discuss, and keep visible there.
+            </p>
+            <p class="note_muted">
+              I'm open to exploring new opportunities, and I'm always happy to chat about Pact and contract testing, Rust ↔ Python interop, or particle-physics numerics.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>(".copy-btn");
+  const RESET_MS = 2000;
+  if (btn) {
+    btn.addEventListener("click", () => {
+      const email = btn.dataset.email;
+      if (!email || !navigator.clipboard) return;
+      navigator.clipboard.writeText(email)
+        .then(() => {
+          btn.textContent = "✓ copied";
+          setTimeout(() => {
+            btn.textContent = "copy address";
+          }, RESET_MS);
+        })
+        .catch(() => {});
+    });
+  }
+</script>
+
+<style lang="scss">
+  @use "../styles/tokens/breakpoints" as *;
+
+  // MARK: Hero
+  .hero {
+    padding-block: var(--space-8) var(--space-7);
+  }
+
+  .hero_lead {
+    font-size: var(--text-lead-size);
+    line-height: var(--text-lead-leading);
+    color: var(--color-muted);
+    max-width: var(--width-narrow);
+    margin-top: var(--space-5);
+  }
+
+  .hero_accent {
+    color: var(--color-accent);
+  }
+
+  // MARK: Email band
+  .band_inner {
+    padding-block: var(--space-7);
+  }
+
+  .email_display {
+    font-family: var(--font-mono);
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-block: var(--space-4) var(--space-5);
+  }
+
+  .local  { color: var(--color-ink); }
+  .at     { color: var(--color-muted); }
+  .domain { color: var(--color-ink); }
+  .tld    { color: var(--color-muted); }
+
+  .band_actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
+    margin-top: var(--space-5);
+  }
+
+  .pgp {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    color: var(--color-muted);
+    text-decoration: none;
+    margin-left: var(--space-2);
+
+    &:hover { color: var(--color-ink); }
+  }
+
+  // MARK: Elsewhere
+  .elsewhere_section {
+    padding-block: var(--space-7);
+  }
+
+  .channel_grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    margin-top: var(--space-5);
+
+    @media (min-width: $bp-md) { grid-template-columns: repeat(2, 1fr); }
+    @media (min-width: $bp-lg) { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .channel_card {
+    border: 1px solid var(--color-rule);
+    padding: var(--space-4);
+  }
+
+  .channel_handle {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-meta-size);
+    color: var(--color-accent);
+    text-decoration: none;
+    margin-block: var(--space-2);
+
+    &:hover { text-decoration: underline; }
+  }
+
+  .channel_desc {
+    font-size: var(--text-meta-size);
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  // MARK: A note
+  .note_section {
+    padding-block: var(--space-7);
+  }
+
+  .note_muted {
+    color: var(--color-muted);
+  }
+</style>
