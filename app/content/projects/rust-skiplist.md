@@ -1,9 +1,9 @@
-+++
-github = "JP-Ellis/rust-skiplist"
-slug = "rust-skiplist"
-tagline = "A skip list data structure for Rust"
-title = "rust-skiplist"
-+++
+---
+github: JP-Ellis/rust-skiplist
+slug: rust-skiplist
+tagline: A skip list data structure for Rust
+title: rust-skiplist
+---
 
 A skip list is a probabilistic data structure that provides O(log n) average search, insertion, and deletion. It hasthe same asymptotic complexity as a balanced binary search tree, but with simpler implementation and cache-friendly access patterns for sequential reads.
 

@@ -1,9 +1,11 @@
-+++
-date = 2024-12-30
-source = "https://pact-foundation.github.io/pact-python/blog/2024/12/30/functional-arguments/"
-tags = ["pact", "python"]
-title = "Functional Arguments"
-+++
+---
+date: 2024-12-30
+source: https://pact-foundation.github.io/pact-python/blog/2024/12/30/functional-arguments/
+tags:
+  - pact
+  - python
+title: Functional Arguments
+---
 
 Today marks the [release of Pact Python version 2.3.0](https://github.com/pact-foundation/pact-python/releases/tag/v2.3.0). Among the many incremental improvements, the most significant is the [support of functional arguments](https://github.com/pact-foundation/pact-python/pull/890). This feature provides an improved user experience for providers, and also introduces several breaking changes to the `pact.v3` preview.
 

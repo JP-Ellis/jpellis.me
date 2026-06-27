@@ -1,9 +1,11 @@
-+++
-date = 2024-07-26
-source = "https://pact-foundation.github.io/pact-python/blog/2024/07/26/asynchronous-message-support/"
-tags = ["pact", "python"]
-title = "Asynchronous Message Support"
-+++
+---
+date: 2024-07-26
+source: https://pact-foundation.github.io/pact-python/blog/2024/07/26/asynchronous-message-support/
+tags:
+  - pact
+  - python
+title: Asynchronous Message Support
+---
 
 We are excited to announce that support for verifying asynchronous message interactions has been added in the recent [release of Pact Python version 2.2.1](https://github.com/pact-foundation/pact-python/releases/tag/v2.2.1). To explore this feature, use the [`pact.v3`](https://pact-foundation.github.io/pact-python/reference/pact/v3/) module. A huge shoutout goes to [Val Kolovos](https://github.com/valkolovos) who contributed this feature across two very large PRs ([#714](https://github.com/pact-foundation/pact-python/pull/714) and [#725](https://github.com/pact-foundation/pact-python/pull/725)). This represents a significant step forward in the capabilities of Pact Python and on the road to full support for the Pact specification.
 

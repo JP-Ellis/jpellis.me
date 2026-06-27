@@ -1,9 +1,11 @@
-+++
-date = 2024-04-11
-source = "https://pact-foundation.github.io/pact-python/blog/2024/04/11/a-sneak-peek-into-the-pact-python-future/"
-tags = ["pact", "python"]
-title = "A Sneak Peek into the Pact Python Future"
-+++
+---
+date: 2024-04-11
+source: https://pact-foundation.github.io/pact-python/blog/2024/04/11/a-sneak-peek-into-the-pact-python-future/
+tags:
+  - pact
+  - python
+title: A Sneak Peek into the Pact Python Future
+---
 
 We are thrilled to announce the release of [Pact Python `v2.2`](https://github.com/pact-foundation/pact-python/releases/tag/v2.2.0), a significant milestone that not only improves upon the existing features but also offers an exclusive preview into the future of contract testing with Python.
 
