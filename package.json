@@ -37,7 +37,7 @@
     "remark-parse": "11.0.0",
     "remark-rehype": "11.1.2",
     "smol-toml": "1.7.0",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "unified": "11.0.5",
     "vitest": "4.1.10",
     "wrangler": "4.107.1",
