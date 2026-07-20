@@ -141,7 +141,7 @@ function buildTabGroup(
   const labels: Element[] = tabs.map((tab, i) => ({
     type: "element",
     tagName: "label",
-    properties: { htmlFor: `tab-${g}-${i}` },
+    properties: { htmlFor: [`tab-${g}-${i}`] },
     children: [{ type: "text", value: tab.title }],
   }));
 
