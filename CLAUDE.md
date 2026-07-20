@@ -87,7 +87,6 @@ and gotchas that are easy to get wrong.
 - **Scripts run via `tsx`** (`aubx tsx scripts/…`). Node's native TS runner
   chokes on the attribute-less JSON imports the lib modules use; `tsx` handles
   them.
-- **The generated lockfiles are formatted artifacts.** `aube-lock.yaml` is
-  excluded from `typos` (it would "correct" package names/hashes) and is
-  yamlfix-formatted; after any `aube install`, let the yamlfix hook reformat
-  before committing.
+- **The generated lockfiles are machine-owned artifacts.** `aube-lock.yaml` is
+  excluded from both `typos` (it would "correct" package names/hashes) and
+  `yamlfix`; commit it exactly as the package manager wrote it.

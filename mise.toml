@@ -19,7 +19,7 @@ description = "Check formatting (biome, tombi, yamlfix)"
 run = [
   "biome format .",
   "tombi format --check .",
-  "yamlfix -c {{cwd}}/.yamlfix.toml --check .",
+  "yamlfix -c {{cwd}}/.yamlfix.toml --exclude '**/aube-lock.yaml' --check .",
 ]
 
 [tasks."format:fix"]
@@ -27,7 +27,7 @@ description = "Apply formatting fixes (biome, tombi, yamlfix)"
 run = [
   "biome format --write .",
   "tombi format .",
-  "yamlfix -c {{cwd}}/.yamlfix.toml .",
+  "yamlfix -c {{cwd}}/.yamlfix.toml --exclude '**/aube-lock.yaml' .",
 ]
 
 [tasks.lint]
