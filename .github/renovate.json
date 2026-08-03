@@ -20,6 +20,13 @@
       "schedule": "* 0-4 * * 1"
     },
     {
+      "description": "Held below 7 in the root manifest: @astrojs/check declares a typescript peer of ^5 || ^6, and TypeScript 7 (the Go port) no longer exposes the ts.sys JS API that @astrojs/language-server needs, so `astro check` crashes. Raise once @astrojs/check accepts TypeScript 7.",
+      "matchManagers": ["npm"],
+      "matchFileNames": ["package.json"],
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<7"
+    },
+    {
       "description": "Pinned to =0.8.3 in Cargo.toml: worker >=0.8.4 pulls wasm-streams 0.6, which collides with leptos server_fn's 0.5 (duplicate wasm-bindgen symbols, breaking the wasm32 SSR link). Re-enable once server_fn moves to wasm-streams 0.6.",
       "matchManagers": ["cargo"],
       "matchPackageNames": ["worker"],
