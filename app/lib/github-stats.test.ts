@@ -1,16 +1,19 @@
 // biome-ignore-all lint/style/useNamingConvention: test fixtures mirror the GitHub API response shape
-import { describe, expect, test } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import fallbackJson from "../data/github-stats-fallback.json" with {
   type: "json",
 };
 import {
   contributionWindow,
   fallbackGithubStats,
+  fetchGithubStats,
   parseActivityItems,
   parseContributionTotals,
 } from "./github-stats.ts";
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/u;
+const BAD_CREDENTIALS_RE = /401.*Bad credentials/u;
+const SCOPE_ERROR_RE = /Resource not accessible by personal access token/u;
 
 // MARK: parseContributionTotals
 
@@ -317,5 +320,47 @@ describe("fallbackGithubStats", () => {
 
     expect(periodFrom).toMatch(DATE_RE);
     expect(periodTo).toMatch(DATE_RE);
+  });
+});
+
+// MARK: transport errors
+
+describe("fetchGithubStats transport errors", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  test("surfaces the body message when GitHub rejects the token", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        new Response(JSON.stringify({ message: "Bad credentials" }), {
+          status: 401,
+        }),
+      ),
+    );
+
+    await expect(fetchGithubStats("expired")).rejects.toThrow(
+      BAD_CREDENTIALS_RE,
+    );
+  });
+
+  test("surfaces GraphQL errors returned with a 200", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            data: { user: null },
+            errors: [
+              { message: "Resource not accessible by personal access token" },
+            ],
+          }),
+          { status: 200 },
+        ),
+      ),
+    );
+
+    await expect(fetchGithubStats("scopeless")).rejects.toThrow(SCOPE_ERROR_RE);
   });
 });
