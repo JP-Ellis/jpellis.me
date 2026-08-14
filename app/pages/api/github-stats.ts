@@ -17,7 +17,9 @@ export const GET: APIRoute = async () => {
       stats =
         (cached?.data as GitHubStats | undefined) ?? fallbackGithubStats();
     }
-  } catch {
+  } catch (err) {
+    // biome-ignore lint/suspicious/noConsole: Worker observability captures console output; a silent fallback hides a broken refresh.
+    console.error("[api/github-stats] KV read failed, using fallback:", err);
     stats = fallbackGithubStats();
   }
   return Response.json(stats);
