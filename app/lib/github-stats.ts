@@ -162,6 +162,34 @@ function classifyActivityItem(i: Record<string, unknown>): {
 
 // MARK: Transport
 
+/**
+ * Extracts a human-readable reason from a GitHub error response, so a failure
+ * says "401: Bad credentials" rather than a bare status code.
+ */
+async function failureDetail(resp: Response): Promise<string> {
+  try {
+    const body = (await resp.json()) as { message?: unknown };
+    if (typeof body.message === "string" && body.message) {
+      return `: ${body.message}`;
+    }
+  } catch {
+    // Body was not JSON; the status alone will have to do.
+  }
+  return "";
+}
+
+/**
+ * Collapses a GraphQL `errors` array into a single message. GitHub reports
+ * scope and permission problems this way *with a 200 status*, so these must be
+ * checked explicitly or they surface later as confusing parse failures.
+ */
+function graphqlErrorMessage(errors: unknown[]): string {
+  const messages = errors
+    .map((e) => (e as { message?: unknown }).message)
+    .filter((m): m is string => typeof m === "string");
+  return messages.length > 0 ? messages.join("; ") : "unknown GraphQL error";
+}
+
 async function graphql(
   query: string,
   token: string,
@@ -177,9 +205,17 @@ async function graphql(
     body: JSON.stringify({ query }),
   });
   if (!resp.ok) {
-    throw new Error(`GraphQL status ${resp.status}`);
+    throw new Error(
+      `GraphQL status ${resp.status}${await failureDetail(resp)}`,
+    );
   }
-  return resp.json() as Promise<Record<string, unknown>>;
+
+  const body = (await resp.json()) as Record<string, unknown>;
+  const { errors } = body;
+  if (Array.isArray(errors) && errors.length > 0) {
+    throw new Error(`GraphQL error: ${graphqlErrorMessage(errors)}`);
+  }
+  return body;
 }
 
 async function restGet(
@@ -196,7 +232,7 @@ async function restGet(
     },
   });
   if (!resp.ok) {
-    throw new Error(`REST status ${resp.status}`);
+    throw new Error(`REST status ${resp.status}${await failureDetail(resp)}`);
   }
   return resp.json();
 }
