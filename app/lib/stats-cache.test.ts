@@ -80,3 +80,60 @@ test("a failing refresh is reported and never rejects", async () => {
     err,
   );
 });
+
+test("concurrent misses share a single refresh", async () => {
+  const kv = fakeKv({});
+  let resolveRefresh: ((v: number) => void) | undefined;
+  const refresh = vi.fn(
+    () =>
+      new Promise<number>((res) => {
+        resolveRefresh = res;
+      }),
+  );
+  const waits: Promise<unknown>[] = [];
+  const read = () =>
+    readWithSWR({
+      kv,
+      key: "single-flight",
+      maxAgeMs: 10_000,
+      refresh,
+      waitUntil: (p) => waits.push(p),
+      now: () => 1000,
+    });
+
+  await Promise.all([read(), read(), read()]);
+  resolveRefresh?.(7);
+  await Promise.all(waits);
+
+  expect(refresh).toHaveBeenCalledTimes(1);
+  expect(JSON.parse(kv._store.get("single-flight") as string).data).toBe(7);
+});
+
+test("a failed refresh is not retried until the cooldown expires", async () => {
+  const kv = fakeKv({});
+  const refresh = vi.fn().mockRejectedValue(new Error("boom"));
+  vi.spyOn(console, "error").mockImplementation(() => undefined);
+  const waits: Promise<unknown>[] = [];
+  const read = (now: number) =>
+    readWithSWR({
+      kv,
+      key: "cooldown",
+      maxAgeMs: 10_000,
+      refresh,
+      waitUntil: (p) => waits.push(p),
+      cooldownMs: 60_000,
+      now: () => now,
+    });
+
+  await read(1000);
+  await Promise.all(waits);
+  expect(refresh).toHaveBeenCalledTimes(1);
+
+  await read(30_000);
+  await Promise.all(waits);
+  expect(refresh).toHaveBeenCalledTimes(1);
+
+  await read(61_001);
+  await Promise.all(waits);
+  expect(refresh).toHaveBeenCalledTimes(2);
+});
