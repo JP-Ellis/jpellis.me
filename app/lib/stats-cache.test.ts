@@ -1,5 +1,9 @@
-import { expect, test, vi } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
 import { readWithSWR } from "./stats-cache.ts";
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 function fakeKv(initial: Record<string, string>) {
   const store = new Map(Object.entries(initial));
@@ -51,4 +55,28 @@ test("returns stale data and schedules background refresh", async () => {
   expect(waits.length).toBe(1);
   await Promise.all(waits);
   expect(JSON.parse(kv._store.get("s") as string).data).toBe(2);
+});
+
+test("a failing refresh is reported and never rejects", async () => {
+  const kv = fakeKv({});
+  const err = new Error("GraphQL status 401");
+  const refresh = vi.fn().mockRejectedValue(err);
+  const logged = vi.spyOn(console, "error").mockImplementation(() => undefined);
+  const waits: Promise<unknown>[] = [];
+
+  const r = await readWithSWR({
+    kv,
+    key: "fail-reported",
+    maxAgeMs: 10_000,
+    refresh,
+    waitUntil: (p) => waits.push(p),
+    now: () => 1000,
+  });
+
+  expect(r).toEqual({ data: null, stale: false });
+  await expect(Promise.all(waits)).resolves.toBeDefined();
+  expect(logged).toHaveBeenCalledWith(
+    expect.stringContaining("fail-reported"),
+    err,
+  );
 });

@@ -27,7 +27,11 @@ export async function readWithSWR<T>(opts: {
             opts.key,
             JSON.stringify({ data, fetchedAt: now } satisfies CachedStats<T>),
           ),
-        ),
+        )
+        .catch((err: unknown) => {
+          // biome-ignore lint/suspicious/noConsole: Worker observability captures console output; this is the only signal that a background refresh is failing.
+          console.error(`[stats-cache] refresh failed for "${opts.key}":`, err);
+        }),
     );
   }
   return { data: cached?.data ?? null, stale: cached !== null && !fresh };
