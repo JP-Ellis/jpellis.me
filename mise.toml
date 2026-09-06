@@ -5,7 +5,7 @@
 "core:node" = "26"
 
 "aqua:cargo-bins/cargo-binstall" = "latest"
-"github:endevco/aube" = "v2.2.10"
+"github:endevco/aube" = "v2.2.12"
 "cargo:uv" = "0.12"
 
 "cargo:committed" = "1"
