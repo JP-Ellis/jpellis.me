@@ -31,11 +31,11 @@ test.describe("CSS foundation — masthead and footer on home page", () => {
     expect(overflows).toBe(false);
   });
 
-  test("eyebrow inside band uses the chromatic accent (not ink or paper)", async ({
+  test("eyebrow inside band uses the chromatic accent (not text or surface)", async ({
     page,
   }) => {
     // The band eyebrow renders in the solid accent colour. Assert it is a
-    // saturated hue rather than the near-grey ink/paper tones, which is what
+    // saturated hue rather than the near-grey text/surface tones, which is what
     // distinguishes it visually (the live site renders it fully opaque).
     const [r, g, b] = await page.evaluate((): number[] => {
       const el = document.querySelector(

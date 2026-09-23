@@ -22,7 +22,7 @@
     letter-spacing: 0.04em;
     padding: var(--space-1) var(--space-2);
     border: 1px solid var(--color-rule);
-    color: var(--color-ink);
+    color: var(--color-text);
     line-height: 1.4;
     white-space: nowrap;
     text-decoration: none;
@@ -57,7 +57,7 @@
   // Prevent the browser's :visited colour from overriding tag text colour
   // (applies when filter links like /blog?tag=rust have been visited before).
   a.tag:visited {
-    color: var(--color-ink);
+    color: var(--color-text);
   }
 
   a.tag.tag--accent:visited {

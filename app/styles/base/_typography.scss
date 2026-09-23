@@ -89,11 +89,11 @@
   }
 
   // ── Links ─────────────────────────────────────────────────────────────
-  // Ink-coloured text, accent underline at 1pt from baseline.
+  // Text-coloured, accent underline at 1pt from baseline.
   // skip-ink: auto (browser default) naturally gaps the line where
   // descenders cross — the "descenders break the line" effect.
   a {
-    color: var(--color-ink);
+    color: var(--color-text);
     text-decoration-color: var(--color-accent);
     text-underline-offset: 2pt;
     text-decoration-skip-ink: all;
@@ -125,7 +125,7 @@
   pre {
     overflow-x: auto;
     padding: 14px 16px;
-    background: var(--color-panel);
+    background: var(--color-surface-raised);
     border: 1px solid var(--color-faint);
     border-radius: 4px;
     line-height: 1.55;

@@ -34,7 +34,7 @@
       }
 
       th {
-        background: var(--color-panel);
+        background: var(--color-surface-raised);
       }
     }
 
@@ -60,7 +60,7 @@
           margin-bottom: calc(var(--border-width-thick) * -1);
 
           &:hover {
-            color: var(--color-ink);
+            color: var(--color-text);
           }
         }
       }

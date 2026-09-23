@@ -17,8 +17,8 @@ test.describe("Band", () => {
     const [bandBg, bodyBg] = await page.evaluate((): [string, string] => {
       const root = document.documentElement;
       const rootStyle = getComputedStyle(root);
-      const paper = rootStyle.getPropertyValue("--color-paper").trim();
-      if (!paper) {
+      const surface = rootStyle.getPropertyValue("--color-surface").trim();
+      if (!surface) {
         return ["skip", "skip"];
       }
       function toRgb(color: string): string {
