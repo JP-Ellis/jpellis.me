@@ -1,9 +1,15 @@
 // Border-width and border-radius tokens.
 // --border-width-thick — UI chrome: focus rings, tab indicators, accent borders
+// --radius-xs          — small repeated cells, such as the commit heatmap
 // --radius-sm          — tight corners: inline code, chips, skeletons, focus ring
+// --radius-lg          — large surfaces, such as inset bands
+// --radius-pill        — fully rounded ends on buttons
 @layer tokens {
   :root {
     --border-width-thick: 2px; // UI chrome accents; 3px sites consolidated to this value
-    --radius-sm: 2px; // tight corners; 3px sites consolidated to this value
+    --radius-xs: 3px;
+    --radius-sm: 5px;
+    --radius-lg: 20px;
+    --radius-pill: 999px;
   }
 }
