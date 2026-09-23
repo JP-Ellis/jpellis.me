@@ -67,6 +67,19 @@ $good-ch: 0.14 148; // green; used for positive/success states
   @include derived-tokens;
 }
 
+// Inverted palettes for `.band`. They sit slightly closer to the page's
+// lightness than the full theme, so a band reads as a panel rather than a
+// hole in the page.
+@mixin band-dark {
+  @include theme-dark;
+  --color-paper: oklch(0.25 #{$ink-ch}); // #24211f
+}
+
+@mixin band-light {
+  @include theme-light;
+  --color-paper: oklch(0.93 #{$paper-ch}); // #e9e8e6
+}
+
 // ── Apply to :root ─────────────────────────────────────────────────────
 // [data-theme] is set on <html> by the ThemeToggle component from a
 // server-read cookie, preventing any flash on load.
