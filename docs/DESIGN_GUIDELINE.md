@@ -65,14 +65,15 @@ Lowest → highest priority: `reset, tokens, base, components, utilities`
 
 ### Colour
 
-Three source tokens drive everything: `--color-paper` (background), `--color-ink` (foreground), `--color-accent` (brand). Use the derived tokens for softer treatments:
+Three source tokens drive everything: `--color-surface` (background), `--color-text` (foreground), `--color-accent` (brand). Use the derived tokens for softer treatments:
 
 | Token | Use for |
 | --------------------- | ------------------------------- |
-| `--color-paper` | page / card background |
-| `--color-paper-deep` | slightly sunken surface |
-| `--color-panel` | slightly raised surface |
-| `--color-ink` | primary text, borders, icons |
+| `--color-surface` | page / card background |
+| `--color-surface-sunken` | slightly sunken surface |
+| `--color-surface-raised` | slightly raised surface |
+| `--color-surface-glass` | translucent surface over a backdrop blur |
+| `--color-text` | primary text, borders, icons |
 | `--color-muted` | secondary text, placeholders |
 | `--color-faint` | hover backgrounds, subtle fills |
 | `--color-rule` | hairline borders |
@@ -81,7 +82,7 @@ Three source tokens drive everything: `--color-paper` (background), `--color-ink
 | `--color-accent-wash` | hover fill behind accent text |
 | `--color-selection` | text selection highlight |
 
-Inside a `.band`, the three source tokens (`--color-paper`, `--color-ink`, `--color-accent`) are locally reassigned to invert the contrast. All derived tokens update automatically. **Components rendered inside a band require no changes** — they continue to use `--color-ink`, `--color-muted`, `--color-faint`, `--color-rule`, etc. and the correct inverted values cascade in.
+Inside a `.band`, the three source tokens (`--color-surface`, `--color-text`, `--color-accent`) are locally reassigned to invert the contrast. All derived tokens update automatically. **Components rendered inside a band require no changes** — they continue to use `--color-text`, `--color-muted`, `--color-faint`, `--color-rule`, etc. and the correct inverted values cascade in.
 
 ```scss
 // ✓ correct — works everywhere, including inside .band
@@ -154,7 +155,7 @@ with `@use` (paths are relative to the component file):
     display: grid;
     gap: var(--space-5);
     padding: var(--space-6);
-    background: var(--color-panel);
+    background: var(--color-surface-raised);
     border: 1px solid var(--color-rule);
     border-radius: var(--radius-sm);
   }
@@ -204,7 +205,7 @@ Global component files (`app/styles/components/`) use BEM-lite (block + modifier
 Stop and check if a global component already exists, or if you should create one:
 
 - Writing `cursor: pointer` + `border` + `font-family: var(--font-mono)` — use `.btn`
-- Use the standard token (`--color-ink`, `--color-muted`, `--color-faint`, `--color-rule`) and let `.band`'s cascade handle the inversion
+- Use the standard token (`--color-text`, `--color-muted`, `--color-faint`, `--color-rule`) and let `.band`'s cascade handle the inversion
 - Defining the same single-property pattern in more than one component — promote to `app/styles/components/`
 - Any button, badge, or card pattern is almost certainly reusable — start it in the global layer
 
@@ -288,14 +289,14 @@ Dark mode, focus styles, transitions, and reduced-motion are all CSS-only. Never
 @media (prefers-color-scheme: dark) { … }
 
 // ✗ broken without JS
-.js-loaded .band { background: var(--color-paper); }
+.js-loaded .band { background: var(--color-surface); }
 ```
 
 ## 9. Dark Mode
 
 Dark mode is driven by two Sass mixins in `tokens/_colors.scss`, `theme-light`
-and `theme-dark`, which assign the three source tokens (`--color-paper`,
-`--color-ink`, `--color-accent`) directly. The derived tokens
+and `theme-dark`, which assign the three source tokens (`--color-surface`,
+`--color-text`, `--color-accent`) directly. The derived tokens
 (`--color-muted`, `--color-faint`, `--color-rule`, …) are defined `from` those
 sources, so they all update automatically — no extra work needed in
 components. The mixins are the single source of truth (there are no
@@ -310,14 +311,14 @@ Two mechanisms operate independently:
 
 The `.band` component inverts locally with `band-dark` while the page is light
 and `band-light` while the page is dark. These wrap the theme mixins and lift
-the paper lightness slightly toward the page. Children inside a band need no
+the surface lightness slightly toward the page. Children inside a band need no
 band-specific changes.
 
 Components always use semantic tokens, never raw values:
 
 ```scss
 // ✓ works in both modes
-.card { background: var(--color-paper); border: 1px solid var(--color-rule); }
+.card { background: var(--color-surface); border: 1px solid var(--color-rule); }
 
 // ✗ hardcoded — breaks dark mode
 .card { background: #f8f6f4; border: 1px solid rgba(24,22,19,0.18); }

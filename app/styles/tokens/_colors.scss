@@ -7,8 +7,8 @@
 //     always resolve against the correct primary values
 //
 // Accent and status hues are conversions of the Almanac prototype's hex
-// values. Paper and ink are a warm neutral with a much lower chroma than
-// the prototype's cream. The hex equivalent sits in a comment on each token
+// values. Surface and text are a warm neutral with a much lower chroma
+// than the prototype's cream. The hex equivalent sits in a comment on each token
 // for verification; update it whenever the OKLCH value changes.
 //
 // CSS relative color syntax (oklch(from <source> …)) requires:
@@ -18,8 +18,8 @@
 // Only the hue and chroma are shared across themes. Lightness is set
 // inline inside each mixin below so it can be tuned independently
 // per theme without any coupling.
-$paper-ch: 0.003 80;
-$ink-ch: 0.006 70;
+$surface-ch: 0.003 80;
+$text-ch: 0.006 70;
 $accent-ch: 0.1497 34.55;
 $warning-ch: 0.14 75;
 $good-ch: 0.14 148; // green; used for positive/success states
@@ -30,15 +30,15 @@ $good-ch: 0.14 148; // green; used for positive/success states
 // they recompute automatically because each theme mixin sets the primary
 // tokens before calling this mixin.
 @mixin derived-tokens {
-  // Tinted paper variants
-  --color-paper-deep: oklch(from var(--color-paper) calc(l - 0.04) c h); // #eae9e7
-  --color-panel: oklch(from var(--color-paper) calc(l + 0.025) c h); // slightly lighter/raised surface
-  --color-paper-glass: oklch(from var(--color-paper) l c h / 78%); // translucent surface over a backdrop blur
+  // Surface variants
+  --color-surface-sunken: oklch(from var(--color-surface) calc(l - 0.04) c h); // #eae9e7
+  --color-surface-raised: oklch(from var(--color-surface) calc(l + 0.025) c h); // slightly lighter/raised surface
+  --color-surface-glass: oklch(from var(--color-surface) l c h / 78%); // translucent surface over a backdrop blur
 
-  // Ink at opacity
-  --color-muted: oklch(from var(--color-ink) l c h / 55%); // rgba(24,22,19,0.55)
-  --color-faint: oklch(from var(--color-ink) l c h / 10%); // rgba(24,22,19,0.10)
-  --color-rule: oklch(from var(--color-ink) l c h / 18%); // rgba(24,22,19,0.18)
+  // Text colour at opacity
+  --color-muted: oklch(from var(--color-text) l c h / 55%); // rgba(24,22,19,0.55)
+  --color-faint: oklch(from var(--color-text) l c h / 10%); // rgba(24,22,19,0.10)
+  --color-rule: oklch(from var(--color-text) l c h / 18%); // rgba(24,22,19,0.18)
 
   // Accent variants
   --color-selection: oklch(from var(--color-accent) l c h / 25%);
@@ -51,22 +51,22 @@ $good-ch: 0.14 148; // green; used for positive/success states
 
 // ── Theme mixins ───────────────────────────────────────────────────────
 @mixin theme-light {
-  --color-paper: oklch(0.975 #{$paper-ch}); // #f8f6f4
-  --color-ink: oklch(0.2 #{$ink-ch}); // #181613
+  --color-surface: oklch(0.975 #{$surface-ch}); // #f8f6f4
+  --color-text: oklch(0.2 #{$text-ch}); // #181613
   --color-accent: oklch(0.5497 #{$accent-ch}); // #b8492f
   --color-warning: oklch(0.57 #{$warning-ch}); // #a16207
   --color-good: oklch(0.55 #{$good-ch}); // oklch(0.55 0.14 148)
   @include derived-tokens;
 }
 
-// Dark mode inverts the palette: paper takes the ink chroma/hue, ink takes the paper chroma/hue.
+// Dark mode inverts the palette: surface takes the text chroma/hue, text takes the surface chroma/hue.
 // Lightness values are tuned independently.
 @mixin theme-dark {
-  --color-paper: oklch(0.185 #{$ink-ch}); // #141210
-  --color-ink: oklch(0.94 #{$paper-ch}); // #ecebe9
+  --color-surface: oklch(0.185 #{$text-ch}); // #141210
+  --color-text: oklch(0.94 #{$surface-ch}); // #ecebe9
   --color-accent: oklch(0.6205 #{$accent-ch}); // #d05f47
   --color-warning: oklch(0.78 #{$warning-ch}); // lighter amber on dark bg
-  --color-good: oklch(0.7 #{$good-ch}); // lightened for legibility on dark paper
+  --color-good: oklch(0.7 #{$good-ch}); // lightened for legibility on the dark surface
   @include derived-tokens;
 }
 
@@ -75,12 +75,12 @@ $good-ch: 0.14 148; // green; used for positive/success states
 // hole in the page.
 @mixin band-dark {
   @include theme-dark;
-  --color-paper: oklch(0.25 #{$ink-ch}); // #24211f
+  --color-surface: oklch(0.25 #{$text-ch}); // #24211f
 }
 
 @mixin band-light {
   @include theme-light;
-  --color-paper: oklch(0.93 #{$paper-ch}); // #e9e8e6
+  --color-surface: oklch(0.93 #{$surface-ch}); // #e9e8e6
 }
 
 // ── Apply to :root ─────────────────────────────────────────────────────

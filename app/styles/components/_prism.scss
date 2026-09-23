@@ -11,11 +11,11 @@
   :root {
     // H≈82  golden-amber  — clearly separates strings from rust keywords (H≈34)
     --prism-string: oklch(0.46 0.14 82);
-    --prism-subtle: oklch(from var(--color-ink) l c h / 65%);
+    --prism-subtle: oklch(from var(--color-text) l c h / 65%);
     // H≈62  ochre         — adjacent to golden strings but distinct
     --prism-number: oklch(0.5 0.15 62);
     --prism-builtin: oklch(0.44 0.12 148); // H≈148 sage-green
-    --prism-function: oklch(0.5 0.13 255); // H≈255 indigo-blue, lighter for visibility on paper
+    --prism-function: oklch(0.5 0.13 255); // H≈255 indigo-blue, lighter for visibility on the light surface
     --prism-selection: oklch(from var(--color-accent) l c h / 18%);
   }
 
@@ -47,7 +47,7 @@
     font-variant-ligatures: contextual;
     font-weight: 400;
     line-height: 1.65;
-    color: var(--color-ink);
+    color: var(--color-text);
     background: none;
     text-align: left;
     text-shadow: none;
@@ -64,7 +64,7 @@
     margin: 1.6em 0;
     padding: 1.25em 1.4em;
     overflow: auto;
-    background: var(--color-paper-deep);
+    background: var(--color-surface-sunken);
     border: 1px solid var(--color-rule);
     border-radius: 2px;
     box-shadow: none;
@@ -77,7 +77,7 @@
     border: 1px solid var(--color-rule);
     border-radius: 2px;
     font-size: 0.92em;
-    color: var(--color-ink);
+    color: var(--color-text);
     white-space: nowrap;
   }
 
@@ -155,7 +155,7 @@
 
   .token.variable,
   .token.parameter {
-    color: var(--color-ink);
+    color: var(--color-text);
   }
 
   // CSS strings are .token.string inside a .language-css context; ensure they

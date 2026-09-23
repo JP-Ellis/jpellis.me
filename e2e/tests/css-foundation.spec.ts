@@ -4,7 +4,7 @@ import { expect, test } from "@playwright/test";
 
 // Design colours are authored in oklch; the sRGB values a browser computes
 // from them vary by a few units per channel across contexts and rendering
-// paths (the live site renders "ink" as both 26,22,18 and 25,21,17).
+// paths (the same text colour can land one unit apart per channel).
 // Compare with a small tolerance rather than asserting bit-exact sRGB.
 const RGB_TOLERANCE = 3;
 
@@ -16,13 +16,15 @@ function expectRgbClose(actual: number[], expected: number[]): void {
   }
 }
 
-// Light theme paper/ink, and the independently-tuned dark theme tones, as
-// rendered by the live site (the source of truth). The dark theme is not a
-// straight inversion of the light palette.
-const PAPER: [number, number, number] = [245, 241, 234];
-const INK: [number, number, number] = [26, 22, 18];
-const DARK_BG: [number, number, number] = [25, 21, 17];
-const DARK_FG: [number, number, number] = [242, 238, 231];
+// Surface and text for each theme. The dark theme is tuned independently,
+// not a straight inversion of the light palette. Bands invert the page
+// palette with a surface lifted toward the page lightness.
+const SURFACE: [number, number, number] = [248, 246, 244];
+const TEXT: [number, number, number] = [24, 22, 19];
+const DARK_SURFACE: [number, number, number] = [20, 18, 16];
+const DARK_TEXT: [number, number, number] = [236, 235, 233];
+const BAND_ON_LIGHT: [number, number, number] = [36, 33, 31];
+const BAND_ON_DARK: [number, number, number] = [233, 232, 230];
 
 test.describe("CSS foundation — typography and color", () => {
   test.beforeEach(async ({ page }) => {
@@ -66,8 +68,8 @@ test.describe("CSS foundation — typography and color", () => {
         toRgb(getComputedStyle(document.body).color),
       ];
     });
-    expectRgbClose(bg, isDark ? DARK_BG : PAPER);
-    expectRgbClose(fg, isDark ? DARK_FG : INK);
+    expectRgbClose(bg, isDark ? DARK_SURFACE : SURFACE);
+    expectRgbClose(fg, isDark ? DARK_TEXT : TEXT);
   });
 
   test("page has no horizontal overflow at narrow viewport", async ({
@@ -125,7 +127,7 @@ test.describe("CSS foundation — typography and color", () => {
         globalThis.matchMedia("(prefers-color-scheme: dark)").matches,
       ];
     });
-    expectRgbClose(bandBg, isDark ? PAPER : INK);
+    expectRgbClose(bandBg, isDark ? BAND_ON_DARK : BAND_ON_LIGHT);
   });
 });
 
