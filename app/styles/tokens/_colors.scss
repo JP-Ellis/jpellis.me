@@ -40,7 +40,8 @@ $good-ch: 0.14 148; // green; used for positive/success states
   --color-faint: oklch(from var(--color-ink) l c h / 10%); // rgba(24,22,19,0.10)
   --color-rule: oklch(from var(--color-ink) l c h / 18%); // rgba(24,22,19,0.18)
 
-  // Accent variant
+  // Accent variants
+  --color-selection: oklch(from var(--color-accent) l c h / 25%);
   --color-accent-soft: oklch(
     from var(--color-accent) calc(l + 0.23) calc(c * 0.56) h
   ); // #e8a78f
