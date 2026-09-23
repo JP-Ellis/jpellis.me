@@ -316,7 +316,7 @@ Components always use semantic tokens, never raw values:
 .card { background: var(--color-paper); border: 1px solid var(--color-rule); }
 
 // ✗ hardcoded — breaks dark mode
-.card { background: #f5f1ea; border: 1px solid rgba(26,22,18,0.18); }
+.card { background: #f8f6f4; border: 1px solid rgba(24,22,19,0.18); }
 ```
 
 View Transitions CSS is unconditional (not JS-gated):
