@@ -84,7 +84,7 @@ function badge(item: ActivityItem): string {
 
     <div class="commit-grid">
       {
-        grid.map((col) => (
+        grid.toReversed().map((col) => (
           <div class="commit-col" data-testid="commit-col">
             {col.map((level) => (
               <span class="commit-cell" data-commit-level={String(level)} />
@@ -167,11 +167,15 @@ function badge(item: ActivityItem): string {
     color: color-mix(in oklch, var(--color-text) 85%, transparent);
   }
 
+  // Columns render newest-first and row-reverse lays them out oldest-first,
+  // so an overflowing grid (phones) opens scrolled to the newest week.
+  // Auto margins on the edge columns centre the grid when it fits and
+  // collapse to zero when it overflows, keeping every week reachable.
   .commit-grid {
     display: flex;
+    flex-direction: row-reverse;
     gap: var(--space-half);
     overflow-x: auto;
-    justify-content: center;
   }
 
   .commit-col {
@@ -179,6 +183,14 @@ function badge(item: ActivityItem): string {
     flex-direction: column;
     gap: var(--space-half);
     flex-shrink: 0;
+
+    &:first-child {
+      margin-inline-end: auto;
+    }
+
+    &:last-child {
+      margin-inline-start: auto;
+    }
   }
 
   .commit-cell {
