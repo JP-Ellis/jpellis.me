@@ -183,11 +183,16 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
                   >
                     {nameCell}
                     <span class="row_kind">{entry.kind}</span>
-                    <div>
+                    <div class="row_body">
                       <span class="row_summary">{entry.summary}</span>
                       <span class="row_stack">{entry.stack}</span>
                     </div>
-                    <span class="row_stars">{starsCell}</span>
+                    <span class="row_stars">
+                      {starsCell}
+                      {starsCell !== "—" && (
+                        <span class="row_stars_unit" aria-hidden="true">★</span>
+                      )}
+                    </span>
                     <span
                       class={`row_status ${statusClass[entry.status]}`}
                     >
@@ -245,6 +250,10 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
 <style lang="scss">
   @use "../styles/tokens/breakpoints" as *;
   @use "../styles/mixins/focus" as *;
+
+  // Below desktop width the five index columns leave the summary a sliver,
+  // so rows stack instead.
+  $bp-index-stack: $bp-lg - 1px;
 
   // MARK: Hero
   .hero {
@@ -326,6 +335,11 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
     text-transform: uppercase;
     color: var(--color-muted);
     align-items: baseline;
+
+    // Stacked rows label each cell themselves, so the column header goes.
+    @media (max-width: $bp-index-stack) {
+      display: none;
+    }
   }
 
   .index_row {
@@ -335,13 +349,22 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
     padding: var(--space-5) 0;
     align-items: baseline;
 
-    @media (max-width: $bp-sm) {
-      grid-template-columns: 1fr auto;
+    @media (max-width: $bp-index-stack) {
+      grid-template-columns: minmax(0, 1fr) auto;
       grid-template-areas:
-        "name   status"
-        "kind   stars"
-        "summary summary"
-        "stack  stack";
+        "name    status"
+        "kind    stars"
+        "body    body";
+      column-gap: var(--space-4);
+      row-gap: var(--space-2);
+    }
+  }
+
+  .row_body {
+    min-width: 0;
+
+    @media (max-width: $bp-index-stack) {
+      grid-area: body;
     }
   }
 
@@ -351,7 +374,7 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
     color: var(--color-accent);
     overflow-wrap: break-word;
 
-    @media (max-width: $bp-sm) {
+    @media (max-width: $bp-index-stack) {
       grid-area: name;
     }
   }
@@ -376,7 +399,7 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
     font-size: var(--text-meta-size);
     color: var(--color-muted);
 
-    @media (max-width: $bp-sm) {
+    @media (max-width: $bp-index-stack) {
       grid-area: kind;
     }
   }
@@ -386,10 +409,6 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
     font-size: var(--text-body-size);
     line-height: var(--text-body-leading);
     display: block;
-
-    @media (max-width: $bp-sm) {
-      grid-area: summary;
-    }
   }
 
   .row_stack {
@@ -398,10 +417,6 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
     color: var(--color-muted);
     margin-top: var(--space-1);
     display: block;
-
-    @media (max-width: $bp-sm) {
-      grid-area: stack;
-    }
   }
 
   .row_stars {
@@ -409,9 +424,18 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
     font-size: var(--text-meta-size);
     text-align: right;
 
-    @media (max-width: $bp-sm) {
+    @media (max-width: $bp-index-stack) {
       grid-area: stars;
-      text-align: left;
+      color: var(--color-muted);
+    }
+  }
+
+  // Without the header's ★ column, stacked rows label the count inline.
+  .row_stars_unit {
+    display: none;
+
+    @media (max-width: $bp-index-stack) {
+      display: inline;
     }
   }
 
@@ -432,8 +456,9 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
     display: inline-flex;
     align-items: center;
 
-    @media (max-width: $bp-sm) {
+    @media (max-width: $bp-index-stack) {
       grid-area: status;
+      justify-self: end;
       min-height: unset;
     }
   }
