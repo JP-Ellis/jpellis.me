@@ -225,7 +225,7 @@ const stats = await loadStats();
 
   .projects-name {
     font-family: var(--font-mono);
-    font-size: 14px;
+    font-size: var(--text-body-size);
     color: var(--color-accent);
 
     @media (max-width: $bp-stack) {
@@ -244,7 +244,8 @@ const stats = await loadStats();
   }
 
   .projects-summary {
-    font-size: 18px;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-leading);
 
     @media (max-width: $bp-stack) {
       grid-area: summary;
@@ -292,7 +293,7 @@ const stats = await loadStats();
   }
 
   .cross-post-title {
-    font-size: 22px;
+    font-size: var(--text-lead-size);
     font-style: italic;
     line-height: 1.2;
   }
