@@ -126,7 +126,7 @@ These classes are available everywhere. Do not re-implement them in a module.
 | `.eyebrow-grid` | Two-column label + content grid; stacks on mobile |
 | `.eyebrow` | Fira Code uppercase label in `--color-accent` |
 | `.eyebrow--muted` | Same but `--color-muted` (dates, locations) |
-| `.rule-section` | 1 px `--color-ink` hairline between major sections |
+| `.rule-section` | 1 px `--color-rule` hairline between major sections |
 | `.rule-list` | 1 px `--color-faint` hairline between list items |
 | `.tag` | Base pill/chip; combine with `--pill`, `--hash`, `--accent` |
 | `.band` | Full-bleed contrast section; locally inverts colour tokens so children need no band-specific changes |
