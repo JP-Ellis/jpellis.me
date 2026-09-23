@@ -5,10 +5,14 @@
 // .tag--hash     — slightly rounded corners (category tags on writing)
 // .tag--accent   — accent colour border and text (active filter)
 //
+// Only interactive tags (<a>, <button>) respond to hover.
+//
 // Usage:
 //   <span class="tag tag--pill">rust</span>
 //   <span class="tag tag--hash">#engineering</span>
 //   <span class="tag tag--hash tag--accent">#engineering</span>
+@use "../mixins/hover" as *;
+
 @layer components {
   .tag {
     display: inline-flex;
@@ -25,7 +29,7 @@
   }
 
   .tag--pill {
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
   }
 
   .tag--hash {
@@ -39,6 +43,11 @@
 
   // Reset browser-default button chrome so <button class="tag …"> renders
   // identically to <span class="tag …">.
+  a.tag,
+  button.tag {
+    @include accent-hover-transition;
+  }
+
   button.tag {
     appearance: none;
     background: transparent;
@@ -55,10 +64,8 @@
     color: var(--color-accent);
   }
 
-  // Hover: background shift only — no colour or border change (spec §8 motion)
-  .tag:hover,
   a.tag:hover,
   button.tag:hover {
-    background-color: var(--color-faint);
+    @include accent-hover;
   }
 }
