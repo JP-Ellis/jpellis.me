@@ -33,6 +33,7 @@ $good-ch: 0.14 148; // green; used for positive/success states
   // Tinted paper variants
   --color-paper-deep: oklch(from var(--color-paper) calc(l - 0.04) c h); // #eae9e7
   --color-panel: oklch(from var(--color-paper) calc(l + 0.025) c h); // slightly lighter/raised surface
+  --color-paper-glass: oklch(from var(--color-paper) l c h / 78%); // translucent surface over a backdrop blur
 
   // Ink at opacity
   --color-muted: oklch(from var(--color-ink) l c h / 55%); // rgba(24,22,19,0.55)
