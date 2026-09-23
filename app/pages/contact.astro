@@ -154,6 +154,12 @@ const pgpDisplay = PGP_FINGERPRINT.split("")
     letter-spacing: -0.02em;
     line-height: 1;
     margin-block: var(--space-4) var(--space-5);
+
+    // The address is ~10.4em wide; at 2rem it breaks after "jpellis." on
+    // phones. Scale with the viewport so it stays on one line.
+    @media (max-width: $bp-md) {
+      font-size: min(7.5vw, 2rem);
+    }
   }
 
   .local  { color: var(--color-text); }
