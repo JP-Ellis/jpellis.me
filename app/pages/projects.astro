@@ -282,6 +282,13 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
     flex-wrap: wrap;
     justify-content: center;
     gap: var(--space-7);
+
+    // Four stats wrap 3 + 1 on phones; a 2 × 2 grid keeps them balanced.
+    @media (max-width: $bp-md) {
+      display: grid;
+      grid-template-columns: repeat(2, auto);
+      gap: var(--space-6) var(--space-7);
+    }
   }
 
   .stat_item {
