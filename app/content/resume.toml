@@ -8,15 +8,18 @@ to = "Present"
 org = "PactFlow / SmartBear"
 loc = "Melbourne"
 title = "Senior Software Engineer"
-sub = "Python · Rust · Open Source"
+sub = "Rust · Python · AWS · Open Source"
 featured = true
-tags = ["rust", "python", "open-source", "pact", "ffi", "aws", "ai"]
+tags = ["rust", "python", "open-source", "pact", "ffi", "aws", "datadog", "ai"]
 body = """
-Led the rewrite of pact-python over a Rust FFI core, bringing the library to \
-feature-parity with the latest Pact specification for the first time in years. \
-Pioneered SmartBear's first AI-powered product — AI-generated Pacts — built \
-with LangChain on AWS. Active in the OSS Pact Foundation across code review, \
-RFCs, contributor support, and 300+ merged pull requests across 30+ repositories.\
+Lead the open source Pact Foundation across engineering, product, support and \
+governance: 500+ merged pull requests across nearly 50 repositories, and over \
+1,000 reviewed. Re-architected Pact Python around the shared Rust core, \
+shipping v3 in October 2025 to a library with 1.3M+ downloads a month. Took \
+SmartBear's first AI product, PactFlow AI, from spike to production, and now \
+lead the design of a shared authentication platform for the SmartBear \
+portfolio. Own PactFlow services end to end, from AWS infrastructure through \
+to Datadog observability, shipping to production several times a day.\
 """
 
 [[roles]]
@@ -29,7 +32,8 @@ sub = "Data & Cloud Engineering"
 tags = ["azure", "snowflake", "iac", "python", "data-engineering", "devops"]
 body = """
 Delivered regulated-environment data and cloud projects across financial \
-services: ML infrastructure on Azure ML Studio (a KPMG-global first), an \
+services: ML infrastructure on Azure ML that KPMG globally recognised as \
+pioneering, an \
 end-to-end Azure + Snowflake analytics platform with CI/CD over Bicep, and a \
 modular Azure Data Platform accelerator. Served as Tech Lead and Scrum Master.\
 """
@@ -39,7 +43,7 @@ from = "Jan 2017"
 to = "Jul 2022"
 org = "University of Melbourne"
 loc = "Melbourne"
-title = "PhD, Theoretical Particle Physics"
+title = "Doctoral Research, Theoretical Particle Physics"
 sub = "E₆-inspired seesaw · leptogenesis"
 tags = ["rust", "numerics", "physics", "leptogenesis"]
 body = """
@@ -111,16 +115,17 @@ physics, quantum mechanics, electromagnetism, and mathematical analysis.\
 
 [[roles]]
 from = "Jul 2013"
-to = "Aug 2013"
-org = "CERN"
-loc = "Geneva"
-title = "Summer Student"
-sub = "LHC Level-1 Trigger"
+to = "Nov 2013"
+org = "CERN · Australian Synchrotron"
+loc = "Geneva · Melbourne"
+title = "Undergraduate Research Placements"
+sub = "LHC Level-1 Trigger · Beam Halo Monitor"
 tags = ["c++", "root", "experimental-physics"]
 body = """
 Designed a level-1 trigger for the multiband instability monitor at the LHC, \
 enabling early detection of proton beam instabilities. The work contributed to \
-a peer-reviewed publication in Physical Review Accelerator Beams (2019).\
+a peer-reviewed publication in Physical Review Accelerator Beams (2019). Also \
+built a photodiode-based beam-halo monitor at the Australian Synchrotron.\
 """
 
 [[roles]]
