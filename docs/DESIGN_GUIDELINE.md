@@ -37,6 +37,7 @@ app/styles/
     _prism.scss             ← code-block syntax highlighting
   mixins/
     _focus.scss             ← @mixin focus-ring
+    _hover.scss             ← @mixin accent-hover, accent-hover-transition
   utilities/
     _sr-only.scss           ← .sr-only
 
@@ -77,6 +78,8 @@ Three source tokens drive everything: `--color-paper` (background), `--color-ink
 | `--color-rule` | hairline borders |
 | `--color-accent` | interactive elements, emphasis |
 | `--color-accent-soft` | accent fills, tag borders |
+| `--color-accent-wash` | hover fill behind accent text |
+| `--color-selection` | text selection highlight |
 
 Inside a `.band`, the three source tokens (`--color-paper`, `--color-ink`, `--color-accent`) are locally reassigned to invert the contrast. All derived tokens update automatically. **Components rendered inside a band require no changes** — they continue to use `--color-ink`, `--color-muted`, `--color-faint`, `--color-rule`, etc. and the correct inverted values cascade in.
 
@@ -128,9 +131,9 @@ These classes are available everywhere. Do not re-implement them in a module.
 | `.eyebrow--muted` | Same but `--color-muted` (dates, locations) |
 | `.rule-section` | 1 px `--color-rule` hairline between major sections |
 | `.rule-list` | 1 px `--color-faint` hairline between list items |
-| `.tag` | Base pill/chip; combine with `--pill`, `--hash`, `--accent` |
+| `.tag` | Base pill/chip; combine with `--pill`, `--hash`, `--accent`; `<a>` and `<button>` tags take the accent hover |
 | `.band` | Contrast section, full-bleed on small screens and an inset rounded card from `$bp-lg`; locally inverts colour tokens so children need no band-specific changes |
-| `.btn` | Monospace bordered button or link; inherits inverted tokens automatically inside `.band` |
+| `.btn` | Monospace bordered pill button or link with the accent hover; inherits inverted tokens automatically inside `.band` |
 | `.sr-only` | Visually hidden, accessible to screen readers |
 
 ## 5. Writing a Component's Scoped Styles

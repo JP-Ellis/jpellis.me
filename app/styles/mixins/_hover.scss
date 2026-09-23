@@ -1,0 +1,22 @@
+// @mixin accent-hover — hover treatment for bordered controls (buttons,
+// filter tags): accent text and border over a faint accent wash.
+//
+// Usage in a component file:
+//   @use '../mixins/hover';   (adjust path as needed)
+//
+//   .my-control:hover {
+//     @include hover.accent-hover;
+//   }
+
+@mixin accent-hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  background-color: var(--color-accent-wash);
+}
+
+// @mixin accent-hover-transition — pair with accent-hover on the base rule.
+@mixin accent-hover-transition {
+  transition-property: color, border-color, background-color;
+  transition-duration: var(--duration-default);
+  transition-timing-function: var(--ease-default);
+}
