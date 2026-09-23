@@ -45,7 +45,7 @@ app/components/<name>.astro
 ```
 
 UI lives in `.astro` components (with Svelte islands for interactivity). The
-full-bleed `.band`, the masthead, and the footer are `.astro` components with
+`.band`, the masthead, and the footer are `.astro` components with
 their own scoped styles, not global SCSS partials.
 
 ### Cascade Layers
@@ -129,7 +129,7 @@ These classes are available everywhere. Do not re-implement them in a module.
 | `.rule-section` | 1 px `--color-rule` hairline between major sections |
 | `.rule-list` | 1 px `--color-faint` hairline between list items |
 | `.tag` | Base pill/chip; combine with `--pill`, `--hash`, `--accent` |
-| `.band` | Full-bleed contrast section; locally inverts colour tokens so children need no band-specific changes |
+| `.band` | Contrast section, full-bleed on small screens and an inset rounded card from `$bp-lg`; locally inverts colour tokens so children need no band-specific changes |
 | `.btn` | Monospace bordered button or link; inherits inverted tokens automatically inside `.band` |
 | `.sr-only` | Visually hidden, accessible to screen readers |
 
@@ -305,9 +305,10 @@ Two mechanisms operate independently:
 2. **`[data-theme]` override:** `[data-theme="light"]` / `[data-theme="dark"]`
    on `<html>` overrides the OS preference for a persisted user choice.
 
-The `.band` component reuses the same mixins to invert locally: it applies
-`theme-dark` while the page is light and `theme-light` while the page is dark,
-so children inside a band need no band-specific changes.
+The `.band` component inverts locally with `band-dark` while the page is light
+and `band-light` while the page is dark. These wrap the theme mixins and lift
+the paper lightness slightly toward the page. Children inside a band need no
+band-specific changes.
 
 Components always use semantic tokens, never raw values:
 

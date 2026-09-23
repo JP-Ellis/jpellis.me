@@ -10,25 +10,31 @@ const { testId } = Astro.props;
 </section>
 
 <style lang="scss">
+  @use '../styles/tokens/breakpoints' as *;
   @use '../styles/tokens/colors' as *;
 
   .band {
-    @include theme-dark;
+    @include band-dark;
     background-color: var(--color-paper);
     color: var(--color-ink);
+
+    @media (min-width: $bp-lg) {
+      margin-inline: var(--space-5);
+      border-radius: var(--radius-lg);
+    }
   }
 
   @media (prefers-color-scheme: dark) {
     .band {
-      @include theme-light;
+      @include band-light;
     }
   }
 
   :global([data-theme="light"]) .band {
-    @include theme-dark;
+    @include band-dark;
   }
 
   :global([data-theme="dark"]) .band {
-    @include theme-light;
+    @include band-light;
   }
 </style>
