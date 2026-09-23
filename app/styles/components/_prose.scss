@@ -5,7 +5,7 @@
 @layer components {
   .prose {
     blockquote {
-      border-left: var(--border-width-thick) solid var(--color-rule);
+      border-left: var(--border-width-thick) solid var(--color-accent);
       padding-left: var(--space-4);
       color: var(--color-muted);
       margin-inline: 0;
@@ -15,6 +15,10 @@
     ol {
       padding-left: var(--space-6);
       margin-bottom: var(--space-4);
+    }
+
+    li::marker {
+      color: var(--color-accent);
     }
 
     table {
