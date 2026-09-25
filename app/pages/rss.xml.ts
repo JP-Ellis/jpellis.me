@@ -1,11 +1,9 @@
-import { getCollection } from "astro:content";
 import rss from "@astrojs/rss";
 import type { APIContext } from "astro";
+import { getPosts } from "../lib/posts.ts";
 
 export async function GET(context: APIContext): Promise<Response> {
-  const posts = (await getCollection("blog"))
-    .filter((p) => !p.data.draft)
-    .sort((a, b) => Number(b.data.date) - Number(a.data.date));
+  const posts = await getPosts();
 
   return rss({
     title: "JP Ellis",
