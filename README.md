@@ -110,7 +110,8 @@ public/               Static assets served as-is
 - **End-to-end** — Playwright drives the built Worker (`e2e/`). It has its own
   `package.json`/lockfile; `mise run e2e:test` installs deps + Chromium and
   runs the suite. CI runs the Chromium projects only; the full multi-browser
-  matrix runs locally.
+  matrix runs locally. The suite serves the Worker on port 8787; set
+  `E2E_PORT` to use another port.
 
 ## Deployment
 
