@@ -11,6 +11,19 @@
     text-decoration: var(--shiki-light-text-decoration, none);
   }
 
+  // Mermaid diagrams, rendered to inline SVG at build time.
+  .mermaid {
+    margin-block: var(--space-5) var(--space-4);
+    overflow-x: auto;
+
+    svg {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin-inline: auto;
+    }
+  }
+
   @media (prefers-color-scheme: dark) {
     .astro-code,
     .astro-code span {
