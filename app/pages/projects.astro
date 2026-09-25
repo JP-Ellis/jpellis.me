@@ -4,6 +4,7 @@ import Band from "../components/band.astro";
 import { OSS_CONTRIBS } from "../data/oss-contribs.ts";
 import { PROJECTS } from "../data/projects.ts";
 import Base from "../layouts/base.astro";
+import { CACHE_WEEKLY_STATS } from "../lib/cache-control.ts";
 import {
   fallbackProjectStats,
   fetchProjectStats,
@@ -43,6 +44,8 @@ async function loadProjectStats() {
 }
 
 const projectStats = await loadProjectStats();
+
+Astro.response.headers.set("Cache-Control", CACHE_WEEKLY_STATS);
 const repoMap = new Map(projectStats.repos.map((r) => [r.slug, r]));
 
 const totalStars = projectStats.repos.reduce((sum, r) => sum + r.stars, 0);

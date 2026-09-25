@@ -4,6 +4,7 @@ import YearInCode from "../components/year-in-code.astro";
 import { PROJECTS } from "../data/projects.ts";
 import Base from "../layouts/base.astro";
 import { formatDate, sourceDomain } from "../lib/blog.ts";
+import { CACHE_DAILY_STATS } from "../lib/cache-control.ts";
 import { fallbackGithubStats, fetchGithubStats } from "../lib/github-stats.ts";
 import { readWithSWR } from "../lib/stats-cache.ts";
 
@@ -43,6 +44,8 @@ async function loadStats() {
 }
 
 const stats = await loadStats();
+
+Astro.response.headers.set("Cache-Control", CACHE_DAILY_STATS);
 ---
 
 <Base title="JP Ellis">
