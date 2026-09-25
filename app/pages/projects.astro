@@ -81,26 +81,26 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
 
     <Band testId="projects-band">
       <div class="container band_inner">
-        <div class="stats_row">
-          <dl class="stat_item">
-            <dt class="stat_value">{formatStars(totalStars)}</dt>
-            <dd class="stat_label">
+        <dl class="stats_row">
+          <div class="stat_item">
+            <dt class="stat_label">
               <span class="sr-only">Total </span>stars
-            </dd>
-          </dl>
-          <dl class="stat_item">
-            <dt class="stat_value">{String(totalForks)}</dt>
-            <dd class="stat_label">forks</dd>
-          </dl>
-          <dl class="stat_item">
-            <dt class="stat_value">400+</dt>
-            <dd class="stat_label">citations</dd>
-          </dl>
-          <dl class="stat_item">
-            <dt class="stat_value">2015</dt>
-            <dd class="stat_label">open source since</dd>
-          </dl>
-        </div>
+            </dt>
+            <dd class="stat_value">{formatStars(totalStars)}</dd>
+          </div>
+          <div class="stat_item">
+            <dt class="stat_label">forks</dt>
+            <dd class="stat_value">{String(totalForks)}</dd>
+          </div>
+          <div class="stat_item">
+            <dt class="stat_label">citations</dt>
+            <dd class="stat_value">400+</dd>
+          </div>
+          <div class="stat_item">
+            <dt class="stat_label">open source since</dt>
+            <dd class="stat_value">2015</dd>
+          </div>
+        </dl>
 
         <div class="eyebrow-grid fingerprint_row">
           <h2 class="eyebrow eyebrow--muted">The stack</h2>
@@ -119,15 +119,20 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
     <section class="index_section">
       <div class="container">
         <div class="eyebrow-grid">
-          <h2 class="eyebrow">Index</h2>
-          <div>
-            <div class="index_header rule-section">
-              <span>repo</span>
-              <span>kind</span>
-              <span>summary</span>
-              <span class="row_stars">★</span>
-              <span>status</span>
-            </div>
+          <h2 class="eyebrow" id="projects-index">Index</h2>
+          <table class="index_table" role="table" aria-labelledby="projects-index">
+            <thead role="rowgroup">
+              <tr class="index_header rule-section" role="row">
+                <th scope="col" role="columnheader">repo</th>
+                <th scope="col" role="columnheader">kind</th>
+                <th scope="col" role="columnheader">summary</th>
+                <th scope="col" role="columnheader" class="row_stars">
+                  <span aria-hidden="true">★</span><span class="sr-only">stars</span>
+                </th>
+                <th scope="col" role="columnheader">status</th>
+              </tr>
+            </thead>
+            <tbody role="rowgroup">
             {
               PROJECTS.map((entry) => {
                 const hasDetail = detailSlugs.has(entry.name);
@@ -180,32 +185,37 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
                 }
 
                 return (
-                  <div
+                  <tr
                     class="index_row rule-list"
                     data-testid="projects-row"
+                    role="row"
                   >
-                    {nameCell}
-                    <span class="row_kind">{entry.kind}</span>
-                    <div class="row_body">
+                    <th scope="row" role="rowheader" class="row_name_cell">
+                      {nameCell}
+                    </th>
+                    <td role="cell" class="row_kind">{entry.kind}</td>
+                    <td role="cell" class="row_body">
                       <span class="row_summary">{entry.summary}</span>
                       <span class="row_stack">{entry.stack}</span>
-                    </div>
-                    <span class="row_stars">
+                    </td>
+                    <td role="cell" class="row_stars">
                       {starsCell}
                       {starsCell !== "—" && (
                         <span class="row_stars_unit" aria-hidden="true">★</span>
                       )}
-                    </span>
-                    <span
+                    </td>
+                    <td
+                      role="cell"
                       class={`row_status ${statusClass[entry.status]}`}
                     >
                       ● {entry.status}
-                    </span>
-                  </div>
+                    </td>
+                  </tr>
                 );
               })
             }
-          </div>
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
@@ -281,6 +291,7 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
   }
 
   .stats_row {
+    margin: 0;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -294,8 +305,10 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
     }
   }
 
+  // Each stat is a label/value pair; the value shows above its label.
   .stat_item {
-    margin: 0;
+    display: flex;
+    flex-direction: column-reverse;
   }
 
   .stat_value {
@@ -332,6 +345,21 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
   // MARK: Index
   .index_section {
     padding: var(--space-6) 0 var(--space-8);
+  }
+
+  // A real table for assistive technology; each row lays out as a grid.
+  // Changing a table's display drops its implicit roles in some browsers, so
+  // the markup restates them with explicit role attributes.
+  .index_table,
+  .index_table > thead,
+  .index_table > tbody {
+    display: block;
+  }
+
+  :where(th, td) {
+    padding: 0;
+    font-weight: inherit;
+    text-align: start;
   }
 
   .index_header {
@@ -378,15 +406,18 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
     }
   }
 
-  .row_name {
+  .row_name_cell {
     font-family: var(--font-mono);
     font-size: var(--text-body-size);
-    color: var(--color-accent);
     overflow-wrap: break-word;
 
     @media (max-width: $bp-index-stack) {
       grid-area: name;
     }
+  }
+
+  .row_name {
+    color: var(--color-accent);
   }
 
   .row_name_link {
