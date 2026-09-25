@@ -29,12 +29,4 @@ const { testId } = Astro.props;
       @include band-light;
     }
   }
-
-  :global([data-theme="light"]) .band {
-    @include band-dark;
-  }
-
-  :global([data-theme="dark"]) .band {
-    @include band-light;
-  }
 </style>

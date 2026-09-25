@@ -84,8 +84,6 @@ $good-ch: 0.14 148; // green; used for positive/success states
 }
 
 // ── Apply to :root ─────────────────────────────────────────────────────
-// [data-theme] is set on <html> by the ThemeToggle component from a
-// server-read cookie, preventing any flash on load.
 @layer tokens {
   :root {
     @include theme-light;
@@ -94,11 +92,5 @@ $good-ch: 0.14 148; // green; used for positive/success states
     :root {
       @include theme-dark;
     }
-  }
-  [data-theme="light"] {
-    @include theme-light;
-  }
-  [data-theme="dark"] {
-    @include theme-dark;
   }
 }

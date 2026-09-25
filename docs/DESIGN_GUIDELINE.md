@@ -34,7 +34,7 @@ app/styles/
     _tags.scss              ← .tag with --pill, --hash, --accent variants
     _buttons.scss           ← .btn
     _prose.scss             ← long-form article styling
-    _prism.scss             ← code-block syntax highlighting
+    _code.scss              ← Shiki code-block colours per colour scheme
   mixins/
     _focus.scss             ← @mixin focus-ring
     _hover.scss             ← @mixin accent-hover, accent-hover-transition
@@ -258,11 +258,10 @@ protect that during development.
 
 **Test:** disable JS. Every page must show all content, have working `<a>`-based navigation, and render correctly styled.
 
-| Behaviour        | Without JS                     | With JS                                  |
-| ---------------- | ------------------------------ | ---------------------------------------- |
-| Dark mode        | `prefers-color-scheme` applies | `[data-theme]` override                  |
-| Page transitions | Normal browser navigation      | View Transitions via `<ClientRouter />`  |
-| Live data        | Server-rendered snapshot       | Island enhancement (e.g. the live clock) |
+| Behaviour        | Without JS                | With JS                                  |
+| ---------------- | ------------------------- | ---------------------------------------- |
+| Page transitions | Normal browser navigation | View Transitions via `<ClientRouter />`  |
+| Live data        | Server-rendered snapshot  | Island enhancement (e.g. the live clock) |
 
 ### Astro Rules
 
@@ -302,12 +301,9 @@ sources, so they all update automatically — no extra work needed in
 components. The mixins are the single source of truth (there are no
 `--_color-*` private tokens).
 
-Two mechanisms operate independently:
-
-1. **CSS baseline:** `@media (prefers-color-scheme: dark)` applies
-   `theme-dark` at `:root` — no JS, works on first render.
-2. **`[data-theme]` override:** `[data-theme="light"]` / `[data-theme="dark"]`
-   on `<html>` overrides the OS preference for a persisted user choice.
+`@media (prefers-color-scheme: dark)` applies `theme-dark` at `:root`. The
+OS preference is the only switch: there is no manual toggle, and dark mode
+needs no JS.
 
 The `.band` component inverts locally with `band-dark` while the page is light
 and `band-light` while the page is dark. These wrap the theme mixins and lift
