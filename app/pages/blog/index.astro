@@ -1,9 +1,9 @@
 ---
-import { getCollection } from "astro:content";
 import Band from "../../components/band.astro";
 import Base from "../../layouts/base.astro";
 import { formatDate, sourceDomain, splitExcerpt } from "../../lib/blog.ts";
 import { CACHE_CONTENT } from "../../lib/cache-control.ts";
+import { getPosts } from "../../lib/posts.ts";
 
 // On demand so the server can filter by the ?tag= and ?year= query string.
 export const prerender = false;
@@ -16,8 +16,7 @@ const ISO_DATE_LENGTH = 10;
 const tag = Astro.url.searchParams.get("tag");
 const year = Astro.url.searchParams.get("year");
 
-const allPosts = await getCollection("blog");
-allPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const allPosts = await getPosts();
 
 const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))].sort();
 const allYears = [

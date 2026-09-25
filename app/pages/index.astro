@@ -1,11 +1,11 @@
 ---
-import { getCollection } from "astro:content";
 import YearInCode from "../components/year-in-code.astro";
 import { PROJECTS } from "../data/projects.ts";
 import Base from "../layouts/base.astro";
 import { formatDate, sourceDomain } from "../lib/blog.ts";
 import { CACHE_DAILY_STATS } from "../lib/cache-control.ts";
 import { fallbackGithubStats, fetchGithubStats } from "../lib/github-stats.ts";
+import { getPosts } from "../lib/posts.ts";
 import { readWithSWR } from "../lib/stats-cache.ts";
 
 export const prerender = false;
@@ -14,9 +14,7 @@ const ISO_DATE_LENGTH = 10;
 const HOME_SECTION_COUNT = 3;
 const STATS_MAX_AGE_MS = 86_400_000;
 
-const allPosts = await getCollection("blog");
-allPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-const recentPosts = allPosts.slice(0, HOME_SECTION_COUNT);
+const recentPosts = (await getPosts()).slice(0, HOME_SECTION_COUNT);
 
 const selectedProjects = PROJECTS.slice(0, HOME_SECTION_COUNT);
 
