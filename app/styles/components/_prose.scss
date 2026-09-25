@@ -1,7 +1,7 @@
-// Prose container — applied to rendered Markdown injected via inner_html.
+// Prose container — applied to rendered Markdown content.
 // Contains only deviations from base/_typography.scss needed for long-form content.
-// Must be a global (non-scoped) class because Stylance scoping cannot reach
-// inner_html-injected nodes.
+// Must be a global (non-scoped) class because Astro's scoped styles do not
+// reach the elements a content collection's <Content /> renders.
 @layer components {
   .prose {
     blockquote {

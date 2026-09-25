@@ -75,7 +75,7 @@ const HTTP_NOT_FOUND = 404;
 
 /**
  * Parses stars, forks, open_issues, and watchers from a GitHub REST repo response.
- * Mirrors parse_repo_response in fetch.rs — uses watchers_count (not subscribers_count).
+ * Reads watchers_count, not subscribers_count.
  *
  * @throws when any required numeric field is missing or not a number.
  */
@@ -126,7 +126,7 @@ export function parseReleaseResponse(
 /**
  * Parses a single commit from the GitHub commits list API.
  *
- * Bot-detection rule (mirrors parse_commit in fetch.rs):
+ * Bot-detection rule:
  *   author object is present AND author.type === "Bot" → null (bot)
  *   author is null/absent → treat as human (not linked to a GitHub account)
  *
@@ -335,8 +335,8 @@ export async function fetchProjectStats(
 }
 
 /**
- * Returns placeholder ProjectsStats for use when the GitHub API is unavailable.
- * Mirrors fallback_projects_stats() from defaults.rs.
+ * Returns the baked-in ProjectsStats snapshot for use when the GitHub API is
+ * unavailable.
  */
 export function fallbackProjectStats(): ProjectsStats {
   const repos: RepoStats[] = (fallbackJson as FallbackRepo[]).map((r) => ({

@@ -30,7 +30,7 @@ describe("PROJECTS data", () => {
     });
   });
 
-  it("order matches the Rust source exactly", () => {
+  it("keeps the display order", () => {
     const names = PROJECTS.map((p) => p.name);
     expect(names).toEqual([
       "pact-python",
