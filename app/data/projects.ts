@@ -36,7 +36,7 @@ export const PROJECTS: ProjectEntry[] = [
     name: "rust-skiplist",
     kind: "OSS · library",
     stack: "rust",
-    summary: "Skiplist data structure implementation in Rust.",
+    summary: "A skip list for Rust.",
     status: "maintained",
     link: { kind: "github", slug: "JP-Ellis/rust-skiplist" },
   },

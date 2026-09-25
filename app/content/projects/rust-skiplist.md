@@ -5,7 +5,7 @@ tagline: A skip list data structure for Rust
 title: rust-skiplist
 ---
 
-A skip list is a probabilistic data structure that provides O(log n) average search, insertion, and deletion. It hasthe same asymptotic complexity as a balanced binary search tree, but with simpler implementation and cache-friendly access patterns for sequential reads.
+A skip list is a probabilistic data structure that provides O(log n) average search, insertion, and deletion. It has the same asymptotic complexity as a balanced binary search tree, with a simpler implementation.
 
 This crate provides `SkipList<T>` and `OrderedSkipList<T>`, both implementing the standard Rust collection traits (`IntoIterator`, `FromIterator`, `Extend`).
 
