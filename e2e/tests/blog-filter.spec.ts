@@ -1,7 +1,8 @@
 import { expect, type Page, test } from "@playwright/test";
 
-const TAG = "pact";
-const TAG_URL_RE = /\/blog\?tag=pact$/u;
+// A tag on some posts but not all, so filtering hides rows.
+const TAG = "rust";
+const TAG_URL_RE = /\/blog\?tag=rust$/u;
 const BLOG_URL_RE = /\/blog$/u;
 
 function rows(page: Page) {
