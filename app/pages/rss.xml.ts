@@ -10,6 +10,7 @@ export async function GET(context: APIContext): Promise<Response> {
     title: SITE_NAME,
     description: SITE_DESCRIPTION,
     site: context.site ?? "https://jpellis.me",
+    trailingSlash: false,
     items: posts.map((p) => ({
       title: p.data.title,
       pubDate: p.data.date,

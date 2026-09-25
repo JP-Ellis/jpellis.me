@@ -7,6 +7,7 @@ import Footer from "../components/footer.astro";
 import Masthead from "../components/masthead.astro";
 import {
   pageTitle,
+  publicPath,
   SITE_DESCRIPTION,
   SITE_NAME,
   SOCIAL_IMAGE,
@@ -24,6 +25,8 @@ interface Props {
   published?: Date;
   /** schema.org structured data for the page. */
   jsonLd?: Record<string, unknown>;
+  /** Keeps the page out of search indexes and omits its canonical URL. */
+  noindex?: boolean;
 }
 
 const {
@@ -33,11 +36,13 @@ const {
   type = "website",
   published,
   jsonLd,
+  noindex = false,
 } = Astro.props;
 
 const site = Astro.site ?? Astro.url;
 const fullTitle = pageTitle(title);
-const canonicalUrl = canonical ?? new URL(Astro.url.pathname, site).href;
+const canonicalUrl =
+  canonical ?? new URL(publicPath(Astro.url.pathname), site).href;
 const imageUrl = new URL(SOCIAL_IMAGE, site).href;
 // Escapes `<` so post text cannot close the JSON-LD script element.
 const jsonLdText = jsonLd && JSON.stringify(jsonLd).replaceAll("<", "\\u003c");
@@ -49,7 +54,11 @@ const jsonLdText = jsonLd && JSON.stringify(jsonLd).replaceAll("<", "\\u003c");
     <meta name="color-scheme" content="light dark" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalUrl} />
+    {noindex ? (
+      <meta name="robots" content="noindex" />
+    ) : (
+      <link rel="canonical" href={canonicalUrl} />
+    )}
     <meta property="og:site_name" content={SITE_NAME} />
     <meta property="og:type" content={type} />
     <meta property="og:title" content={title ?? SITE_NAME} />

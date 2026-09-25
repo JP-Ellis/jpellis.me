@@ -18,6 +18,21 @@ export const PROFILES = [
   "https://orcid.org/0000-0003-2556-1536",
 ] as const;
 
+const HTML_SUFFIX_RE = /\.html$/u;
+const INDEX_SUFFIX_RE = /\/index$/u;
+
+/**
+ * Maps a request path to the page's public path. With `build.format: "file"`
+ * a prerendered page sees its output file (`/contact.html`) as its path; the
+ * site serves it without the extension.
+ */
+export function publicPath(pathname: string): string {
+  const path = pathname
+    .replace(HTML_SUFFIX_RE, "")
+    .replace(INDEX_SUFFIX_RE, "/");
+  return path === "" ? "/" : path;
+}
+
 /** Formats a page title as `Page · Joshua Ellis`, or the bare name. */
 export function pageTitle(page?: string): string {
   return page ? `${page} · ${SITE_NAME}` : SITE_NAME;
