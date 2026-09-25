@@ -39,5 +39,18 @@
     // Eyebrow — Fira Code uppercase, section labels
     --text-eyebrow-size: 12px;
     --text-eyebrow-tracking: 0.08em;
+
+    // Label — Fira Code uppercase column and stat labels, tracked wider
+    --text-label-tracking: 0.1em;
+
+    // Logo — the masthead wordmark
+    --text-logo-size: 22px;
+
+    // Stat — Fraunces headline figures, such as the year-in-code totals
+    --text-stat-size: clamp(28px, 4vw, 36px);
+
+    // Code — block code, and inline code set slightly larger to match body x-height
+    --text-code-size: 13px;
+    --text-code-inline-size: 14px;
   }
 }

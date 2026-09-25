@@ -198,6 +198,7 @@ Astro.response.headers.set("Cache-Control", CACHE_DAILY_STATS);
 
     strong { color: var(--color-text); }
 
+    // Relative to the lead, so code keeps its proportion to the text.
     code {
       font-family: var(--font-mono);
       color: var(--color-text);
@@ -213,6 +214,7 @@ Astro.response.headers.set("Cache-Control", CACHE_DAILY_STATS);
 
   .projects-row {
     display: grid;
+    // Name, kind, summary, link: fixed tracks sized to this list's content.
     grid-template-columns: 220px 200px 1fr 80px;
     gap: var(--space-5);
     padding-block: var(--space-4);
@@ -300,7 +302,7 @@ Astro.response.headers.set("Cache-Control", CACHE_DAILY_STATS);
   .cross-post-title {
     font-size: var(--text-lead-size);
     font-style: italic;
-    line-height: 1.2;
+    line-height: var(--text-title-leading);
   }
 
   .cross-post-source {
@@ -309,7 +311,7 @@ Astro.response.headers.set("Cache-Control", CACHE_DAILY_STATS);
     font-size: var(--text-eyebrow-size);
     color: var(--color-muted);
     margin-top: var(--space-2);
-    letter-spacing: 0.06em;
+    letter-spacing: var(--text-eyebrow-tracking);
     text-transform: uppercase;
     text-decoration: none;
   }

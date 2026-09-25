@@ -8,6 +8,15 @@
     --width-index: 1280px; // index, work, résumé pages
     --width-narrow: 760px; // narrower prose containers (home lead, contact lead)
 
+    // Text measures, in characters of the element's own font
+    --measure-short: 52ch; // taglines and short leads
+    --measure: 65ch; // blocks of running text
+    --measure-long: 70ch; // default paragraph cap
+
+    // Fixed grid columns
+    --col-narrow: 64px; // years, counts and small figures
+    --col-label: 160px; // date ranges, repository names
+
     // Horizontal gutters
     --gutter-page: 80px; // desktop
     --gutter-page-mobile: var(--space-5); // 24px — mobile

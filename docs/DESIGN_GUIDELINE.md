@@ -112,10 +112,16 @@ The type ramp maps font roles to HTML elements. Components do not re-specify fon
 | `--text-body-*` | body | Newsreader |
 | `--text-meta-*` | timestamps, captions | Fira Code |
 | `--text-eyebrow-*` | labels, tags | Fira Code uppercase |
+| `--text-label-tracking` | uppercase column and stat labels | Fira Code uppercase |
+| `--text-logo-size` | masthead wordmark | Fraunces |
+| `--text-stat-size` | headline figures | Fraunces 300 |
+| `--text-code-*` | block and inline code | Fira Code |
 
 ### Layout and Z-Index
 
 Use `--width-prose` (880 px) and `--width-index` (1280 px) for `max-width`. Horizontal padding uses `--gutter-page-mobile` on mobile and `--gutter-page` at `$bp-lg`. The two-column editorial layout uses `--gutter-eyebrow` as the left column width.
+
+Cap text blocks with a measure in characters: `--measure-short` (52ch) for taglines and short leads, `--measure` (65ch) for running text, `--measure-long` (70ch) for the default paragraph cap. Fixed grid columns use `--col-narrow` (64 px) for years and small figures and `--col-label` (160 px) for date ranges and repository names. A column sized to one table's content can stay a literal, declared once in a component custom property with a comment giving the reason.
 
 Always use a `--z-*` token for `z-index` — never a raw integer.
 
