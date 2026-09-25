@@ -1,10 +1,14 @@
 ---
 import Band from "../components/band.astro";
 import Base from "../layouts/base.astro";
+import { CONTACT_EMAIL } from "../lib/site.ts";
 
 export const prerender = true;
 
-const EMAIL = "website@jpellis.me";
+const [emailLocal, emailHost] = CONTACT_EMAIL.split("@");
+const tldStart = emailHost.lastIndexOf(".");
+const emailDomain = emailHost.slice(0, tldStart);
+const emailTld = emailHost.slice(tldStart);
 // biome-ignore lint/security/noSecrets: public PGP fingerprint, not a secret
 const PGP_FINGERPRINT = "AA152D8F537EE25D3AC2FADCF162288C8BA20FCE";
 
@@ -40,13 +44,13 @@ const pgpDisplay = PGP_FINGERPRINT.split("")
           <span class="eyebrow">Write to</span>
           <p class="email_display">
             <span>
-              <span class="local">website</span><span class="at">@</span><span class="domain">jpellis</span><span class="tld">.me</span>
+              <span class="local">{emailLocal}</span><span class="at">@</span><span class="domain">{emailDomain}</span><span class="tld">{emailTld}</span>
             </span>
           </p>
           <div class="band_actions">
-            <a href={`mailto:${EMAIL}`} class="btn">↗ open in mail client</a>
+            <a href={`mailto:${CONTACT_EMAIL}`} class="btn">↗ open in mail client</a>
             <noscript><style>.copy-btn { display: none; }</style></noscript>
-            <button class="btn copy-btn" data-email={EMAIL}>copy address</button>
+            <button class="btn copy-btn" data-email={CONTACT_EMAIL}>copy address</button>
             <a href={pgpUrl} class="pgp" target="_blank" rel="noopener noreferrer">
               pgp · {pgpDisplay}
             </a>
@@ -62,7 +66,7 @@ const pgpDisplay = PGP_FINGERPRINT.split("")
         <div class="channel_grid">
           <div class="channel_card">
             <span class="eyebrow--muted">Email</span>
-            <a href="mailto:website@jpellis.me" class="channel_handle">website@jpellis.me</a>
+            <a href={`mailto:${CONTACT_EMAIL}`} class="channel_handle">{CONTACT_EMAIL}</a>
             <p class="channel_desc">preferred</p>
           </div>
           <div class="channel_card">
