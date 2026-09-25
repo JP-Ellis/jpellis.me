@@ -6,6 +6,7 @@ import { defineConfig } from "astro/config";
 import favicons from "astro-favicons";
 
 import { rehypePymdownx } from "./app/lib/rehype-pymdownx.ts";
+import { remarkMermaid } from "./app/lib/remark-mermaid.ts";
 
 const SITE = "https://jpellis.me";
 
@@ -77,6 +78,7 @@ export default defineConfig({
     processor: unified({
       gfm: true,
       smartypants: true,
+      remarkPlugins: [remarkMermaid],
       rehypePlugins: [rehypePymdownx],
     }),
   },
