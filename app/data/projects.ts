@@ -121,7 +121,7 @@ export const PROJECTS: ProjectEntry[] = [
     kind: "consulting · internal",
     stack: "azure · bicep · python",
     summary:
-      "Modular, configuration-driven accelerator for deploying standardised Azure data-platform infrastructure; used as an internal KPMG template.",
+      "Modular, configuration-driven accelerator for deploying standardized Azure data-platform infrastructure; used as an internal KPMG template.",
     status: "shipped",
     link: null,
   },
