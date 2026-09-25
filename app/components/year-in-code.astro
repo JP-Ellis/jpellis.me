@@ -61,7 +61,7 @@ function badge(item: ActivityItem): string {
   <div class="container band-inner">
     <div class="band-header">
       <div>
-        <p class="eyebrow">The year in code</p>
+        <h2 class="eyebrow band-label">The year in code</h2>
         <p class="stats-headline">
           <em>{stats.commitContributions}</em> commits, <em>{stats.prContributions}</em> PRs, and <em>{stats.issueContributions}</em> issues across <em>{stats.publicRepos}</em> repositories.
         </p>
@@ -89,7 +89,7 @@ function badge(item: ActivityItem): string {
 
     <div class="band-latest">
       <div>
-        <p class="eyebrow latest-label">Latest commits</p>
+        <h3 class="eyebrow latest-label">Latest commits</h3>
         {
           commits.length === 0 ? (
             <p class="no-activity">No recent commits.</p>
@@ -105,7 +105,7 @@ function badge(item: ActivityItem): string {
         }
       </div>
       <div>
-        <p class="eyebrow latest-label">Latest issues & PRs</p>
+        <h3 class="eyebrow latest-label">Latest issues & PRs</h3>
         {
           issuesPrs.length === 0 ? (
             <p class="no-activity">No recent issues or PRs.</p>
@@ -144,6 +144,10 @@ function badge(item: ActivityItem): string {
       flex-direction: column;
       gap: var(--space-2);
     }
+  }
+
+  .band-label {
+    margin-bottom: var(--space-4);
   }
 
   .stats-headline {

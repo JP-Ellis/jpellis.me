@@ -67,8 +67,12 @@ const excerpts = await Promise.all(
     <Band>
       <div class="container">
         <div class="filter_band">
-          <div class="eyebrow-grid filter_row">
-            <span class="eyebrow eyebrow--muted">Tag</span>
+          <div
+            class="eyebrow-grid filter_row"
+            role="group"
+            aria-labelledby="filter-tag-label"
+          >
+            <span class="eyebrow eyebrow--muted" id="filter-tag-label">Tag</span>
             <div class="filter_tags">
               {
                 allTags.map((t) => {
@@ -92,8 +96,12 @@ const excerpts = await Promise.all(
             </div>
           </div>
           <hr class="rule-list" />
-          <div class="eyebrow-grid filter_row">
-            <span class="eyebrow eyebrow--muted">Year</span>
+          <div
+            class="eyebrow-grid filter_row"
+            role="group"
+            aria-labelledby="filter-year-label"
+          >
+            <span class="eyebrow eyebrow--muted" id="filter-year-label">Year</span>
             <div class="filter_tags">
               {
                 allYears.map((y) => {
@@ -123,7 +131,7 @@ const excerpts = await Promise.all(
     <section class="posts_section">
       <div class="container">
         <div class="eyebrow-grid">
-          <span class="eyebrow">Posts</span>
+          <h2 class="eyebrow">Posts</h2>
           <div>
             {
               filtered.map((post, i) => {

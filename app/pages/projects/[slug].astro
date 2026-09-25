@@ -140,7 +140,7 @@ const prLabel =
 
           {showCommits && repo?.recentCommits && (
             <div class="commits">
-              <p class="commits_heading">Recent commits</p>
+              <h2 class="commits_heading">Recent commits</h2>
               <ul class="commit_list">
                 {repo.recentCommits.map((c) => (
                   <li class="commit_item">
@@ -295,6 +295,8 @@ const prLabel =
     font-size: var(--text-meta-size);
     text-transform: uppercase;
     letter-spacing: 0.1em;
+    font-weight: 400;
+    line-height: var(--text-body-leading);
     color: var(--color-muted);
     margin: 0 0 var(--space-4);
   }
