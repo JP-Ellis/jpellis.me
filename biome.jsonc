@@ -7,7 +7,7 @@
     "rules": {
       "preset": "all",
       "correctness": {
-        // Qwik-specific rule; this project is Astro + Svelte.
+        // Qwik-specific rule; this project is Astro.
         "useQwikValidLexicalScope": "off",
         // Biome cannot resolve modules in aube's package store or Astro's
         // virtual modules (astro:content, cloudflare:workers, …), so this

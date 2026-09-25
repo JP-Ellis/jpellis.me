@@ -5,12 +5,12 @@ The source for [jpellis.me](https://jpellis.me) — a personal portfolio and
 blog. Static-first, server-rendered where it needs to be, and built to work
 without JavaScript.
 
-|             |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **CI/CD**   | [![Tests](https://img.shields.io/github/actions/workflow/status/JP-Ellis/jpellis.me/test.yml?branch=main&label=tests)](https://github.com/JP-Ellis/jpellis.me/actions/workflows/test.yml) [![Deploy](https://img.shields.io/github/actions/workflow/status/JP-Ellis/jpellis.me/deploy.yml?branch=main&label=deploy)](https://github.com/JP-Ellis/jpellis.me/actions/workflows/deploy.yml)                                                                                                                                                                                                            |
-| **Stack**   | [![Astro](https://img.shields.io/badge/Astro-BC52EE?logo=astro&logoColor=white)](https://astro.build) [![Svelte](https://img.shields.io/badge/Svelte-FF3E00?logo=svelte&logoColor=white)](https://svelte.dev) [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org) [![Sass](https://img.shields.io/badge/Sass-CC6699?logo=sass&logoColor=white)](https://sass-lang.com) [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare%20Workers-F38020?logo=cloudflare&logoColor=white)](https://workers.cloudflare.com) |
-| **Tooling** | [![Biome](https://img.shields.io/badge/Biome-60A5FA?logo=biome&logoColor=white)](https://biomejs.dev) [![Vitest](https://img.shields.io/badge/Vitest-6E9F18?logo=vitest&logoColor=white)](https://vitest.dev) [![Playwright](https://img.shields.io/badge/Playwright-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev) [![mise](https://img.shields.io/badge/mise-managed-EF4444)](https://mise.jdx.dev) [![prek](https://img.shields.io/badge/pre--commit-prek-FAB040?logo=precommit&logoColor=white)](https://github.com/j178/prek)                                                 |
-| **Meta**    | [![Code license](https://img.shields.io/badge/code-MIT-lightgrey)](LICENSE) [![Content license](https://img.shields.io/badge/content-CC%20BY%204.0-lightgrey)](https://creativecommons.org/licenses/by/4.0/) [![Site](https://img.shields.io/badge/site-jpellis.me-1A1612)](https://jpellis.me)                                                                                                                                                                                                                                                                                                      |
+|             |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **CI/CD**   | [![Tests](https://img.shields.io/github/actions/workflow/status/JP-Ellis/jpellis.me/test.yml?branch=main&label=tests)](https://github.com/JP-Ellis/jpellis.me/actions/workflows/test.yml) [![Deploy](https://img.shields.io/github/actions/workflow/status/JP-Ellis/jpellis.me/deploy.yml?branch=main&label=deploy)](https://github.com/JP-Ellis/jpellis.me/actions/workflows/deploy.yml)                                                                                                                                                            |
+| **Stack**   | [![Astro](https://img.shields.io/badge/Astro-BC52EE?logo=astro&logoColor=white)](https://astro.build) [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org) [![Sass](https://img.shields.io/badge/Sass-CC6699?logo=sass&logoColor=white)](https://sass-lang.com) [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare%20Workers-F38020?logo=cloudflare&logoColor=white)](https://workers.cloudflare.com)                                                         |
+| **Tooling** | [![Biome](https://img.shields.io/badge/Biome-60A5FA?logo=biome&logoColor=white)](https://biomejs.dev) [![Vitest](https://img.shields.io/badge/Vitest-6E9F18?logo=vitest&logoColor=white)](https://vitest.dev) [![Playwright](https://img.shields.io/badge/Playwright-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev) [![mise](https://img.shields.io/badge/mise-managed-EF4444)](https://mise.jdx.dev) [![prek](https://img.shields.io/badge/pre--commit-prek-FAB040?logo=precommit&logoColor=white)](https://github.com/j178/prek) |
+| **Meta**    | [![Code license](https://img.shields.io/badge/code-MIT-lightgrey)](LICENSE) [![Content license](https://img.shields.io/badge/content-CC%20BY%204.0-lightgrey)](https://creativecommons.org/licenses/by/4.0/) [![Site](https://img.shields.io/badge/site-jpellis.me-1A1612)](https://jpellis.me)                                                                                                                                                                                                                                                      |
 
 ## Overview
 
@@ -26,9 +26,9 @@ JavaScript — client-side scripts only enhance an already-working page.
   site at build time. The pages that show live GitHub stats opt out per-route
   with `export const prerender = false`, so only those run on the Worker.
 - **No-JS first, progressive enhancement.** The server emits complete HTML.
-  Islands (e.g. the theme toggle, the live clock) layer behaviour on top via
-  Astro's `<ClientRouter />` and `astro:page-load`; nothing gates content
-  behind JS.
+  Small inline scripts (e.g. the live clock, the blog filter) layer behaviour
+  on top via Astro's `<ClientRouter />` and `astro:page-load`; nothing gates
+  content behind JS.
 - **Stale-while-revalidate caching.** SSR pages read GitHub stats from a
   Workers KV namespace and refresh them in the background (`waitUntil`), so a
   request never blocks on the GitHub API. When KV and the API are both
@@ -42,7 +42,6 @@ JavaScript — client-side scripts only enhance an already-working page.
 | Area        | Choice                                                        |
 | ----------- | ------------------------------------------------------------- |
 | Framework   | Astro 7 (`output: static` + selective SSR)                    |
-| Islands     | Svelte 5                                                      |
 | Hosting     | Cloudflare Workers (`@astrojs/cloudflare`), Workers KV        |
 | Language    | TypeScript                                                    |
 | Styling     | Sass with cascade layers and design tokens                    |
@@ -90,12 +89,12 @@ The underlying `package.json` scripts (`dev`, `build`, `preview`, `deploy`,
 
 ```text
 app/                  Astro source (srcDir)
-  components/         UI components (.astro, .svelte islands)
+  components/         UI components (.astro)
   content/            Markdown content collections (blog, projects)
   data/               Static data + GitHub fallback snapshots
   layouts/            Page shells
   lib/                Server logic: GitHub fetchers, SWR cache, helpers
-  pages/              Routes (incl. SSR stats pages and api/, rss.xml)
+  pages/              Routes (incl. SSR stats pages, rss.xml)
   styles/            Sass design system (tokens, base, components, utilities)
 docs/                 Design guideline and design exploration
 e2e/                  Playwright workspace (own package.json + lockfile)

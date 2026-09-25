@@ -45,8 +45,8 @@ app/components/<name>.astro
   <style lang="scss">        ← component-scoped styles (Astro scopes them)
 ```
 
-UI lives in `.astro` components (with Svelte islands for interactivity). The
-`.band`, the masthead, and the footer are `.astro` components with
+UI lives in `.astro` components, with small `<script>` blocks for
+interactivity. The `.band`, the masthead, and the footer are `.astro` components with
 their own scoped styles, not global SCSS partials.
 
 ### Cascade Layers

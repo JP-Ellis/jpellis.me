@@ -1,6 +1,5 @@
 import cloudflare from "@astrojs/cloudflare";
 import { unified } from "@astrojs/markdown-remark";
-import svelte from "@astrojs/svelte";
 import { defineConfig } from "astro/config";
 import favicons from "astro-favicons";
 
@@ -19,7 +18,6 @@ export default defineConfig({
     prerenderEnvironment: "node",
   }),
   integrations: [
-    svelte(),
     favicons({
       input: "app/assets/favicon.png",
       name: "Joshua Ellis",
