@@ -64,7 +64,7 @@ $good-ch: 0.14 148; // green; used for positive/success states
 @mixin theme-dark {
   --color-surface: oklch(0.185 #{$text-ch}); // #141210
   --color-text: oklch(0.94 #{$surface-ch}); // #ecebe9
-  --color-accent: oklch(0.6205 #{$accent-ch}); // #d05f47
+  --color-accent: oklch(0.6205 #{$accent-ch}); // #d05f44
   --color-warning: oklch(0.78 #{$warning-ch}); // lighter amber on dark bg
   --color-good: oklch(0.7 #{$good-ch}); // lightened for legibility on the dark surface
   @include derived-tokens;
