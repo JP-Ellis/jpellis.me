@@ -108,9 +108,13 @@ const pgpDisplay = PGP_FINGERPRINT.split("")
 </Base>
 
 <script>
-  const btn = document.querySelector<HTMLButtonElement>(".copy-btn");
   const RESET_MS = 2000;
-  if (btn) {
+
+  // Runs on every page load, including ClientRouter navigations, which
+  // swap in a fresh button without re-running this module.
+  function setUpCopyButton() {
+    const btn = document.querySelector<HTMLButtonElement>(".copy-btn");
+    if (!btn) return;
     btn.addEventListener("click", () => {
       const email = btn.dataset.email;
       if (!email || !navigator.clipboard) return;
@@ -124,6 +128,8 @@ const pgpDisplay = PGP_FINGERPRINT.split("")
         .catch(() => {});
     });
   }
+
+  document.addEventListener("astro:page-load", setUpCopyButton);
 </script>
 
 <style lang="scss">
