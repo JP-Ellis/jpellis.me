@@ -6,7 +6,6 @@ import {
   timeAgo,
 } from "../lib/year-in-code.ts";
 import Band from "./band.astro";
-import LiveStats from "./live-stats.svelte";
 
 interface Props {
   stats: GitHubStats;
@@ -63,15 +62,9 @@ function badge(item: ActivityItem): string {
     <div class="band-header">
       <div>
         <p class="eyebrow">The year in code</p>
-        <LiveStats
-          initial={{
-            commitContributions: stats.commitContributions,
-            prContributions: stats.prContributions,
-            issueContributions: stats.issueContributions,
-            publicRepos: stats.publicRepos,
-          }}
-          client:idle
-        />
+        <p class="stats-headline">
+          <em>{stats.commitContributions}</em> commits, <em>{stats.prContributions}</em> PRs, and <em>{stats.issueContributions}</em> issues across <em>{stats.publicRepos}</em> repositories.
+        </p>
       </div>
       <span class="date-range">{dateRange}</span>
     </div>
@@ -151,6 +144,14 @@ function badge(item: ActivityItem): string {
       flex-direction: column;
       gap: var(--space-2);
     }
+  }
+
+  .stats-headline {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(28px, 4vw, 36px);
+    margin-top: var(--space-2);
+    letter-spacing: -0.015em;
   }
 
   .date-range {
