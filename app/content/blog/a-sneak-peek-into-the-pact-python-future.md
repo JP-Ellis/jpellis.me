@@ -1,5 +1,6 @@
 ---
 date: 2024-04-11
+description: Pact Python 2.2 previews the Rust-based pact.v3 module and sets out a staged migration towards Pact Python v3.
 source: https://pact-foundation.github.io/pact-python/blog/2024/04/11/a-sneak-peek-into-the-pact-python-future/
 tags:
   - pact
@@ -11,7 +12,7 @@ We are thrilled to announce the release of [Pact Python `v2.2`](https://github.c
 
 ## A Glimpse Ahead with `pact.v3`
 
-The work is taking shape in a branch-new module – `pact.v3` – that serves as an early preview of what will become Pact Python `v3`. This will provide full support for Pact Specifications `v3` and `v4`.
+The work is taking shape in a brand-new module – `pact.v3` – that serves as an early preview of what will become Pact Python `v3`. This will provide full support for Pact Specifications `v3` and `v4`.
 
 This new version harnesses the power of Rust's foreign function interface (FFI) library, promising enhanced performance and reliability. It will also make it easier to incorporate upstream changes in the future. Although it's just a sneak peek, it's an open invitation for you to explore what's coming and contribute to shaping its final form.
 
@@ -19,7 +20,7 @@ This new version harnesses the power of Rust's foreign function interface (FFI) 
 
 ## Your Feedback Is Invaluable
 
-The journey toward perfection is never solitary. We count on your insights and experiences to refine our offerings. If you run into any hiccups or have thoughts you'd like to share:
+The journey towards perfection is never solitary. We count on your insights and experiences to refine our offerings. If you run into any hiccups or have thoughts you'd like to share:
 
 - Report issues on our GitHub page: [Pact Python Issues](https://github.com/pact-foundation/pact-python/issues).
 - Join the conversation on GitHub discussions: [Pact Python Discussions](https://github.com/pact-foundation/pact-python/discussions).
@@ -31,23 +32,23 @@ We eagerly await your input!
 
 Transitioning to a new version can be daunting; thus, we've planned a staged migration:
 
-### :Construction: Stage 1 (From V2.2)
+### 🚧 Stage 1 (From V2.2)
 
 - The existing library remains operational with continued support for minor updates.
 - The new `pact.v3` is available for trial but should be used cautiously as changes are expected.
 - It's not recommended for production use yet, but feedback from experimentation is encouraged.
 - Expect [`PendingDeprecationWarning`](https://docs.python.org/3/library/exceptions.html#PendingDeprecationWarning) alerts when using the current library.
 
-### :Hammer_and_wrench: Stage 2 (From V2.3, to Be Confirmed)
+### 🛠️ Stage 2 (From V2.3, to Be Confirmed)
 
 - The `pact.v3` module is anticipated to stabilize and we urge users to start planning their migration.
 - Comprehensive migration guidance will be provided for a seamless transition.
 - More assertive [`DeprecationWarning`](https://docs.python.org/3/library/exceptions.html#DeprecationWarning) notifications will prompt users to switch to the new module.
 - This phase will provide ample time, likely spanning a few months, for users to adapt.
 
-### :Rocket: Stage 3 (From V3)
+### 🚀 Stage 3 (From V3)
 
-- The `pact.v3` module graduates to simply `pact`, signaling its readiness as the primary library.
+- The `pact.v3` module graduates to simply `pact`, signalling its readiness as the primary library.
   - Migrators from `pact.v3` can expect minimal effort adjustments – mostly a find-and-replace task from `pact.v3` to `pact`.
   - Any necessary breaking changes identified during Stage 2 will be implemented, with detailed guidance provided.
 - The original library moves under the `pact.v2` umbrella.
