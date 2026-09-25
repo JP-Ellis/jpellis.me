@@ -20,7 +20,7 @@ test.describe("Footer", () => {
     ).toHaveAttribute("href", "https://linkedin.com/in/joshuapellis");
     await expect(footer.getByRole("link", { name: "email" })).toHaveAttribute(
       "href",
-      "mailto:josh@jpellis.me",
+      "mailto:website@jpellis.me",
     );
   });
 
