@@ -7,8 +7,8 @@ test.describe("Home page", () => {
     await page.goto("/");
   });
 
-  test("page title is 'JP Ellis'", async ({ page }) => {
-    await expect(page).toHaveTitle("JP Ellis");
+  test("page title is 'Joshua Ellis'", async ({ page }) => {
+    await expect(page).toHaveTitle("Joshua Ellis");
   });
 
   test("hero h1 contains key phrases", async ({ page }) => {

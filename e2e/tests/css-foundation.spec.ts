@@ -100,12 +100,18 @@ test.describe("CSS foundation — typography and color", () => {
     expect(wideSize).toBeGreaterThan(narrowSize);
   });
 
-  test(".container max-width is 1280px", async ({ page }) => {
-    const mw = await page.evaluate(() => {
+  test(".container max-width is the --width-index token", async ({ page }) => {
+    const [mw, token] = await page.evaluate(() => {
       const el = document.querySelector(".container") as HTMLElement;
-      return getComputedStyle(el).maxWidth;
+      return [
+        getComputedStyle(el).maxWidth,
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--width-index")
+          .trim(),
+      ];
     });
-    expect(mw).toBe("1280px");
+    expect(token).not.toBe("");
+    expect(mw).toBe(token);
   });
 
   test("band background is inverse of the page colour scheme", async ({
@@ -136,12 +142,18 @@ test.describe("CSS foundation — blog page", () => {
     await page.goto("/blog");
   });
 
-  test("tag--pill has border-radius 999px", async ({ page }) => {
-    const r = await page.evaluate(() => {
+  test("tag--pill uses the --radius-pill token", async ({ page }) => {
+    const [r, token] = await page.evaluate(() => {
       const el = document.querySelector(".tag--pill") as HTMLElement;
-      return getComputedStyle(el).borderRadius;
+      return [
+        getComputedStyle(el).borderRadius,
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--radius-pill")
+          .trim(),
+      ];
     });
-    expect(r).toBe("999px");
+    expect(token).not.toBe("");
+    expect(r).toBe(token);
   });
 });
 
