@@ -19,7 +19,7 @@ export const PROJECTS: ProjectEntry[] = [
     kind: "OSS · library",
     stack: "rust · python · ffi",
     summary:
-      "Python bindings for Pact, rebuilt over a Rust FFI core. The version most pact-python users actually reach for.",
+      "Python bindings for Pact, rebuilt over a Rust FFI core. Downloaded over 1.3 million times a month.",
     status: "active",
     link: { kind: "github", slug: "pact-foundation/pact-python" },
   },
@@ -130,7 +130,7 @@ export const PROJECTS: ProjectEntry[] = [
     kind: "work · internal",
     stack: "rust · python · ai",
     summary:
-      "AI-powered platform that automates the creation and maintenance of contract tests, integrating into existing development tools to save teams up to 60% of manual testing time.",
+      "SmartBear's first AI product, for generating and maintaining Pact contract tests. I took it from spike to production.",
     status: "active",
     link: { kind: "external", url: "https://pactflow.io/ai/" },
   },
