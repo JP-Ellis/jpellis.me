@@ -61,7 +61,7 @@ export const PROJECTS: ProjectEntry[] = [
     kind: "research · numerics",
     stack: "rust",
     summary:
-      "Solver for highly-coupled Boltzmann equations with rates spanning many decades; custom quadrature.",
+      "Solver for highly coupled Boltzmann equations with rates spanning many decades; custom quadrature.",
     status: "archived",
     link: { kind: "github", slug: "hep-rs/boltzmann-solver" },
   },
