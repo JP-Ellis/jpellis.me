@@ -32,7 +32,7 @@ sub = "Data & Cloud Engineering"
 tags = ["azure", "snowflake", "iac", "python", "data-engineering", "devops"]
 body = """
 Delivered regulated-environment data and cloud projects across financial \
-services: ML infrastructure on Azure ML that KPMG globally recognised as \
+services: ML infrastructure on Azure ML that KPMG globally recognized as \
 pioneering, an \
 end-to-end Azure + Snowflake analytics platform with CI/CD over Bicep, and a \
 modular Azure Data Platform accelerator. Served as Tech Lead and Scrum Master.\
@@ -178,7 +178,7 @@ org = "SmartBear"
 
 [[honours]]
 year = 2018
-award = "Science Abroad Traveling Scholarship"
+award = "Science Abroad Travelling Scholarship"
 org = "University of Melbourne"
 
 [[honours]]
