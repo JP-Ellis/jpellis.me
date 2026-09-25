@@ -6,9 +6,10 @@ title: TikZ-Feynman
 ---
 
 Ti*k*Z-Feynman is a LaTeX package for typesetting Feynman diagrams
-directly in LaTeX, without external tools. It leverages Ti*k*Z's graph
+directly in LaTeX, without external tools. It uses Ti*k*Z's graph
 placement algorithms to automate vertex layout, while still allowing
-fine-grained manual control for complex diagrams.
+fine-grained manual control for complex diagrams. Automatic layout needs
+LuaLaTeX. Other engines get a more rudimentary placement algorithm.
 
 The package is available through [CTAN](https://ctan.org/pkg/tikz-feynman)
 and ships with thorough [documentation](https://arxiv.org/pdf/1601.05437)
@@ -56,11 +57,11 @@ A "penguin" diagram with explicit momentum arrows:
 };
 ```
 
-A B-meson decay to π⁺π⁻ using the manual `diagram*` environment for
-full positional control:
+B⁰ meson mixing through a W box diagram, followed by a decay to π⁺π⁻,
+using the manual `diagram*` environment for full positional control:
 
 <img src="/projects/tikz-feynman/mixing.png"
-     alt="B meson decaying to π⁺π⁻"
+     alt="B⁰ meson mixing through a W box diagram, then decaying to π⁺π⁻"
      class="invert-dark"
      style="display: block; margin: 0 auto;"
      width="500" />
