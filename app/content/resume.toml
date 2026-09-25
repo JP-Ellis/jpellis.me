@@ -12,7 +12,7 @@ sub = "Rust · Python · AWS · Open Source"
 featured = true
 tags = ["rust", "python", "open-source", "pact", "ffi", "aws", "datadog", "ai"]
 body = """
-Lead the open source Pact Foundation across engineering, product, support and \
+Lead the open-source Pact Foundation across engineering, product, support and \
 governance: 500+ merged pull requests across nearly 50 repositories, and over \
 1,000 reviewed. Re-architected Pact Python around the shared Rust core, \
 shipping v3 in October 2025 to a library with 1.3M+ downloads a month. Took \
