@@ -25,12 +25,14 @@ const allYears = [
   ),
 ].sort((a, b) => b.localeCompare(a));
 
-const filtered = allPosts.filter((p) => {
-  const tagOk = !tag || p.data.tags.includes(tag);
-  const postYear = p.data.date.toISOString().slice(0, YEAR_LENGTH);
+// Every post is rendered; posts outside the filter are hidden, so the
+// client-side filter can reveal them again without a reload.
+function matchesFilter(post: (typeof allPosts)[number]): boolean {
+  const tagOk = !tag || post.data.tags.includes(tag);
+  const postYear = post.data.date.toISOString().slice(0, YEAR_LENGTH);
   const yearOk = !year || postYear === year;
   return tagOk && yearOk;
-});
+}
 
 function filterUrl(
   filterTag: string | null,
@@ -51,7 +53,7 @@ function filterUrl(
 }
 
 const excerpts = await Promise.all(
-  filtered.map((p) => splitExcerpt(p.body ?? "", p.data.description)),
+  allPosts.map((p) => splitExcerpt(p.body ?? "", p.data.description)),
 );
 ---
 
@@ -87,6 +89,7 @@ const excerpts = await Promise.all(
                       role="button"
                       aria-pressed={isActive ? "true" : "false"}
                       data-filter-tag={t}
+                      data-astro-reload
                     >
                       {t}
                     </a>
@@ -116,6 +119,7 @@ const excerpts = await Promise.all(
                       role="button"
                       aria-pressed={isActive ? "true" : "false"}
                       data-filter-year={y}
+                      data-astro-reload
                     >
                       {y}
                     </a>
@@ -132,18 +136,18 @@ const excerpts = await Promise.all(
       <div class="container">
         <div class="eyebrow-grid">
           <h2 class="eyebrow">Posts</h2>
-          <div>
+          <div class="post_list rule-section">
             {
-              filtered.map((post, i) => {
+              allPosts.map((post, i) => {
                 const isoDate = post.data.date.toISOString().slice(0, ISO_DATE_LENGTH);
                 const postYear = post.data.date.toISOString().slice(0, YEAR_LENGTH);
-                const border = i === 0 ? "rule-section" : "rule-list";
                 const excerptHtml = excerpts[i];
                 const source = post.data.source;
                 const tags = post.data.tags;
                 return (
                   <div
-                    class={`post_row ${border}`}
+                    class="post_row"
+                    hidden={!matchesFilter(post)}
                     data-testid="post-row"
                     data-tags={tags.join(" ")}
                     data-year={postYear}
@@ -184,7 +188,21 @@ const excerpts = await Promise.all(
 </Base>
 
 <script>
-  function applyFilter(tag: string | null, year: string | null) {
+  function filterUrl(tag: string | null, year: string | null): string {
+    const params = new URLSearchParams();
+    if (tag) params.set("tag", tag);
+    if (year) params.set("year", year);
+    const qs = params.toString();
+    return qs ? `/blog?${qs}` : "/blog";
+  }
+
+  // Shows matching rows and updates each pill's state and toggle link.
+  // A click pushes a history entry; Back and Forward only re-apply one.
+  function applyFilter(
+    tag: string | null,
+    year: string | null,
+    push: boolean,
+  ) {
     const rows = document.querySelectorAll<HTMLElement>('[data-testid="post-row"]');
     const tagPills = document.querySelectorAll<HTMLElement>("[data-filter-tag]");
     const yearPills = document.querySelectorAll<HTMLElement>("[data-filter-year]");
@@ -204,6 +222,7 @@ const excerpts = await Promise.all(
       const active = pillTag === tag;
       pill.classList.toggle("tag--accent", active);
       pill.setAttribute("aria-pressed", active ? "true" : "false");
+      pill.setAttribute("href", filterUrl(active ? null : pillTag, year));
     }
 
     for (const pill of yearPills) {
@@ -211,14 +230,12 @@ const excerpts = await Promise.all(
       const active = pillYear === year;
       pill.classList.toggle("tag--accent", active);
       pill.setAttribute("aria-pressed", active ? "true" : "false");
+      pill.setAttribute("href", filterUrl(tag, active ? null : pillYear));
     }
 
-    const params = new URLSearchParams();
-    if (tag) params.set("tag", tag);
-    if (year) params.set("year", year);
-    const qs = params.toString();
-    const url = qs ? `/blog?${qs}` : "/blog";
-    history.pushState({ tag, year }, "", url);
+    if (push) {
+      history.pushState({ blogFilter: true, tag, year }, "", filterUrl(tag, year));
+    }
   }
 
   function readParams(): { tag: string | null; year: string | null } {
@@ -237,17 +254,26 @@ const excerpts = await Promise.all(
 
     if ("filterTag" in target.dataset) {
       const clicked = target.dataset.filterTag ?? "";
-      applyFilter(currentTag === clicked ? null : clicked, currentYear);
+      applyFilter(currentTag === clicked ? null : clicked, currentYear, true);
     } else {
       const clicked = target.dataset.filterYear ?? "";
-      applyFilter(currentTag, currentYear === clicked ? null : clicked);
+      applyFilter(currentTag, currentYear === clicked ? null : clicked, true);
     }
   });
 
-  window.addEventListener("popstate", () => {
-    const { tag, year } = readParams();
-    applyFilter(tag, year);
-  });
+  // Entries pushed by the filter are handled here, and the ClientRouter's
+  // own popstate listener is stopped so it does not refetch the page. A
+  // capture listener on window runs before the router's bubble listener.
+  window.addEventListener(
+    "popstate",
+    (e) => {
+      if (!e.state?.blogFilter) return;
+      e.stopImmediatePropagation();
+      const { tag, year } = readParams();
+      applyFilter(tag, year, false);
+    },
+    { capture: true },
+  );
 </script>
 
 <style lang="scss">
@@ -281,6 +307,16 @@ const excerpts = await Promise.all(
     grid-template-columns: 1fr auto;
     gap: var(--space-2) var(--space-8);
     padding-block: var(--space-4);
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  // The list's top rule stands in for the first visible row's border; later
+  // visible rows get the faint list hairline.
+  .post_row:not([hidden]) ~ .post_row:not([hidden]) {
+    border-top: 1px solid var(--color-faint);
   }
 
   .post_title {
