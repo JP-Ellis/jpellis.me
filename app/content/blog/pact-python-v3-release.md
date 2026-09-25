@@ -1,6 +1,7 @@
 ---
 date: 2025-12-04
-source: https://pact-foundation.github.io/pact-python/blog/2025/12/04/pact-python-v3-release/
+description: A look back at the release of Pact Python v3, which moves the library onto the Rust core and a more Pythonic API.
+source: https://pact-foundation.github.io/pact-python/blog/2025/12/04/announcing-pact-python-v3/
 tags:
   - pact
   - python
@@ -22,7 +23,7 @@ This came with a few problems:
 
 1. The reference implementation of Pact moved to [Rust](https://github.com/pact-foundation/pact-reference), and development for versions 3 and 4 of the Pact specification took place there, with limited features being backported to Pact Ruby.
 2. It required bundling Ruby as part of the Python wheels, which significantly bloated distributions and slowed down Pact Python.
-3. The Python code served primarily as a wrapper to calling the Ruby-based CLIs, and some aspects of that implementation were exposed to end-users, such as manually checking process exit codes, resulting in a non-"pythonic" experience.
+3. The Python code served primarily as a wrapper around the Ruby-based CLIs, and some aspects of that implementation were exposed to end-users, such as manually checking process exit codes, resulting in a non-"pythonic" experience.
 
 As the Pact specification evolved and the needs of our users grew, it became clear that the old architecture was starting to show its age. Supporting new features, keeping up with upstream changes, and maintaining compatibility across platforms was becoming increasingly difficult.
 
@@ -34,7 +35,7 @@ With these objectives in mind, the development of v3 commenced.
 
 Very early in the development of v3, it was clear to me that this was an opportunity to fundamentally rethink the library's architecture. While the core Pact idioms from the broader ecosystem have been retained, the internal flow and structure of Pact Python were comprehensively overhauled. This decision was not made lightly, as it does introduce a burden on end-users; however, I hoped this would provide significant long-term benefits for maintainability, extensibility, and user experience. Now looking back, I do think this was the right decision, and I'm glad that I was allowed to implement these changes even though I was a newcomer to Pact's ecosystem.
 
-Migrating a large codebase from Pact Python v2 to v3 is an onerous task. Accordingly, considerable effort was invested in ensuring compatibility and a smooth transition. This included the preparation of detailed migration guides, the parallel support of both v2 and v3 for an extended period, and the incorporation of feedback from early adopters who trialed the new version in production environments. The ongoing support for v2 alongside v3 is intended to allow users to migrate incrementally and at their own pace.
+Migrating a large codebase from Pact Python v2 to v3 is an onerous task. Accordingly, considerable effort was invested in ensuring compatibility and a smooth transition. This included the preparation of detailed migration guides, the parallel support of both v2 and v3 for an extended period, and the incorporation of feedback from early adopters who trialled the new version in production environments. The ongoing support for v2 alongside v3 is intended to allow users to migrate incrementally and at their own pace.
 
 The development process for v3 was iterative and, at times, complex. There were periods of rapid progress, such as the initial successful execution of contract tests using the new Rust core, as well as periods where platform-specific issues or subtle bugs required significant investigation and resolution (sometimes making me question my most basic reasoning abilities). Throughout, the primary objective remained to ensure that the new implementation not only matched the previous feature set, but also delivered tangible improvements in usability, reliability, and performance.
 
@@ -60,33 +61,37 @@ What does this look like in practice? Here's a side-by-side comparison of a simp
 from pact.v2 import Consumer, Provider
 import requests
 
-consumer = Consumer('my-web-front-end')
-provider = Provider('my-backend-service')
+consumer = Consumer("my-web-front-end")
+provider = Provider("my-backend-service")
 
-pact = consumer.has_pact_with(provider, pact_dir='/path/to/pacts')
+pact = consumer.has_pact_with(provider, pact_dir="/path/to/pacts")
 (
     pact
-    .given('user exists')  # (1)
-    .upon_receiving('a request for user data')
+    .given("user exists")  # (1)
+    .upon_receiving("a request for user data")
     .with_request(
-        'GET',
-        '/users/123',
-        headers={'Accept': 'application/json'},
-        query={'include': 'profile'}
+        "GET",
+        "/users/123",
+        headers={"Accept": "application/json"},
+        query={"include": "profile"},
     )
     .will_respond_with(
         200,
-        headers={'Content-Type': 'application/json'},
-        body={'id': 123, 'name': 'Alice'}
+        headers={"Content-Type": "application/json"},
+        body={"id": 123, "name": "Alice"},
     )
 )
 
 pact.start_service()  # (2)
 pact.setup()
-response = requests.get(pact.uri + '/users/123')
-assert response.json() == {'id': 123, 'name': 'Alice'}
-pact.verify()         # (3)
-pact.stop_service()   # (4)
+response = requests.get(
+    pact.uri + "/users/123",
+    headers={"Accept": "application/json"},
+    params={"include": "profile"},
+)
+assert response.json() == {"id": 123, "name": "Alice"}
+pact.verify()  # (3)
+pact.stop_service()  # (4)
 # Pact file is written as part of verify() or when the service stops
 ```
 
@@ -99,22 +104,26 @@ pact.stop_service()   # (4)
 from pact import Pact
 import requests
 
-pact = Pact('my-web-front-end', 'my-backend-service')
+pact = Pact("my-web-front-end", "my-backend-service")
 (
     pact
-    .upon_receiving('a request for user data')
-    .given('user exists', id=123, name='Alice')  # (1)
-    .with_request('GET', '/users/123')
-    .with_header('Accept', 'application/json')
-    .with_query_parameter('include', 'profile')
+    .upon_receiving("a request for user data")
+    .given("user exists", id=123, name="Alice")  # (1)
+    .with_request("GET", "/users/123")
+    .with_header("Accept", "application/json")
+    .with_query_parameter("include", "profile")
     .will_respond_with(200)
-    .with_body({'id': 123, 'name': 'Alice'}, content_type='application/json')
+    .with_body({"id": 123, "name": "Alice"}, content_type="application/json")
 )
 
 with pact.serve() as srv:  # (2)
-    response = requests.get(f"{srv.url}/users/123")
-    assert response.json() == {'id': 123, 'name': 'Alice'}
-pact.write_file('/path/to/pacts')  # (3)
+    response = requests.get(
+        f"{srv.url}/users/123",
+        headers={"Accept": "application/json"},
+        params={"include": "profile"},
+    )
+    assert response.json() == {"id": 123, "name": "Alice"}
+pact.write_file("/path/to/pacts")  # (3)
 ```
 
 1. In v3, provider states can be parameterized, making it easier to reuse and manage test data across different scenarios.
@@ -123,7 +132,7 @@ pact.write_file('/path/to/pacts')  # (3)
 
 ### Migration, with You in Mind
 
-We know big upgrades can be daunting, especially for teams with large codebases. That's why v3 includes a backwards compatibility module: you can keep your old tests running while you gradually adopt the new API, at your own pace. Many of the changes in v3 came directly from user feedback; feature requests, bug reports, and discussions on Slack have all shaped this release. The transition is designed to be as smooth as possible, so you can take advantage of new features without disrupting your workflow.
+We know big upgrades can be daunting, especially for teams with large codebases. That's why v3 includes a backwards compatibility module: you can keep your old tests running while you gradually adopt the new API, at your own pace. Many of the changes in v3 came directly from user feedback: feature requests, bug reports, and discussions on Slack have all shaped this release. The transition is designed to be as smooth as possible, so you can take advantage of new features without disrupting your workflow.
 
 ## Reflections and Gratitude
 
@@ -134,7 +143,7 @@ No open source project is a solo effort, and Pact Python v3 is no exception. Thi
 - **[valkolovos](https://github.com/valkolovos):** for his work on matchers, generators, asynchronous message support, and being an early adopter of Pact Python v3.
 - **[Nikhil Arora](https://github.com/Nikhil172913832):** for a number of recent improvements, including improvements to the developer experience.
 - **[Amit Singh](https://github.com/amit828as):** for expanding v3 HTTP interaction examples and real-world testing.
-- **[Kevin Rohan Vaz](https://github.com/kevinrvaz):** For fixing and improving the v3 verifier.
+- **[Kevin Rohan Vaz](https://github.com/kevinrvaz):** for fixing and improving the v3 verifier.
 
 I would also like to acknowledge contributors to the (now legacy) v2 codebase and the original project:
 
@@ -156,3 +165,7 @@ With v3 as our new foundation, we are already seeing new features and integratio
 If you are ready to get started, you will find everything you need in the [documentation](https://pact-foundation.github.io/pact-python/), including a [migration guide](https://pact-foundation.github.io/pact-python/MIGRATION/) for those moving from v2. The [GitHub repository](https://github.com/pact-foundation/pact-python) is always open for issues, discussions, and contributions. If you are new to Pact entirely, you can read more about it on [`pact.io`](https://pact.io/).
 
 Thank you for being part of this journey. Here's to a new chapter in contract testing for Python. Happy testing!
+
+## Updates
+
+- **September 2026:** The code examples in this post were updated in September 2026 to the current Pact Python API. Both examples now send the `Accept` header and `include` query parameter that the interaction declares, so that the request matches the Pact.
