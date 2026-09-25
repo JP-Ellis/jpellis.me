@@ -3,8 +3,7 @@
  * tab groups (`/// tab | Title` … `///`) and details blocks
  * (`/// details | Title` … `///`).
  *
- * The plugin mirrors the logic in `build/markdown.rs` (`postprocess_pymdownx`):
- * it scans hast paragraph nodes for `/// <type> | <title>` opener text and
+ * It scans hast paragraph nodes for `/// <type> | <title>` opener text and
  * `///` closer text, extracts the nodes between them, and replaces them with
  * the appropriate HTML structure.
  *
@@ -328,8 +327,7 @@ function transformChildren(
 
 /**
  * Rehype plugin: replaces PyMdown-style `/// tab | …` / `/// details | …`
- * marker paragraphs with proper tab-group and details HTML, matching the
- * output of `build/markdown.rs`'s `postprocess_pymdownx`.
+ * marker paragraphs with proper tab-group and details HTML.
  */
 export const rehypePymdownx: Plugin<[], Root, Root> =
   (): Transformer<Root, Root> =>

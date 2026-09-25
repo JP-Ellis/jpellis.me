@@ -6,10 +6,9 @@
 //   - @mixin derived-tokens is called by both theme mixins so derived tokens
 //     always resolve against the correct primary values
 //
-// Accent and status hues are conversions of the Almanac prototype's hex
-// values. Surface and text are a warm neutral with a much lower chroma
-// than the prototype's cream. The hex equivalent sits in a comment on each token
-// for verification; update it whenever the OKLCH value changes.
+// Surface and text are a warm neutral with a very low chroma. The hex
+// equivalent sits in a comment on each token for verification; update it
+// whenever the OKLCH value changes.
 //
 // CSS relative color syntax (oklch(from <source> …)) requires:
 //   Chrome 119+, Firefox 128+, Safari 16.4+ — acceptable for 2026.

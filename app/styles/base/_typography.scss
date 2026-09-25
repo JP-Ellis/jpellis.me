@@ -63,7 +63,7 @@
   }
 
   // When headings are directly adjacent, collapse the top margin to a
-  // tight gap — matching the spec's stacked-specimen appearance.
+  // tight gap so they read as one stacked block.
   :is(h1, h2, h3, h4, h5, h6) + :is(h2, h3, h4, h5, h6) {
     margin-block-start: 0.1em;
   }
@@ -113,7 +113,7 @@
     letter-spacing: var(--text-meta-tracking);
   }
 
-  // Inline code — accent-tinted background  spec: rgba(184,73,47,0.08)
+  // Inline code — accent-tinted background
   :not(pre) > code {
     font-size: 14px;
     background: oklch(from var(--color-accent) l c h / 8%);

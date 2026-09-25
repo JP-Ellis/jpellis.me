@@ -68,7 +68,7 @@ export function splitExcerpt(
 
 /**
  * Extract the host portion from a URL string.
- * Mirrors Rust `source_domain`: splits on "//" and takes the first segment.
+ * Splits on "//" and takes the first path segment after it.
  * Returns undefined if the string contains no "//".
  */
 export function sourceDomain(url: string): string | undefined {
