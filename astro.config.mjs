@@ -47,6 +47,9 @@ export default defineConfig({
   markdown: {
     syntaxHighlight: "shiki",
     shikiConfig: {
+      // Emit only CSS variables; app/styles/components/_code.scss picks the
+      // light or dark set from prefers-color-scheme.
+      defaultColor: false,
       themes: {
         light: "github-light",
         dark: "github-dark",
