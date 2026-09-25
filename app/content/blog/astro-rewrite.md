@@ -1,6 +1,7 @@
 ---
 date: 2026-06-01
 description: Notes on rebuilding a personal portfolio in Astro on Cloudflare Workers.
+draft: true
 tags:
   - astro
   - typescript
