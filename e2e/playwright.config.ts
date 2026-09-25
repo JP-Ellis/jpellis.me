@@ -25,7 +25,8 @@ export const config: PlaywrightTestConfig = {
   fullyParallel: true,
   forbidOnly: IS_CI,
   retries: IS_CI ? 2 : 0,
-  workers: IS_CI ? 1 : "100%",
+  // Tests mostly wait on navigation, so oversubscribing the CPUs pays off.
+  workers: "150%",
   reporter: IS_CI ? "github" : "html",
   use: {
     // biome-ignore lint/style/useNamingConvention: Playwright config key
