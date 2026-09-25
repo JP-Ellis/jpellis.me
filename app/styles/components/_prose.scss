@@ -113,7 +113,7 @@
 
     details {
       border: 1px solid var(--color-rule);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       padding: var(--space-3) var(--space-4);
       margin-block: var(--space-4);
 

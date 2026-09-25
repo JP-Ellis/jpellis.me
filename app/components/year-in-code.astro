@@ -153,9 +153,9 @@ function badge(item: ActivityItem): string {
   .stats-headline {
     font-family: var(--font-display);
     font-weight: 300;
-    font-size: clamp(28px, 4vw, 36px);
+    font-size: var(--text-stat-size);
     margin-top: var(--space-2);
-    letter-spacing: -0.015em;
+    letter-spacing: var(--text-section-tracking);
   }
 
   .date-range {
@@ -166,7 +166,7 @@ function badge(item: ActivityItem): string {
 
   .band-intro {
     margin-bottom: var(--space-5);
-    max-width: 65ch;
+    max-width: var(--measure);
     font-size: var(--text-body-size);
     line-height: var(--text-body-leading);
     color: color-mix(in oklch, var(--color-text) 85%, transparent);
@@ -198,6 +198,7 @@ function badge(item: ActivityItem): string {
     }
   }
 
+  // 13px cells fit 53 weeks across a desktop band; no spacing token fits.
   .commit-cell {
     width: 13px;
     height: 13px;
@@ -221,7 +222,10 @@ function badge(item: ActivityItem): string {
     }
   }
 
+  // Repository, message, age. The age column fits "12mo" at meta size.
   .band-latest {
+    --row-columns: minmax(0, var(--col-label)) 1fr 40px;
+
     margin-top: var(--space-6);
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -238,7 +242,7 @@ function badge(item: ActivityItem): string {
 
   .commit-row {
     display: grid;
-    grid-template-columns: minmax(0, 160px) 1fr 40px;
+    grid-template-columns: var(--row-columns);
     gap: var(--space-3);
     padding-block: var(--space-3);
     border-top: 1px solid var(--color-faint);
@@ -255,7 +259,7 @@ function badge(item: ActivityItem): string {
 
   .activity-row {
     display: grid;
-    grid-template-columns: minmax(0, 160px) 1fr 40px;
+    grid-template-columns: var(--row-columns);
     gap: var(--space-3);
     padding-block: var(--space-3);
     border-top: 1px solid var(--color-faint);

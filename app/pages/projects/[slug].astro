@@ -189,7 +189,7 @@ const prLabel =
     font-size: var(--text-lead-size);
     line-height: var(--text-lead-leading);
     color: var(--color-muted);
-    max-width: 52ch;
+    max-width: var(--measure-short);
     margin-top: var(--space-3);
   }
 
@@ -242,7 +242,7 @@ const prLabel =
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
-    min-width: 4rem;
+    min-width: var(--col-narrow);
     margin: 0;
   }
 
@@ -294,7 +294,7 @@ const prLabel =
     font-family: var(--font-mono);
     font-size: var(--text-meta-size);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: var(--text-label-tracking);
     font-weight: 400;
     line-height: var(--text-body-leading);
     color: var(--color-muted);

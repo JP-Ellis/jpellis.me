@@ -277,7 +277,7 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
     font-size: var(--text-lead-size);
     line-height: var(--text-lead-leading);
     color: var(--color-muted);
-    max-width: 52ch;
+    max-width: var(--measure-short);
     margin-top: var(--space-4);
   }
 
@@ -325,7 +325,7 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
   .stat_label {
     font-family: var(--font-mono);
     font-size: var(--text-meta-size);
-    letter-spacing: 0.1em;
+    letter-spacing: var(--text-label-tracking);
     text-transform: uppercase;
     color: var(--color-muted);
     margin: var(--space-1) 0 0;
@@ -356,6 +356,12 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
     display: block;
   }
 
+  // Repo, kind, summary, stars, status. The stars and status tracks fit
+  // their longest values ("1.2k", "● maintained") at meta size.
+  .index_table {
+    --index-columns: minmax(0, 20ch) var(--gutter-eyebrow) 1fr 60px 100px;
+  }
+
   :where(th, td) {
     padding: 0;
     font-weight: inherit;
@@ -364,12 +370,12 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
 
   .index_header {
     display: grid;
-    grid-template-columns: minmax(0, 20ch) 140px 1fr 60px 100px;
+    grid-template-columns: var(--index-columns);
     gap: var(--space-5);
     padding: var(--space-3) 0;
     font-family: var(--font-mono);
     font-size: var(--text-meta-size);
-    letter-spacing: 0.1em;
+    letter-spacing: var(--text-label-tracking);
     text-transform: uppercase;
     color: var(--color-muted);
     align-items: baseline;
@@ -382,7 +388,7 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
 
   .index_row {
     display: grid;
-    grid-template-columns: minmax(0, 20ch) 140px 1fr 60px 100px;
+    grid-template-columns: var(--index-columns);
     gap: var(--space-5);
     padding: var(--space-5) 0;
     align-items: baseline;
@@ -526,7 +532,7 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
     font-size: var(--text-body-size);
     line-height: var(--text-body-leading);
     color: var(--color-muted);
-    max-width: 60ch;
+    max-width: var(--measure);
     margin: 0 auto;
   }
 
@@ -552,6 +558,7 @@ const ossFirst20 = OSS_CONTRIBS.slice(0, OSS_CONTRIBS_LIMIT);
     }
   }
 
+  // Sized relative to the link it follows, so it reads as a suffix.
   .contrib_stars {
     font-size: 0.85em;
     opacity: 0.6;

@@ -165,7 +165,7 @@ const rest = roles.filter((r) => r.featured !== true);
     font-size: var(--text-lead-size);
     line-height: var(--text-lead-leading);
     color: var(--color-muted);
-    max-width: 760px;
+    max-width: var(--width-narrow);
     margin-top: var(--space-5);
   }
 
@@ -242,7 +242,7 @@ const rest = roles.filter((r) => r.featured !== true);
     align-items: baseline;
 
     @media (min-width: $bp-md) {
-      grid-template-columns: 160px 1.2fr 1.6fr;
+      grid-template-columns: var(--col-label) 1.2fr 1.6fr;
       gap: var(--space-6);
     }
   }
@@ -307,7 +307,7 @@ const rest = roles.filter((r) => r.featured !== true);
     align-items: baseline;
 
     @media (min-width: $bp-md) {
-      grid-template-columns: 64px 1fr;
+      grid-template-columns: var(--col-narrow) 1fr;
       gap: var(--space-5);
     }
   }
@@ -360,7 +360,7 @@ const rest = roles.filter((r) => r.featured !== true);
     align-items: baseline;
 
     @media (min-width: $bp-md) {
-      grid-template-columns: 64px 1fr 1fr;
+      grid-template-columns: var(--col-narrow) 1fr 1fr;
       gap: var(--space-5);
     }
   }
