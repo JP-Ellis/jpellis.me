@@ -4,7 +4,7 @@ import type { GetStaticPathsResult } from "astro";
 import Base from "../../layouts/base.astro";
 import { formatDate, sourceDomain } from "../../lib/blog.ts";
 import { getPosts, type Post } from "../../lib/posts.ts";
-import { SITE_NAME } from "../../lib/site.ts";
+import { publicPath, SITE_NAME } from "../../lib/site.ts";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const posts = await getPosts();
@@ -25,7 +25,7 @@ const { Content } = await render(entry);
 const isoDate = date.toISOString().slice(0, 10);
 
 const site = Astro.site ?? Astro.url;
-const postUrl = new URL(Astro.url.pathname, site).href;
+const postUrl = new URL(publicPath(Astro.url.pathname), site).href;
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
