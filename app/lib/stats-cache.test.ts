@@ -137,3 +137,18 @@ test("a failed refresh is not retried until the cooldown expires", async () => {
   await Promise.all(waits);
   expect(refresh).toHaveBeenCalledTimes(2);
 });
+
+test("serves stale data without refreshing when no refresh is given", async () => {
+  const kv = fakeKv({ s: JSON.stringify({ data: 1, fetchedAt: 0 }) });
+  const waits: Promise<unknown>[] = [];
+  const r = await readWithSWR({
+    kv,
+    key: "s",
+    maxAgeMs: 1000,
+    refresh: undefined,
+    waitUntil: (p) => waits.push(p),
+    now: () => 5000,
+  });
+  expect(r).toEqual({ data: 1, stale: true });
+  expect(waits).toHaveLength(0);
+});
