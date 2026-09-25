@@ -6,6 +6,7 @@ import { formatDate, sourceDomain } from "../lib/blog.ts";
 import { CACHE_DAILY_STATS } from "../lib/cache-control.ts";
 import { fallbackGithubStats, fetchGithubStats } from "../lib/github-stats.ts";
 import { getPosts } from "../lib/posts.ts";
+import { personJsonLd } from "../lib/site.ts";
 import { readWithSWR } from "../lib/stats-cache.ts";
 
 export const prerender = false;
@@ -46,7 +47,10 @@ const stats = await loadStats();
 Astro.response.headers.set("Cache-Control", CACHE_DAILY_STATS);
 ---
 
-<Base title="JP Ellis">
+<Base
+  description="Joshua Ellis, a software engineer at PactFlow who helps lead the Pact Foundation, maintains pact-python, and once researched particle physics."
+  jsonLd={personJsonLd(Astro.site ?? Astro.url)}
+>
   <main>
     <!-- Hero -->
     <section class="hero">
