@@ -49,7 +49,7 @@ tags = ["rust", "numerics", "physics", "leptogenesis"]
 body = """
 Investigated an E₆-inspired seesaw model under Prof. Volkas, exploring \
 parameter space to constrain the matter–antimatter asymmetry produced in the \
-early universe. Built a Rust-based solver for highly-coupled Boltzmann \
+early universe. Built a Rust-based solver for highly coupled Boltzmann \
 equations with rates spanning many orders of magnitude, incorporating novel \
 integration quadratures for efficient numerical evaluation.\
 """
@@ -124,7 +124,7 @@ tags = ["c++", "root", "experimental-physics"]
 body = """
 Designed a level-1 trigger for the multiband instability monitor at the LHC, \
 enabling early detection of proton beam instabilities. The work contributed to \
-a peer-reviewed publication in Physical Review Accelerator Beams (2019). Also \
+a peer-reviewed publication in Physical Review Accelerators and Beams (2019). Also \
 built a photodiode-based beam-halo monitor at the Australian Synchrotron.\
 """
 
@@ -138,9 +138,7 @@ sub = "English · Music · Sciences"
 tags = []
 body = """
 Taught English, music, and general sciences in a remote village on Pentecost \
-Island — no electricity, running water, or vehicle access. A formative \
-experience in problem-solving under constraint and communicating across \
-language and cultural barriers.\
+Island — no electricity, running water, or vehicle access.\
 """
 
 # ── Publications ──────────────────────────────────────────────────────────────
@@ -149,7 +147,7 @@ language and cultural barriers.\
 [[publications]]
 authors = "T. E. Levens, K. Łasocha, T. Lefevre, M. Gąsior, R. Jones, T. Włostowski, J. P. Ellis, and R. J. Steinhagen"
 title = "Automatic detection of transverse beam instabilities in the Large Hadron Collider"
-journal = "Physical Review Accelerator Beams"
+journal = "Physical Review Accelerators and Beams"
 year = 2019
 doi = "10.1103/PhysRevAccelBeams.22.112803"
 
