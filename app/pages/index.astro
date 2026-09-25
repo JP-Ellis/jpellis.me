@@ -82,7 +82,7 @@ Astro.response.headers.set("Cache-Control", CACHE_DAILY_STATS);
     <section class="projects-section">
       <div class="container">
         <div class="eyebrow-grid">
-          <span class="eyebrow">Selected projects</span>
+          <h2 class="eyebrow">Selected projects</h2>
           <div>
             {selectedProjects.map((entry, i) => {
               const border = i === 0 ? "rule-section" : "rule-list";
@@ -124,7 +124,7 @@ Astro.response.headers.set("Cache-Control", CACHE_DAILY_STATS);
     <section class="elsewhere-section">
       <div class="container">
         <div class="eyebrow-grid">
-          <span class="eyebrow">Recent writing</span>
+          <h2 class="eyebrow">Recent writing</h2>
           <div>
             {recentPosts.map((post, i) => {
               const border = i === 0 ? "rule-section" : "rule-list";

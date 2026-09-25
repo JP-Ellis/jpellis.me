@@ -31,7 +31,7 @@ const rest = roles.filter((r) => r.featured !== true);
         <div class="band_inner">
           <div class="band_header">
             <div>
-              <span class="eyebrow">Now</span>
+              <h2 class="eyebrow eyebrow--inline">Now</h2>
               <p class="band_title">
                 {featuredRole.title} at <em>{featuredRole.org}</em>.
               </p>
@@ -54,7 +54,7 @@ const rest = roles.filter((r) => r.featured !== true);
     <section class="timeline_section">
       <div class="container">
         <div class="eyebrow-grid">
-          <span class="eyebrow">Earlier</span>
+          <h2 class="eyebrow">Earlier</h2>
           <div>
             {
               rest.map((role, i) => (
@@ -90,7 +90,7 @@ const rest = roles.filter((r) => r.featured !== true);
     <section class="publications_section">
       <div class="container">
         <div class="eyebrow-grid">
-          <span class="eyebrow">Publications</span>
+          <h2 class="eyebrow">Publications</h2>
           <div>
             {
               publications.map((pub, i) => (
@@ -135,7 +135,7 @@ const rest = roles.filter((r) => r.featured !== true);
     <section class="honours_section">
       <div class="container">
         <div class="eyebrow-grid">
-          <span class="eyebrow">Honours &amp; Awards</span>
+          <h2 class="eyebrow">Honours &amp; Awards</h2>
           <div>
             {
               honours.map((h, i) => (

@@ -5,6 +5,7 @@
 // Variants:
 //   .eyebrow           — accent colour (default, e.g. "№ 01 / Intro")
 //   .eyebrow--muted    — muted colour (e.g. dates, locations)
+//   .eyebrow--inline   — inline label that sits on its parent's line box
 @layer components {
   .eyebrow {
     font-family: var(--font-mono);
@@ -17,5 +18,18 @@
 
   .eyebrow--muted {
     color: var(--color-muted);
+  }
+
+  // Section labels are headings. Drop the heading defaults that .eyebrow
+  // does not replace, so a heading label looks like a span label.
+  :is(h2, h3).eyebrow {
+    margin-block: 0;
+    font-weight: 400;
+    font-variation-settings: normal;
+  }
+
+  // A label that shares its parent's line box, as an inline span would.
+  .eyebrow--inline {
+    display: inline;
   }
 }
