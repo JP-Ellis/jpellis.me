@@ -1,9 +1,11 @@
 import { expect, test } from "@playwright/test";
 
 const SITE = "https://jpellis.me";
-// A post that is not a cross-post, so its canonical URL is on this site.
-const POST = "/blog/astro-rewrite";
-const CROSS_POST = "/blog/functional-arguments";
+// Every published post is a cross-post, so its canonical URL, feed link and
+// structured-data URL all point at the original.
+const POST = "/blog/functional-arguments";
+const POST_SOURCE =
+  "https://pact-foundation.github.io/pact-python/blog/2024/12/30/functional-arguments/";
 const PAGE_TITLE_RE = /^\S.* · Joshua Ellis$/u;
 
 const PAGES = [
@@ -13,7 +15,6 @@ const PAGES = [
   { path: "/resume", title: /^Résumé · Joshua Ellis$/u },
   { path: "/blog", title: /^Blog · Joshua Ellis$/u },
   { path: POST, title: PAGE_TITLE_RE },
-  { path: CROSS_POST, title: PAGE_TITLE_RE },
   { path: "/contact", title: /^Contact · Joshua Ellis$/u },
 ];
 
@@ -42,12 +43,10 @@ test.describe("Route smoke tests", () => {
         "content",
         /\S/u,
       );
-      if (path !== CROSS_POST) {
-        await expect(head.locator("link[rel='canonical']")).toHaveAttribute(
-          "href",
-          `${SITE}${path}`,
-        );
-      }
+      await expect(head.locator("link[rel='canonical']")).toHaveAttribute(
+        "href",
+        path === POST ? POST_SOURCE : `${SITE}${path}`,
+      );
       await expect(head.locator("meta[property='og:title']")).toHaveCount(1);
       await expect(head.locator("meta[name='twitter:card']")).toHaveCount(1);
       await expect(head.locator("meta[name='color-scheme']")).toHaveAttribute(
@@ -77,10 +76,10 @@ test.describe("Route smoke tests", () => {
   test("cross-posts point their canonical URL at the original", async ({
     page,
   }) => {
-    await page.goto(CROSS_POST);
+    await page.goto(POST);
     await expect(page.locator("link[rel='canonical']")).toHaveAttribute(
       "href",
-      /^https:\/\/pact-foundation\.github\.io\//u,
+      POST_SOURCE,
     );
   });
 
@@ -103,7 +102,7 @@ test.describe("Route smoke tests", () => {
     expect(await jsonLd()).toMatchObject({
       "@type": "BlogPosting",
       headline: await page.locator("main h1").textContent(),
-      url: `${SITE}${POST}`,
+      url: POST_SOURCE,
       author: { name: "Joshua Ellis" },
     });
   });
@@ -133,7 +132,7 @@ test.describe("Feeds", () => {
     const body = await response.text();
     expect(body).toContain("<rss");
     expect(body).toContain("<title>Joshua Ellis</title>");
-    expect(body).toContain(`<link>${SITE}${POST}</link>`);
+    expect(body).toContain(`<link>${POST_SOURCE}</link>`);
     // Posts with a front-matter description carry it into their item.
     expect(body).toMatch(/<item>.*<description>\S/su);
   });
