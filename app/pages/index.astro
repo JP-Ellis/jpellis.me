@@ -25,13 +25,14 @@ async function loadStats() {
     if (!env?.GITHUB_STATS) {
       return fallbackGithubStats();
     }
+    const token = env.GITHUB_TOKEN;
     const ctx = Astro.locals?.cfContext;
     const waitUntil = ctx?.waitUntil?.bind(ctx) ?? (() => undefined);
     const { data } = await readWithSWR({
       kv: env.GITHUB_STATS,
       key: "github/stats",
       maxAgeMs: STATS_MAX_AGE_MS,
-      refresh: () => fetchGithubStats(env.GITHUB_TOKEN),
+      refresh: token ? () => fetchGithubStats(token) : undefined,
       waitUntil,
     });
     return data ?? fallbackGithubStats();

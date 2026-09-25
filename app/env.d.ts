@@ -8,6 +8,7 @@ declare module "cloudflare:workers" {
   export const env: {
     GITHUB_STATS?: KVNamespace;
     PROJECTS_STATS?: KVNamespace;
-    GITHUB_TOKEN: string;
+    /** Unset in CI and in local builds without `.dev.vars`. */
+    GITHUB_TOKEN?: string;
   };
 }

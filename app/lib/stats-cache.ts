@@ -76,13 +76,18 @@ export interface CachedStats<T> {
 
 // biome-ignore lint/style/useNamingConvention: SWR = stale-while-revalidate (domain acronym)
 export async function readWithSWR<T>(
-  opts: RefreshOpts<T> & { maxAgeMs: number },
+  opts: Omit<RefreshOpts<T>, "refresh"> & {
+    maxAgeMs: number;
+    /** Omit when there are no credentials; the cached value is then served as-is. */
+    refresh?: (() => Promise<T>) | undefined;
+  },
 ): Promise<{ data: T | null; stale: boolean }> {
   const now = (opts.now ?? Date.now)();
   const cached = (await opts.kv.get(opts.key, "json")) as CachedStats<T> | null;
   const fresh = cached !== null && now - cached.fetchedAt < opts.maxAgeMs;
-  if (!(cached && fresh)) {
-    scheduleRefresh(opts, now);
+  const { refresh } = opts;
+  if (!(cached && fresh) && refresh) {
+    scheduleRefresh({ ...opts, refresh }, now);
   }
   return { data: cached?.data ?? null, stale: cached !== null && !fresh };
 }
