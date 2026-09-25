@@ -3,8 +3,12 @@ import { getCollection } from "astro:content";
 import Band from "../../components/band.astro";
 import Base from "../../layouts/base.astro";
 import { formatDate, sourceDomain, splitExcerpt } from "../../lib/blog.ts";
+import { CACHE_CONTENT } from "../../lib/cache-control.ts";
 
+// On demand so the server can filter by the ?tag= and ?year= query string.
 export const prerender = false;
+
+Astro.response.headers.set("Cache-Control", CACHE_CONTENT);
 
 const YEAR_LENGTH = 4;
 const ISO_DATE_LENGTH = 10;

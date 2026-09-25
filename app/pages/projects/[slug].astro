@@ -2,6 +2,7 @@
 import { getEntry, render } from "astro:content";
 import { PROJECTS } from "../../data/projects.ts";
 import Base from "../../layouts/base.astro";
+import { CACHE_WEEKLY_STATS } from "../../lib/cache-control.ts";
 import {
   fallbackProjectStats,
   fetchProjectStats,
@@ -20,9 +21,13 @@ const PROJECTS_STATS_MAX_AGE_MS = 604_800_000;
 const { slug } = Astro.params;
 const entry = await getEntry("projects", slug ?? "");
 
+// An empty 404 response makes Astro serve the prerendered 404 page with a
+// 404 status. Astro.rewrite() cannot target a prerendered route from here.
 if (!entry) {
-  return Astro.redirect("/404");
+  return new Response(null, { status: 404, statusText: "Not Found" });
 }
+
+Astro.response.headers.set("Cache-Control", CACHE_WEEKLY_STATS);
 
 const { title, tagline, github, activity } = entry.data;
 const { Content } = await render(entry);
