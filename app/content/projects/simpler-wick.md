@@ -16,7 +16,7 @@ Wick contractions appear in quantum field theory calculations where they connect
 ```latex
 \usepackage{simpler-wick}
 
-% Contract fields 1–3 and 2–4:
+% Contract fields 1–4 and 2–3:
 \(
   \wick{
     \c1\psi \c2\bar\psi \c2\phi \c1\bar\phi
@@ -24,6 +24,6 @@ Wick contractions appear in quantum field theory calculations where they connect
 \)
 ```
 
-The package renders arcs above or below the expression at the correct height, avoids overlapping brackets, and handles nested contractions cleanly. It works seamlessly with `amsmath` environments.
+Each contraction appears as a bracket above the expression. The bracket's height grows with the number after `\c`, so overlapping contractions sit at different levels.
 
 Available on [CTAN](https://ctan.org/pkg/simpler-wick).
