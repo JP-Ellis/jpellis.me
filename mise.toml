@@ -6,11 +6,11 @@
 
 "aqua:cargo-bins/cargo-binstall" = "latest"
 "github:endevco/aube" = "v2.4.0"
-"cargo:uv" = "0.12"
+"aqua:astral-sh/uv" = "0.12"
 
-"cargo:committed" = "1"
-"cargo:prek" = "0.4"
-"cargo:typos-cli" = "1"
+"aqua:crate-ci/committed" = "1"
+"aqua:j178/prek" = "0.5"
+"aqua:crate-ci/typos" = "1"
 "npm:wrangler" = "4"
 "pipx:yamlfix" = "1.19.1"
 
