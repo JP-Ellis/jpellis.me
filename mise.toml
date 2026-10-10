@@ -6,7 +6,7 @@
 
 "aqua:cargo-bins/cargo-binstall" = "latest"
 "github:endevco/aube" = "v2.6.1"
-"aqua:astral-sh/uv" = "0.12"
+"aqua:astral-sh/uv" = "0.13.0"
 
 "aqua:crate-ci/committed" = "1"
 "aqua:j178/prek" = "0.5"
