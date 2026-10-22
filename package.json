@@ -27,7 +27,7 @@
     }
   },
   "devDependencies": {
-    "@astrojs/check": "0.9.10",
+    "@astrojs/check": "0.9.11",
     "@types/hast": "3.0.5",
     "@types/node": "26.6.2",
     "astro-favicons": "3.1.8",
