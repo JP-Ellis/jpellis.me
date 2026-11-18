@@ -39,6 +39,7 @@ Pact Python uses the fantastic [Hatch](https://hatch.pypa.io) project management
 In the case of Pact Python, a [`BuildHookInterface`](https://hatch.pypa.io/1.9/plugins/build-hook/reference/) is defined in [`hatch_build.py`](https://github.com/pact-foundation/pact-python/blob/8c85586d5af61a8b7a3d7450b5c0d323bee90136/pact-python-ffi/hatch_build.py) which executes several crucial tasks:
 
 1. Downloads a specified version of the Rust core library from a designated release on the Pact Foundation's GitHub repository, including the accompanying `pact.h` header file.
+
 2. Utilizes CFFI to create a Python extension module that encapsulates the Rust core library:
 
     ```python

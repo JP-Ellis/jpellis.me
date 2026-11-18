@@ -4,6 +4,10 @@ enable = ["ALL"]
 disable = [
   "MD013",
   "MD033",
+  # Section headings may lead straight into subsections.
+  "MD082",
+  # Headings may name code, such as a module path.
+  "MD093",
 ]
 
 [MD040]
