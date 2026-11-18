@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.2" baseProfile="tiny-ps" viewBox="0 0 512 512">
+  <title>Joshua Ellis</title>
+  <!-- BIMI logo in SVG Tiny PS: app/assets/app-icon.svg with its transform baked into the path. -->
+  <rect width="512" height="512" fill="#b8492f"/>
+  <path fill="#f8f6f4" d="M233.3 151.98H276.17V299.5A68.09 61.15 0 0 1 140 299.5H182.87A25.22 26.48 0 0 0 233.3 299.5ZM286.26 151.98H308.96A63.04 60.21 0 0 1 308.96 272.39H286.26V236.46H308.96A23.96 24.27 0 0 0 308.96 187.91H286.26ZM282.35 321.57H372V357.5H253.67A78.17 71.24 0 0 0 282.35 321.57Z"/>
+</svg>
