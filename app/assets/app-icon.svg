@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>Joshua Ellis</title>
+  <!-- Full bleed: platforms apply their own corner or circle mask. The glyph stays inside the inscribed circle. -->
+  <rect width="512" height="512" fill="#b8492f"/>
+  <path fill="#f8f6f4" transform="matrix(0.63043 0 0 0.63043 94.61 93.98)" d="M220 92H288V326A108 97 0 0 1 72 326H140A40 42 0 0 0 220 326ZM304 92H340A100 95.5 0 0 1 340 283H304V226H340A38 38.5 0 0 0 340 149H304ZM297.8 361H440V418H252.3A124 113 0 0 0 297.8 361Z"/>
+</svg>

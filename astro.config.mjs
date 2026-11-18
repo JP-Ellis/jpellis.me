@@ -40,7 +40,13 @@ export default defineConfig({
       filter: (page) => !page.endsWith("/404"),
     }),
     favicons({
-      input: "app/assets/favicon.png",
+      // The gradient mark suits browser tabs; home-screen icons take the
+      // full-bleed tile, which each platform masks to its own shape.
+      input: {
+        favicons: "app/assets/favicon.svg",
+        android: "app/assets/app-icon.svg",
+        appleIcon: "app/assets/app-icon.svg",
+      },
       name: "Joshua Ellis",
       // biome-ignore lint/style/useNamingConvention: favicons/web-manifest field
       short_name: "JP-Ellis",

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>Joshua Ellis</title>
+  <defs>
+    <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="72" y1="92" x2="440" y2="422">
+      <stop offset="0" stop-color="#d9694d"/>
+      <stop offset="1" stop-color="#9c3a22"/>
+    </linearGradient>
+  </defs>
+  <!-- J and P share one spine; the P bowl's two edges and the foot form the E. -->
+  <path fill="url(#g)" d="M220 92H288V326A108 97 0 0 1 72 326H140A40 42 0 0 0 220 326ZM304 92H340A100 95.5 0 0 1 340 283H304V226H340A38 38.5 0 0 0 340 149H304ZM297.8 361H440V418H252.3A124 113 0 0 0 297.8 361Z"/>
+</svg>
